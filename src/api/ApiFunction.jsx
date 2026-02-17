@@ -672,6 +672,17 @@ export const VerifyBankDetails = async (req) => {
     }
 }
 
+//Verify Bank Details by Salora
+export const VerifyBankDetailsBySalora = async (req) => {
+    try {
+        const response = await api.post("/Salora/SaloraBankPennyValidation/BankPenny-Validate", req); 
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Verify Bank Details error:", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+
 //Verify IFSC Details
 export const VerifyIFSC = async (req) => {
     try {

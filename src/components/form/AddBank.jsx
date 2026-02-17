@@ -7,6 +7,7 @@ import {
   AddUserBankInfo,
   VerifyBankDetails,
   VerifyIFSC,
+  VerifyBankDetailsBySalora,
 } from "../../api/ApiFunction";
 import Modal from "../utils/Modal";
 import { useOpenLeadContext } from "../../context/OpenLeadContext";
@@ -173,22 +174,34 @@ const AddBank = () => {
 
     // Check if IFSC & a/c exists
     const req = {
-      account_number: addBank.values.accountNumber,
-      account_ifsc: addBank.values.ifsc,
-      verification_type: "pennyless",
-      lead_id: leadInfo.lead_id,
-      user_id: leadInfo.user_id,
-      type: 0
+      accNo: addBank.values.accountNumber,
+      ifsc: addBank.values.ifsc,
+      beneficiaryName: addBank.values.accountHolderName,
+      address: "",
+      paymentMode: "IMPS",
+      // partnerLoanId: leadInfo.lead_id,
+      partnerLoanId: "986524", // static to use api
+      productinfo: {
+        comapnyName: import.meta.env.VITE_COMPANY_ID,
+        productName: import.meta.env.VITE_PRODUCT_NAME,
+        userId: leadInfo.user_id,
+        leadId: leadInfo.lead_id,
+        createdBy: adminUser.emp_code
+      }
+      // user_id: leadInfo.user_id,
+      // type: 0
     }
 
     try {
-      const response = await VerifyBankDetails(req);
+      const response = await VerifyBankDetailsBySalora(req);
 
-      if (response.data.is_valid && response.success) {
-        // toast.success("Bank verified successfully.");
+      if (response?.data?.model?.status === "SUCCESS") {
+        toast.success("Bank verified successfully.");
         return true;
       } else {
-        toast.error(response.data?.failure_reason || "Bank verification failed.");
+        toast.error(
+          response?.message || "Bank verification failed.",
+        );
         return false;
       }
     } catch (error) {

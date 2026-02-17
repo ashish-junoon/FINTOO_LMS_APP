@@ -296,7 +296,7 @@ const GetScore = ({ btnEnable = false }) => {
         setLoading(true);
 
         const req = {
-            partnerLoanId: "4787891", //*
+            partnerLoanId: "986524", //*
             serviceCode: "CN1CAS0004",
             monitoringDate: new Date().toLocaleDateString('en-GB').replaceAll('/', ''), //
             consumerInputSubject: {

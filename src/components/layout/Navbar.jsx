@@ -44,7 +44,7 @@ function Navbar({ isOpen, toggleSidebar }) {
                             <Link to="/" className='md:flex hidden ml-5'>
                                 {/* <img src={Images.logo} alt="Logo" className="h-8 w-8 ml-10" /> */}
                                 <span className="text-lg font-bold text-white border bg-primary border-primary rounded-full px-2 py-1 shadow-md">FT</span>
-                                <span className="text-lg font-bold ml-2 my-1.5 text-primary">CRM: Fintoo</span>
+                                <span className="text-lg font-bold ml-2 my-1.5 text-primary">CRM: Fynto</span>
                             </Link>
                         </div>
                     </div>

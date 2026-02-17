@@ -85,7 +85,7 @@ const Login = () => {
                         </div>
                     </div>
                     <div className="px-8 py-5">
-                        <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">Welcome to Fintoo</h2>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">Welcome to Fynto</h2>
                         <p className="text-gray-700 mb-6 text-center">Please login to your account.</p>
                         <form onSubmit={formik.handleSubmit}>
 

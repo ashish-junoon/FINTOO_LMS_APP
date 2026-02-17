@@ -14,6 +14,7 @@ import {
   getInCompleteLeadDetails,
   VerifyBankDetails,
   VerifyIFSC,
+  VerifyBankDetailsBySalora,
 } from "../../api/ApiFunction";
 import Accordion from "../utils/Accordion";
 import Modal from "../utils/Modal";
@@ -101,28 +102,45 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
         toast.error(response.data?.failure_reason || "Invalid IFSC Code!");
         return false;
       }
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const verifyBank = async () => {
+    // const req = {
+    //   account_number: formik.values.accountNumber,
+    //   account_ifsc: formik.values.ifscCode,
+    //   verification_type: "pennyless",
+    //   lead_id: leadInfo.lead_id,
+    //   user_id: leadInfo.user_id,
+    //   type: 0,
+    // };
+
     const req = {
-      account_number: formik.values.accountNumber,
-      account_ifsc: formik.values.ifscCode,
-      verification_type: "pennyless",
-      lead_id: leadInfo.lead_id,
-      user_id: leadInfo.user_id,
-      type: 0,
+      accNo: formik.values.accountNumber,
+      ifsc: formik.values.ifscCode,
+      beneficiaryName: formik.values.accountHolder, // optional but recommended
+      address: "", //optional
+      paymentMode: "IMPS",
+      // partnerLoanId: leadInfo.lead_id,
+      partnerLoanId: "986524", // static to use api
+      productinfo: {
+        comapnyName: import.meta.env.VITE_COMPANY_ID,
+        productName: import.meta.env.VITE_PRODUCT_NAME,
+        userId: leadInfo.user_id,
+        leadId: leadInfo.lead_id,
+        createdBy: adminUser.emp_code
+      }
     };
 
     try {
-      const response = await VerifyBankDetails(req);
+      const response = await VerifyBankDetailsBySalora(req);
 
-      if (response.data.is_valid && response.success) {
-        // toast.success("Bank verified successfully.");
+      if (response?.data?.model?.status === "SUCCESS") {
+        toast.success("Bank verified successfully.");
         return true;
       } else {
         toast.error(
-          response.data?.failure_reason || "Bank verification failed.",
+          response?.message || "Bank verification failed.",
         );
         return false;
       }
@@ -405,18 +423,18 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
       actionButtons={
         btnEnable && !(incomplete && leadInfo?.bank_info_fill)
           ? [
-              {
-                icon: isEditing
-                  ? "IoClose"
-                  : leadStatus === 1
-                    ? "RiEdit2Fill"
-                    : "MdOutlineCheckCircle",
-                onClick: handleEdit,
-                className: isEditing
-                  ? "border border-danger text-danger hover:bg-danger hover:border-danger hover:text-white"
-                  : "border border-primary text-primary hover:bg-success hover:border-success hover:text-white",
-              },
-            ]
+            {
+              icon: isEditing
+                ? "IoClose"
+                : leadStatus === 1
+                  ? "RiEdit2Fill"
+                  : "MdOutlineCheckCircle",
+              onClick: handleEdit,
+              className: isEditing
+                ? "border border-danger text-danger hover:bg-danger hover:border-danger hover:text-white"
+                : "border border-primary text-primary hover:bg-success hover:border-success hover:text-white",
+            },
+          ]
           : null
       }
     >
@@ -475,7 +493,7 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
                 name="ifscCode"
                 id="ifscCode"
                 disabled={!isEditing}
-                onChange={formik.handleChange}
+                onChange={(e) => formik.setFieldValue('ifscCode', e.target.value.toUpperCase())}
                 onBlur={formik.handleBlur}
                 value={formik.values.ifscCode}
               />
