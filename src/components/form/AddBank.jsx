@@ -180,7 +180,7 @@ const AddBank = () => {
       address: "",
       paymentMode: "IMPS",
       // partnerLoanId: leadInfo.lead_id,
-      partnerLoanId: "986524", // static to use api
+      partnerLoanId: "4787891", // static to use api
       productinfo: {
         comapnyName: import.meta.env.VITE_COMPANY_ID,
         productName: import.meta.env.VITE_PRODUCT_NAME,

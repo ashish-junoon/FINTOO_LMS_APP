@@ -5,7 +5,7 @@ function KYCStatusCard() {
     const { leadInfo } = useOpenLeadContext()
 
     const isDone =
-        leadInfo?.selectedproduct?.[0]?.product_code &&
+        leadInfo?.selectedproduct?.[0]?.otp_consent_verified &&
         leadInfo?.is_e_kyc_done &&
         leadInfo?.is_e_nach_activate &&
         leadInfo?.is_loan_consent
@@ -18,7 +18,7 @@ function KYCStatusCard() {
         },
         {
             label: "Loan Applied",
-            status: !!leadInfo?.selectedproduct?.[0]?.product_code,
+            status: !!leadInfo?.selectedproduct?.[0]?.otp_consent_verified,
             doneText: "Done",
         },
         {

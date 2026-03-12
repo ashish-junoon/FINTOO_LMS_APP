@@ -122,7 +122,7 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
       address: "", //optional
       paymentMode: "IMPS",
       // partnerLoanId: leadInfo.lead_id,
-      partnerLoanId: "986524", // static to use api
+      partnerLoanId: "4787891", // static to use api
       productinfo: {
         comapnyName: import.meta.env.VITE_COMPANY_ID,
         productName: import.meta.env.VITE_PRODUCT_NAME,
@@ -211,7 +211,7 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
           if (!isVerified) {
             setIsLoading(false);
             setTimeout(() => {
-              window.location.reload();
+              // window.location.reload();
             }, 1000);
             return; // stop here
           }

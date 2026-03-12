@@ -21,10 +21,12 @@ const GetScore = ({ btnEnable = false }) => {
     const [isUplaod, setIsUplaod] = useState(false)
     const [isSuccess, setIsSuccess] = useState(false);
     const { leadInfo, setLeadInfo } = useOpenLeadContext()
+    // console.log("lead_info ",leadInfo)
     const { adminUser } = useAuth();
 
 
     const scoreData = leadInfo?.cibilCreditScores
+    console.log("score data, ", scoreData)
     const score = parseInt(leadInfo?.cibilCreditScores?.[0]?.credit_score) || 0;
     const funder = adminUser.role === 'Funder' ? true : false
 
@@ -175,7 +177,7 @@ const GetScore = ({ btnEnable = false }) => {
                 setLoading(false)
                 toast.success(response.message);
             } else {
-                toast.error(response.message);
+                toast.error(response?.message || "Something went wrong!");
             }
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -295,8 +297,76 @@ const GetScore = ({ btnEnable = false }) => {
     const getSaloraCreditScore = async () => {
         setLoading(true);
 
+        const saloraReq = {
+            "partnerLoanId": "4787891",
+            "serviceCode": "CN1CAS0004",
+            "monitoringDate": "12062023",
+            "consumerInputSubject": {
+                "tuefHeader": {
+                    "headerType": "TUEF",
+                    "version": "12",
+                    "gstStateCode": "06",
+                    "enquiryPurpose": "05",
+                    "enquiryAmount": "000010000",
+                    "scoreType": "17",
+                    "outputFormat": "03",
+                    "responseSize": "1",
+                    "ioMedia": "CC",
+                    "authenticationMethod": "L"
+                },
+                "names": [
+                    {
+                        "index": "N01",
+                        "firstName": "SUKHVINDRA",
+                        "middleName": "",
+                        "lastName": "SINGH",
+                        "birthDate": "20101987",
+                        "gender": "2"
+                    }
+                ],
+                "ids": [
+                    {
+                        "index": "I01",
+                        "idNumber": "FPKPS8995Q",
+                        "idType": "01"
+                    }
+                ],
+                "telephones": [
+                    {
+                        "index": "T01",
+                        "telephoneNumber": "9587296562",
+                        "telephoneType": "01",
+                        "enquiryEnriched": "Y"
+                    }
+                ],
+                "addresses": [
+                    {
+                        "index": "A01",
+                        "line1": "A01 Akrauli",
+                        "stateCode": "06",
+                        "pinCode": "123401",
+                        "addressCategory": "04",
+                        "residenceCode": "01"
+                    }
+                ],
+                "enquiryAccounts": [
+                    {
+                        "index": "I01",
+                        "accountNumber": ""
+                    }
+                ]
+            },
+            productinfo: {
+                comapnyName: import.meta.env.VITE_COMPANY_ID,
+                productName: import.meta.env.VITE_PRODUCT_NAME,
+                userId: leadInfo?.user_id,
+                leadId: leadInfo?.lead_id,
+                createdBy: adminUser?.emp_code
+            }
+        }
+
         const req = {
-            partnerLoanId: "986524", //*
+            partnerLoanId: "4787891", //*
             serviceCode: "CN1CAS0004",
             monitoringDate: new Date().toLocaleDateString('en-GB').replaceAll('/', ''), //
             consumerInputSubject: {
@@ -364,25 +434,27 @@ const GetScore = ({ btnEnable = false }) => {
             }
         }
 
-        console.log("req to salora", req);
+        // console.log("req to salora", req);
         // return;
 
         try {
-            const response = await ScoreFromSalora(req);
+            const response = await ScoreFromSalora(saloraReq);
 
             if (response?.rawResponse?.controlData?.success) {
                 setLeadInfo(prev => {
                     const updatedScores = [...(prev.cibilCreditScores || [])];
 
                     updatedScores[1] = {
-                            name: response?.rawResponse?.consumerCreditData[0]?.names[0]?.name,
-                            mobile: response?.rawResponse?.consumerCreditData[0]?.telephones[0]?.telephoneNumber,
-                            pan_number: response?.rawResponse?.consumerCreditData[0]?.ids[0]?.idNumber, // 01 type
-                            credit_score: response?.rawResponse?.consumerCreditData[0]?.scores[0]?.score,
-                            credit_report_link: response?.fileUrl,
-                            // provider: response.provider,
-                            provider: "SALORA",
-                        };
+                        name: response?.rawResponse?.consumerCreditData[0]?.names[0]?.name,
+                        mobile: response?.rawResponse?.consumerCreditData[0]?.telephones[0]?.telephoneNumber,
+                        pan_number: response?.rawResponse?.consumerCreditData[0]?.ids[0]?.idNumber, // 01 type
+                        credit_score: response?.rawResponse?.consumerCreditData[0]?.scores[0]?.score,
+                        credit_report_link: response?.fileUrl,
+                        // provider: response.provider,
+                        provider: "SALORA",
+                    };
+
+                    // console.log("updated salora score, ", updatedScores)
 
                     return {
                         ...prev,
@@ -476,7 +548,8 @@ const GetScore = ({ btnEnable = false }) => {
                             Credit Report
                         </div>
 
-                        {(isSuccess) ? (
+                        {/* {(!isSuccess) ? ( */}
+                        {(true) ? (
                             <>
                                 {scoreData?.[0]?.provider && <div className='grid grid-cols-5 ps-2 py-1.5 gap-5'>
                                     {/* <h2>Credit Score by </h2> */}
@@ -494,7 +567,7 @@ const GetScore = ({ btnEnable = false }) => {
                                                     } border border-gray-300 p-5 py-1 font-semibold rounded-lg shadow`}
                                             >
                                                 <span className='text-4xl font-bold'>
-                                                    {scoreData?.[0]?.credit_score ?? 'N/A'}
+                                                    {scoreData?.[0]?.credit_score || 'N/A'}
                                                 </span>
                                             </div>
                                         </div>
@@ -562,7 +635,9 @@ const GetScore = ({ btnEnable = false }) => {
                                                     } border border-gray-300 p-5 py-1 font-semibold rounded-lg shadow`}
                                             >
                                                 <span className='text-4xl font-bold'>
-                                                    {scoreData?.[1]?.credit_score ?? 'N/A'}
+                                                    {scoreData?.[1]?.credit_score
+                                                        ? Number(scoreData[1].credit_score)
+                                                        : 'N/A'}
                                                 </span>
                                             </div>
                                         </div>
