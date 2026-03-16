@@ -192,7 +192,7 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
       // console.log(BankId, " ",  values?.ifscCode.slice(0,4));
 
       try {
-        if (leadStatus === 2) {
+        if (false) {
           // Compare Bank and IFSC on leadStatus === 2 (Verify Leads)
           if (values?.ifscCode.slice(0, 4) != BankId) {
             toast.error("IFSC Code Does Not Match With Bank Name!");

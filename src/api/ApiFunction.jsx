@@ -367,13 +367,23 @@ export const getStateCity = async (req) => {
 //Get Bank List
 export const GetBankList = async () => {
     try {
-        const response = await api.get("/EasebuzzIntegration/BankcodeList");
+        const response = await api.get("/Master/GetBankNameList");
         return response.data; // Return the API response data
     } catch (error) {
         console.error("Get Bank List error:", error.response?.data || error.message);
         throw error; // Rethrow error to handle it in the calling function
     }
 }
+
+// export const GetBankList = async () => {
+//     try {
+//         const response = await api.get("/EasebuzzIntegration/BankcodeList");
+//         return response.data; // Return the API response data
+//     } catch (error) {
+//         console.error("Get Bank List error:", error.response?.data || error.message);
+//         throw error; // Rethrow error to handle it in the calling function
+//     }
+// }
 
 export const AddUserBankInfo = async (req) => {
     try {

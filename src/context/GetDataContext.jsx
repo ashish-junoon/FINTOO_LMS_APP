@@ -60,7 +60,7 @@ export const GetDataProvider = ({ children }) => {
     const getBankList = async () => {
         try {
             const response = await GetBankList();
-            setBankList(response?.data || []); // Ensure data is properly set
+            setBankList(response?.bankName || []); // Ensure data is properly set
         } catch (error) {
             console.error("Error fetching banklist:", error);
         }

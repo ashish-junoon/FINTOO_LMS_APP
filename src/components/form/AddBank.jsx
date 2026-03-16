@@ -217,7 +217,7 @@ const AddBank = () => {
       try {
         const response = await GetBankList();
         // console.log("bank list: ", response.data)
-        setBankList(response.data);
+        setBankList(response.bankName);
       } catch (error) {
         console.error("Error fetching States:", error);
       }
