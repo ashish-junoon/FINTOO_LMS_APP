@@ -34,7 +34,11 @@ const IncompleteLead = () => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await getIncomplete();
+        const req = {
+          company_id: import.meta.env.VITE_COMPANY_ID,
+          product_id: import.meta.env.VITE_PRODUCT_NAME
+        }
+        const response = await getIncomplete(req);
 
         if (response.status) {
           setTableData(response.incompleteleads);

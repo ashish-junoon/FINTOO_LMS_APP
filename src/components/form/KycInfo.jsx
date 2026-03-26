@@ -64,7 +64,7 @@ const KycInfo = ({ btnEnable = false, incomplete }) => {
     },
     validationSchema: Yup.object({
       panNumber: Yup.string()
-        .matches(/^[A-Z]{5}[0-9]{4}[A-Z]$/, "Invalid PAN Number.")
+        .matches(/^[A-Za-z]{5}[0-9]{4}[A-Za-z]$/, "Invalid PAN Number.")
         .required("Required"),
       adharNumber: Yup.string()
         .matches(/^[0-9]{12}$/, "Invalid Aadhar Number.")
@@ -367,6 +367,7 @@ const KycInfo = ({ btnEnable = false, incomplete }) => {
                 placeholder="PAN Number"
                 name="panNumber"
                 type="text"
+                style={" uppercase "}
                 disabled={!isEditing}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}

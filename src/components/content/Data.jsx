@@ -179,7 +179,7 @@ const houseTypeOptions = [
 
 const scorePlatform = [
     // { label: "Transunion", value: "Transunion" },
-    { label: "Experian", value: "Experian" },
+    // { label: "Experian", value: "Experian" },
     // { label: "Equifax", value: "Equifax" },
     { label: "Salora", value: "Salora" },
 ]
@@ -263,7 +263,7 @@ const eKYCRemarks = [
 
 
 const disbursedRemarks = [
-    { label: "Bnak Account Unverified", value: "Bnak Account Unverified" },
+    { label: "Bank Account Unverified", value: "Bank Account Unverified" },
     { label: "Suspicious Profile", value: "Suspicious Profile" },
     { label: "Hold Disbursement", value: "Hold Disbursement" },
 ]

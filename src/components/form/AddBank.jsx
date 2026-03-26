@@ -106,7 +106,7 @@ const AddBank = () => {
         }
 
         // get bank name from bank id
-        const bankname = bankList.find((bank) => bank?.bankId == values?.bankName)?.bankName;
+        const bankname = bankList.find((bank) => bank?.bank_id == values?.bankName)?.bankName;
         // console.log(bankname);
         const userRequest = {
           lead_id: leadInfo?.lead_id,
@@ -129,6 +129,7 @@ const AddBank = () => {
           toast.success(response.message);
           setIsOpen(false);
           resetForm()
+          window.location.reload()
         } else {
           toast.error(response.message);
         }
@@ -160,17 +161,17 @@ const AddBank = () => {
 
   const verifyBank = async (values) => {
     // Check if IFSC is of selected bank
-    if (values?.ifsc.slice(0, 4) != values?.bankName) {
-      toast.error("IFSC Code Does Not Match With Bank Name!")
-      return;
-    }
+    // if (values?.ifsc.slice(0, 4) != values?.bankName) {
+    //   toast.error("IFSC Code Does Not Match With Bank Name!")
+    //   return;
+    // }
 
     // Check if IFSC is valid
-    const isIFSCVerified = await VerifyIFSCCode();
-    if (!isIFSCVerified) {
-      // setIsLoading(false);
-      return; // stop here
-    }
+    // const isIFSCVerified = await VerifyIFSCCode();
+    // if (!isIFSCVerified) {
+    //   // setIsLoading(false);
+    //   return; // stop here
+    // }
 
     // Check if IFSC & a/c exists
     const req = {
@@ -179,24 +180,18 @@ const AddBank = () => {
       beneficiaryName: addBank.values.accountHolderName,
       address: "",
       paymentMode: "IMPS",
-      // partnerLoanId: leadInfo.lead_id,
-      partnerLoanId: "4787891", // static to use api
-      productinfo: {
-        comapnyName: import.meta.env.VITE_COMPANY_ID,
-        productName: import.meta.env.VITE_PRODUCT_NAME,
-        userId: leadInfo.user_id,
-        leadId: leadInfo.lead_id,
-        createdBy: adminUser.emp_code
-      }
-      // user_id: leadInfo.user_id,
-      // type: 0
+      comapny_id: import.meta.env.VITE_COMPANY_ID,
+      product_name: import.meta.env.VITE_PRODUCT_NAME,
+      user_id: leadInfo.user_id,
+      lead_id: leadInfo.lead_id,
+      created_by: adminUser.emp_code
     }
 
     try {
       const response = await VerifyBankDetailsBySalora(req);
 
-      if (response?.data?.model?.status === "SUCCESS") {
-        toast.success("Bank verified successfully.");
+      if (response?.model?.status === "SUCCESS") {
+        // toast.success("Bank verified successfully.");
         return true;
       } else {
         toast.error(
@@ -217,7 +212,12 @@ const AddBank = () => {
       try {
         const response = await GetBankList();
         // console.log("bank list: ", response.data)
-        setBankList(response.bankName);
+        if(response?.status) {
+          setBankList(response?.bankName);
+          // console.log("banklist: ", response?.bankName)
+        } else {
+          console.log("Fetching banklist: ", response?.message)
+        }
       } catch (error) {
         console.error("Error fetching States:", error);
       }
@@ -260,7 +260,7 @@ const AddBank = () => {
                   name="bankName"
                   placeholder="Select"
                   options={bankList?.map((bank) => ({
-                    value: bank?.bankId,
+                    value: bank?.bank_id,
                     label: bank.bankName,
                   }))}
                   {...addBank.getFieldProps("bankName")}

@@ -297,6 +297,7 @@ function UpdateUser() {
                                 name="panNumber"
                                 maxLength={10}
                                 type="text"
+                                style={" uppercase "}
                                 disabled={!isEditing}
                                 value={formik.values.panNumber}
                                 onChange={formik.handleChange}

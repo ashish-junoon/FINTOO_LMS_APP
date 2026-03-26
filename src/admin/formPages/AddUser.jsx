@@ -216,6 +216,7 @@ function AddUser() {
                                 name="panNumber"
                                 maxLength={10}
                                 type="text"
+                                style={" uppercase "}
                                 {...formik.getFieldProps("panNumber")}
                             />
                             {renderError("panNumber")}

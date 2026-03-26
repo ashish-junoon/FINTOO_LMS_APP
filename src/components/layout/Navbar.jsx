@@ -36,12 +36,12 @@ function Navbar({ isOpen, toggleSidebar }) {
             <div className="mx-auto h-[58px] w-full bg-white flex items-center z-50 sticky top-0 shadow-lg">
                 <div className="flex flex-wrap mx-10 w-full">
                     {/* Left Column */}
-                    <div className="w-full md:w-3/12 px-4">
+                    <div className="w-full md:w-6/12 px-4">
                         <div className="flex items-center">
                             <button className='text-primary' onClick={toggleSidebar}>
                                 <Icon name="IoMenu" size={26} />
                             </button>
-                            <Link to="/" className='md:flex hidden ml-5'>
+                            <Link to="/" className='sm:flex hidden ml-5'>
                                 {/* <img src={Images.logo} alt="Logo" className="h-8 w-8 ml-10" /> */}
                                 <span className="text-lg font-bold text-white border bg-primary border-primary rounded-full px-2 py-1 shadow-md">FT</span>
                                 <span className="text-lg font-bold ml-2 my-1.5 text-primary">CRM: Fynto</span>
@@ -50,7 +50,7 @@ function Navbar({ isOpen, toggleSidebar }) {
                     </div>
 
                     {/* Middle Column */}
-                    <div className="w-full md:w-6/12 px-4">
+                    <div className="w-full md:w-3/12 px-4">
                         {/* <div className="w-8/12">
                             <SearchBox
                                 value={searchQuery}

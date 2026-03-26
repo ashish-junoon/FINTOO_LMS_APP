@@ -256,7 +256,7 @@ export const ScoreFromEquiFax = async (req) => {
 //Get Credit Score
 export const ScoreFromSalora = async (req) => {
     try {
-        const response = await api.post("/Salora/SaloraCreditReport/Credit-Report", req);
+        const response = await api.post("/Salora/SaloraCreditReport/Credit-Report_SoftPull", req);
         return response.data; // Return the API response data
     } catch (error) {
         console.error("Get Credit Score error:", error.response?.data || error.message);
@@ -409,6 +409,29 @@ export const getbankCodeListByCode = async (req) => {
 export const registerEMandateEaseBuze = async (req) => {
     try {
         const response = await api.post("/EasebuzzIntegration/CreateEMandateLink", req);
+        return response.data;
+    } catch (error) {
+        console.error("Register eMandate:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+//Register eMandate Salora
+export const registerEMandateBySalora = async (req) => {
+    try {
+        // const response = await api.post("/Salora/SaloraEMandate/e-Mandate", req);
+        const response = await api.post("/Salora/SaloraEMandate/Combined-Process-eMandate_V1", req);
+        return response.data;
+    } catch (error) {
+        console.error("Register eMandate:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+//Cancel eMandate Salora
+export const cancelEmandateSalora = async (param) => {
+    try {
+        const response = await api.delete(`/api/Salora/DeleteToken/Delete E-Mandate/${param}`);
         return response.data;
     } catch (error) {
         console.error("Register eMandate:", error.response?.data || error.message);
@@ -685,7 +708,7 @@ export const VerifyBankDetails = async (req) => {
 //Verify Bank Details by Salora
 export const VerifyBankDetailsBySalora = async (req) => {
     try {
-        const response = await api.post("/Salora/SaloraBankPennyValidation/BankPenny-Validate", req); 
+        const response = await api.post("/Salora/SaloraBankPennyValidation/BankPenny-Validate_V1", req); 
         return response.data; // Return the API response data
     } catch (error) {
         console.error("Verify Bank Details error:", error.response?.data || error.message);
@@ -1016,9 +1039,9 @@ export const LeadReopen = async (req) => {
     }
 }
 
-export const getIncomplete = async () => {
+export const getIncomplete = async (req) => {
     try {
-        const response = await api.post("Admin/IncompleteAndReopen");
+        const response = await api.post("Admin/IncompleteAndReopen", req);
         return response.data; // Return the API response data
     } catch (error) {
         console.error("Get incomplete error :", error.response?.data || error.message);

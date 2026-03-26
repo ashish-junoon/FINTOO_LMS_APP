@@ -538,6 +538,7 @@ function ManageFunders() {
                                         placeholder="Enter pan Number"
                                         name="pan"
                                         id="pan"
+                                        style={" uppercase "}
                                         maxLength={10}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}

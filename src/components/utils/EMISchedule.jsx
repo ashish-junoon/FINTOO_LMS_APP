@@ -12,6 +12,7 @@ import {
   GetUpdateLoanEMI,
   PullNACHPaymentEaseBuzz,
   PullPaymentUsingEaseBuzz,
+  cancelEmandateSalora,
 } from "../../api/ApiFunction";
 import Button from "./Button";
 import Modal from "./Modal";
@@ -51,6 +52,7 @@ function EMISchedule({ data, loan_Id }) {
   const [isWriteoff, setIsWriteoff] = useState(false);
   const [isCollected, setIsCollected] = useState(false);
   const [utrUpdate, setUtrUpdate] = useState(false);
+  const [cancelMandate, setCancelMandate] = useState(false);
   const [paymentInfo, setPaymentInfo] = useState(null);
 
   // console.log(paymentInfo);
@@ -271,6 +273,24 @@ function EMISchedule({ data, loan_Id }) {
 
 
   // alert(JSON.stringify(schedule, null, 2))
+
+  // cancel mandate by salora
+  const handleCancelMandate = async () => {
+    try {
+      const leadid = "4787894123";
+      const res = cancelEmandateSalora(leadid);
+      if(res?.status){
+        toast.info("eMandate Cancelled");
+      } else {
+        toast.error("something went wrong cancelling eMandate")
+      }
+    } catch (error) {
+      console.error("error in cancel mandate, ", error);
+      toast.error("An error occurred while fetching data.");
+    } finally {
+      setCancelMandate(false);
+    }
+  }
 
   // formik for pull payment
   const pullPaymentFormik = useFormik({
@@ -563,10 +583,11 @@ function EMISchedule({ data, loan_Id }) {
             navigate("/manage-loans/accounts");
           }
         } else {
-          toast.error(response.message);
+          toast.error(response?.message);
         }
       } catch (error) {
-        toast.error(error.message || "Something went wrong");
+        // console.log("err: ", error)
+        toast.error(error?.response?.data?.errors?.updated_by?.[0] || error?.message || "Something went wrong");
       } finally {
         setIsLoading(false);
       }
@@ -857,7 +878,7 @@ function EMISchedule({ data, loan_Id }) {
                   type={"button"}
                   disabled={!permission}
                   onClick={() => setIsPullNach(true)}
-                  style="min-w-[170px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
+                  style="min-w-[150px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
                 />
                 <Button
                   btnName={"Update Collection"}
@@ -874,9 +895,17 @@ function EMISchedule({ data, loan_Id }) {
                     type={"button"}
                     disabled={!permission}
                     onClick={() => setUtrUpdate(true)}
-                    style="min-w-[170px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
+                    style="min-w-[140px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
                   />
                 )}
+                {/* <Button
+                  btnName={"Cancel eMandate"}
+                  btnIcon={"MdCancel"}
+                  type={"button"}
+                  disabled={!permission}
+                  onClick={() => setCancelMandate(true)}
+                  style="min-w-[170px] hover:shadow-lg bg-danger text-white font-medium py-2 px-4 rounded"
+                /> */}
               </>
             )}
           </div>
@@ -1023,8 +1052,7 @@ function EMISchedule({ data, loan_Id }) {
               </p>
               <p className="text-lg text-gray-800 font-bold">
                 ₹
-                {updateEMI.due_interest_on_current_day &&
-                  updateEMI.due_interest_on_current_day
+                {updateEMI.due_interest_on_current_day
                   ? updateEMI.due_interest_on_current_day
                   : activeLoan?.due_interest_on_current_day}
               </p>
@@ -1846,6 +1874,54 @@ function EMISchedule({ data, loan_Id }) {
             />
           </div>
         </form>
+      </Modal>
+
+      {/* Cancel Mandate */}
+      <Modal isOpen={cancelMandate} onClose={() => setCancelMandate(false)}>
+        <div className="p-6 border border-gray-200 rounded shadow-md flex flex-col items-center justify-center">
+          {true && (
+            <div className="flex flex-col items-center justify-center">
+              <h2 className="text-lg font-semibold italic mt-2 text-amber-500">
+                Are you sure?
+              </h2>
+              <h6 className="text-center text-xs text-gray-500 mt-2">
+                This action will cancel the existing eMandate.
+              </h6>
+              <div className="grid grid-cols-2 gap-3 my-2">
+                <button
+                  className="px-8 mt-4 shadow-md text-primary border border-primary hover:bg-primary hover:text-white text-xs w-full font-bold py-2 rounded"
+                  onClick={handleCancelMandate}
+                >
+                  Yes
+                </button>
+                <button
+                  className="px-8 mt-4 shadow-md text-primary border border-primary hover:bg-primary hover:text-white text-xs w-full font-bold py-2 rounded"
+                  onClick={() => setCancelMandate(false)}
+                >
+                  No
+                </button>
+              </div>
+
+            </div>
+          )}
+          {paymentInfo?.success === false && (
+            <div className="flex flex-col items-center justify-center">
+              <img src={Images.verified} alt="Failed" />
+              <h2 className="text-lg font-semibold italic mt-2 text-danger">
+                Payment Failed!
+              </h2>
+              <h6 className="text-center text-xs text-gray-700 mt-2">
+                Your payment has failed.
+              </h6>
+              <button
+                className="mt-4 shadow-md text-primary border border-primary hover:bg-primary hover:text-white text-xs w-full font-bold py-2 px-4 rounded"
+                onClick={() => navigate("/manage-loans/accounts")}
+              >
+                Back
+              </button>
+            </div>
+          )}
+        </div>
       </Modal>
     </>
   );

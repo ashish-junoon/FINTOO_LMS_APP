@@ -1,4 +1,4 @@
-import logo from '../../assets/logo.png';
+import logo from '../../assets/fynto.png';
 import dp from '../../assets/dp.jpg';
 import newUser from '../../assets/png/newUser.png'
 import processUser from '../../assets/png/processUser.png'

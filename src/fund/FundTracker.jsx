@@ -327,6 +327,7 @@ function FundTracker() {
                                         placeholder="Enter pan Number"
                                         name="panCard"
                                         id="panCard"
+                                        style={" uppercase "}
                                         maxLength={10}
                                         onChange={formik.handleChange}
                                         onBlur={formik.handleBlur}

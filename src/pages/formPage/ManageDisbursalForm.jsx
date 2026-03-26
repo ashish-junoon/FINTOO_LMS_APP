@@ -8,7 +8,7 @@ import AppStatus from "../../components/utils/AppStatus";
 import AppCard from "../../components/form/AppCard";
 import KYCStatusCard from "../../components/form/KYCStatusCard";
 import Button from "../../components/utils/Button";
-import { getLeadDetails } from "../../api/ApiFunction";
+import { getLeadDetails, VerifyBankDetailsBySalora } from "../../api/ApiFunction";
 import TabWrap from "../../components/utils/TabWrap";
 import Modal from "../../components/utils/Modal";
 import SelectInput from "../../components/fields/SelectInput";
@@ -78,7 +78,7 @@ const ManageDisbursalForm = () => {
   const funder = adminUser.role === "Funder" ? true : false;
   const isInsufficient =
     fundStatus?.funds?.[0]?.left_funds <=
-    userData?.selectedproduct?.[0]?.disburesement_amount
+      userData?.selectedproduct?.[0]?.disburesement_amount
       ? true
       : false;
 
@@ -142,31 +142,31 @@ const ManageDisbursalForm = () => {
   };
 
   const handleApproveYes = async () => {
-      const payload = {
-        lead_id: lead_id,
-        step_status: 24,
-        is_prove: true,
-        updated_by: adminUser?.emp_code,
-        reason: "Ready for Disbursed ",
-        remarks: "Lead is Ready for Disbursed, forwarded for Ready for Disbursed Page."
-      };
-      try {
-        const response = await UpdateUserLead(payload);
-        if (response.status) {
-                toast.success(response.message);
-                navigate("/manage-leads/manage-disbursal");
-            } else {
-                toast.error(response.message);
-            }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        toast.error("An error occurred while fetching data.");
+    const payload = {
+      lead_id: lead_id,
+      step_status: 24,
+      is_prove: true,
+      updated_by: adminUser?.emp_code,
+      reason: "Ready for Disbursed ",
+      remarks: "Lead is Ready for Disbursed, forwarded for Ready for Disbursed Page."
+    };
+    try {
+      const response = await UpdateUserLead(payload);
+      if (response.status) {
+        toast.success(response.message);
+        navigate("/manage-leads/manage-disbursal");
+      } else {
+        toast.error(response.message);
       }
-    };
-  
-    const handleApproveNo = () => {
-      setIsReadyOpen(false);
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      toast.error("An error occurred while fetching data.");
+    }
+  };
+
+  const handleApproveNo = () => {
+    setIsReadyOpen(false);
+  };
 
   const formik = useFormik({
     enableReinitialize: true, // ✅ Important: allows initialValues to update when userData changes
@@ -202,6 +202,12 @@ const ManageDisbursalForm = () => {
       funderName: Yup.string().required("Funder name is required."),
     }),
     onSubmit: async (values) => {
+      // check if primary bank is verified
+      if(!userData?.is_bank_verified){
+        toast.error("Please verify primary bank first!")
+        return;
+      }
+
       const req = {
         lead_id: userData?.lead_id,
         product_code: userData?.selectedproduct?.[0]?.product_code,
@@ -306,25 +312,40 @@ const ManageDisbursalForm = () => {
     //   product_name: import.meta.env.VITE_PRODUCT_NAME,
     // };
 
-    const req={
-        account_number: data?.account_number,
-        account_ifsc: data?.ifsc_code,
-        verification_type: "pennyless",
-        lead_id: lead_id,
-        user_id: user_id,
-        type: 1
+    // const req={
+    //     account_number: data?.account_number,
+    //     account_ifsc: data?.ifsc_code,
+    //     verification_type: "pennyless",
+    //     lead_id: lead_id,
+    //     user_id: user_id,
+    //     type: 1
+    // }
+
+    const req = {
+      accNo: data?.account_number,
+      ifsc: data?.ifsc_code,
+      beneficiaryName: userData?.personalInfo?.[0]?.full_name,
+      // beneficiaryName: "Ravi Mishra",
+      address: "",
+      paymentMode: "IMPS",
+      comapny_id: import.meta.env.VITE_COMPANY_ID,
+      product_name: import.meta.env.VITE_PRODUCT_NAME,
+      user_id: user_id,
+      lead_id: lead_id,
+      created_by: adminUser.emp_code
     }
 
     try {
       setIsLoading(true);
-      const response = await VerifyBankDetails(req);
-      if (response.success) {
+      const response = await VerifyBankDetailsBySalora(req);
+      if (response?.model?.status === "SUCCESS" || response?.success) {
         setIsLoading(false);
-        setBankVerified(response?.data?.is_valid);
+        // setBankVerified(response?.data?.is_valid);
+        setBankVerified(true);
         toast.success("Bank verified successfully.");
         fetchData();
       } else {
-        toast.error(response.message);
+        toast.error(response?.message || "Bank verification failed.");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -446,7 +467,7 @@ const ManageDisbursalForm = () => {
         ["ifsc", "id", "api", "gst", "pan"].includes(word.toLowerCase())
           ? word.toUpperCase()
           : word[0]?.toUpperCase() + word.slice(1)
-    ).join(" ");
+      ).join(" ");
 
   useEffect(() => {
     if (lead_id && user_id) {
@@ -508,18 +529,16 @@ const ManageDisbursalForm = () => {
             <div className="grid grid-cols-4 gap-10">
               <div className="col-span-1">
                 <div
-                  className={`border rounded mt-5 ${
-                    bankVerified || isBankVerified
-                      ? "border-green-500"
-                      : "border-red-500"
-                  }`}
+                  className={`border rounded mt-5 ${bankVerified || isBankVerified
+                    ? "border-green-500"
+                    : "border-red-500"
+                    }`}
                 >
                   <span
-                    className={`w-full ${
-                      bankVerified || isBankVerified
-                        ? "bg-green-500"
-                        : "bg-red-500"
-                    } rounded-t flex justify-center text-white items-center`}
+                    className={`w-full ${bankVerified || isBankVerified
+                      ? "bg-green-500"
+                      : "bg-red-500"
+                      } rounded-t flex justify-center text-white items-center`}
                   >
                     Bank Details
                   </span>
@@ -534,14 +553,14 @@ const ManageDisbursalForm = () => {
                     ))}
 
                     {(bankVerified || isBankVerified) && (
-                        <div className="flex justify-end items-center mb-2">
-                          <img
-                            src={Images.verifiedStamp}
-                            alt="disbursal"
-                            className="w-1/3"
-                          />
-                        </div>
-                      )}
+                      <div className="flex justify-end items-center mb-2">
+                        <img
+                          src={Images.verifiedStamp}
+                          alt="disbursal"
+                          className="w-1/3"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -655,14 +674,14 @@ const ManageDisbursalForm = () => {
       {permission && (
         <div className="col-span-2">
           <div className="flex justify-end mt-3 gap-5">
-            <Button
+            {/* <Button
               btnName={"Ready for Disbursed"}
               btnIcon={"MdOutlineCheckCircleOutline"}
               type={"submit"}
               disabled={isOnHold}
               onClick={handleReadyDisbursed}
               style="min-w-[150px] text-sm italic font-semibold md:w-auto my-4 py-1 border-primary px-4 text-white bg-primary border hover:border-primary text-primary hover:bg-white hover:text-primary"
-            />
+            /> */}
             <Button
               btnName={"Mark as Disbursed"}
               btnIcon={"MdOutlineCheckCircleOutline"}
@@ -723,11 +742,10 @@ const ManageDisbursalForm = () => {
               <div className="col-span-2">
                 <div className="grid grid-cols-3 gap-4 w-max mx-auto">
                   <div
-                    className={`border py-1 px-5 rounded shadow-sm ${
-                      isInsufficient
-                        ? "bg-red-100 text-danger border-red-500"
-                        : "bg-green-100 text-success border-success"
-                    }`}
+                    className={`border py-1 px-5 rounded shadow-sm ${isInsufficient
+                      ? "bg-red-100 text-danger border-red-500"
+                      : "bg-green-100 text-success border-success"
+                      }`}
                   >
                     <p className="text-md text-center italic">
                       Available Funds
@@ -836,7 +854,8 @@ const ManageDisbursalForm = () => {
                 onBlur={formik.handleBlur}
                 value={formik.values.transDate}
                 // max={new Date().getFullYear() - 0 } // Limit to 18 years ago
-                max={new Date().toISOString().split("T")[0]}
+                // max={new Date().toISOString().split("T")[0]}
+                max={new Date().toLocaleDateString("en-CA")}
               />
               {formik.touched.transDate && formik.errors.transDate && (
                 <ErrorMsg error={formik.errors.transDate} />
@@ -988,7 +1007,7 @@ const ManageDisbursalForm = () => {
         </div>
       </Modal>
 
-    {/* Ready for disbursed Confirmation model  */}
+      {/* Ready for disbursed Confirmation model  */}
       <Modal isOpen={isReadyOpen} onClose={() => setIsReadyOpen(false)}>
         <div className="text-center font-semibold my-3">
           <h1>Are you sure to mark this Profile as Ready for Disbursed ?</h1>

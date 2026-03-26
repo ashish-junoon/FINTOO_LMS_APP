@@ -12,6 +12,7 @@ import {
   UpdateMenualNACH,
   getbankCodeListByCode,
   registerEMandateEaseBuze,
+  registerEMandateBySalora,
 } from "../../api/ApiFunction";
 import SelectInput from "../../components/fields/SelectInput";
 import TextInput from "../../components/fields/TextInput";
@@ -248,7 +249,7 @@ const LeadKYCForm = () => {
       ifsc: "",
       account_number: "",
       account_holder_name: "",
-      expiry_date: "",
+      // expiry_date: "",
       message: "",
       final_collection_date: "",
       email: "",
@@ -268,8 +269,8 @@ const LeadKYCForm = () => {
           "Invalid email format",
           (value) => !value || Yup.string().email().isValidSync(value),
         ),
-        expiry_date: Yup.date().required("Expiry date is required")
-        .min(new Date(new Date().setHours(0, 0, 0, 0)), "Expiry date cannot be in the past"),
+      // expiry_date: Yup.date().required("Expiry date is required")
+        // .min(new Date(new Date().setHours(0, 0, 0, 0)), "Expiry date cannot be in the past"),
       // expiry_date: Yup.date()
       //   .min(
       //     new Date(new Date().setHours(0, 0, 0, 0)),
@@ -308,39 +309,56 @@ const LeadKYCForm = () => {
       //   ? values.final_collection_date.split("-").reverse().join("-")
       //   : "";
 
-      const req = {
-        email: values.email || userData?.personalInfo[0]?.email_id,
-        phone: values.phone || userData?.mobile_number,
-        amount: "1.00",
-        name: userData.personalInfo[0].full_name.trim(),
-        lead_id: userData?.lead_id,
-        user_id: userData?.user_id,
-        loan_id: "",
-        company_id: "JUNOON",
-        product_code: import.meta.env.VITE_PRODUCT_NAME,
-        message: values.message,
-        expiry_date: formattedDate,
-        is_auto_debit_link: true,
-        is_auto_debit_seamless: true,
+      // const req = {
+      //   email: values.email || userData?.personalInfo[0]?.email_id,
+      //   phone: values.phone || userData?.mobile_number,
+      //   amount: "1.00",
+      //   name: userData.personalInfo[0].full_name.trim(),
+      //   lead_id: userData?.lead_id,
+      //   user_id: userData?.user_id,
+      //   loan_id: "",
+      //   company_id: "JUNOON",
+      //   product_code: import.meta.env.VITE_PRODUCT_NAME,
+      //   message: values.message,
+      //   expiry_date: formattedDate,
+      //   is_auto_debit_link: true,
+      //   is_auto_debit_seamless: true,
 
-        auth_details: {
-          max_debit_amount:
-            userData?.getAssignProduct[0]?.loan_amount * 4 || 100000, // Asking permision of 4x of loan amt. or  1lakh for mandate,
-          final_collection_date: formattedDate,
-          auto_debit_type: "ENACH",
-          holder_account_number: values.account_number,
-          holder_account_type: "SAVINGS",
-          holder_bank_ifsc: values.ifsc,
-          auth_mode: values.authMode,
-          amount_rule: "MAX",
-          holder_bank_code: values.ifsc?.slice(0, 4),
-          frequency: "DAILY",
-        },
+      //   auth_details: {
+      //     max_debit_amount:
+      //       userData?.getAssignProduct[0]?.loan_amount * 4 || 100000, // Asking permision of 4x of loan amt. or  1lakh for mandate,
+      //     final_collection_date: formattedDate,
+      //     auto_debit_type: "ENACH",
+      //     holder_account_number: values.account_number,
+      //     holder_account_type: "SAVINGS",
+      //     holder_bank_ifsc: values.ifsc,
+      //     auth_mode: values.authMode,
+      //     amount_rule: "MAX",
+      //     holder_bank_code: values.ifsc?.slice(0, 4),
+      //     frequency: "DAILY",
+      //   },
+      // };
+
+      const req = {
+        comapny_id: import.meta.env.VITE_COMPANY_ID,
+        product_name: import.meta.env.VITE_PRODUCT_NAME,
+        user_id: userData?.user_id,
+        lead_id: userData?.lead_id,
+        created_by: adminUser?.emp_code,
+        name: userData?.personalInfo?.[0]?.full_name,
+        email: values.email || userData?.personalInfo?.[0]?.email_id,
+        contact: values.phone || userData?.mobile_number,
+        mandateType: values.authMode,
+        description: values.message,
+        maxAmount: userData?.getAssignProduct[0]?.loan_amount * 4 * 100 || 100000, // *100 for Rs
+        accountNumber: values.account_number,
+        ifsc: values.ifsc,
       };
 
       try {
-        const response = await registerEMandateEaseBuze(req);
-        if (response.status) {
+        // const response = await registerEMandateEaseBuze(req);
+        const response = await registerEMandateBySalora(req);
+        if (response.status === "SUCCESS") {
           SetEmandateData(response);
           resetForm();
         } else {
@@ -409,13 +427,15 @@ const LeadKYCForm = () => {
 
     // check for enach for primary bank
     const primaryBank = userData?.bankInfo?.[0];
-    if(!primaryBank?.is_e_nach_created) toast.error(`Enach not set to Primary bank: ${primaryBank?.bank_name}`)
+    if (!primaryBank?.is_e_nach_created) toast.error(`Enach not set to Primary bank: ${primaryBank?.bank_name}`)
 
     // check for enach for all secondary banks
-    userData?.secondarybankinfo?.map((bank) => !bank?.is_e_nach_created && toast.error(`Enach not set to Secondary bank: ${bank?.bank_name}`))
+    // userData?.secondarybankinfo?.map((bank) => !bank?.is_e_nach_created && toast.error(`Enach not set to Secondary bank: ${bank?.bank_name}`))
 
     // return in any case
-    if(userData?.secondarybankinfo?.some((bank) => !bank?.is_e_nach_created) || !primaryBank?.is_e_nach_created) return;
+    if (
+      // userData?.secondarybankinfo?.some((bank) => !bank?.is_e_nach_created) ||
+       !primaryBank?.is_e_nach_created) return;
 
     confirmLead(req);
     setOpenApporve(false); // Close modal after approval
@@ -464,18 +484,18 @@ const LeadKYCForm = () => {
               <div className="">
                 <div className="flex gap-2">
                   {permission &&
-                  <Button
-                    btnName={"Create Mandate"}
-                    btnIcon={"MdAutoMode"}
-                    type={""}
-                    disabled={isOnHold}
-                    onClick={() => {
-                      userData?.secondarybankinfo.length
-                        ? setisBankOpen(!isBankOpen)
-                        : toast.info("No Banks Found for Mandate!");
-                    }}
-                    style="min-w-[150px] bg-primary text-white font-medium py-2 px-4 rounded"
-                  />}
+                    <Button
+                      btnName={"Create Mandate"}
+                      btnIcon={"MdAutoMode"}
+                      type={""}
+                      disabled={isOnHold}
+                      onClick={() => {
+                        userData?.secondarybankinfo.length
+                          ? setisBankOpen(!isBankOpen)
+                          : toast.info("No Banks Found for Mandate!");
+                      }}
+                      style="min-w-[150px] bg-primary text-white font-medium py-2 px-4 rounded"
+                    />}
                   {permission && userData?.is_e_nach_activate === false && (
                     <Button
                       btnName={"Update e-NACH Token"}
@@ -734,7 +754,7 @@ const LeadKYCForm = () => {
                 btnName="Copy Link"
                 btnIcon="IoCheckmarkCircleSharp"
                 type="button"
-                onClick={() => HandleCopyLink(EmandateData?.data?.payment_url)}
+                onClick={() => HandleCopyLink(EmandateData?.shortUrl)}
                 style="min-w-[80px] text-sm italic my-4 font-semibold md:w-auto py-1 border-success px-4 text-white bg-success border hover:border-success text-success hover:bg-white hover:text-success hover:font-bold"
               />
               <Button
@@ -777,10 +797,20 @@ const LeadKYCForm = () => {
                     icon="MdOutlineAddModerator"
                     name="authMode"
                     placeholder="Select"
-                    options={bankCodeListByCode.map((mode) => ({
-                      value: mode.value,
-                      label: mode.label,
-                    }))}
+                    // options={bankCodeListByCode.map((mode) => ({
+                    //   value: mode.value,
+                    //   label: mode.label,
+                    // }))}
+                    options={
+                      [{
+                        value: "netbanking",
+                        label: "Net Banking",
+                      },
+                    {
+                        value: "upi",
+                        label: "UPI",
+                      }]
+                    }
                     {...setBank.getFieldProps("authMode")}
                   />
                   {Error ? (
@@ -847,7 +877,7 @@ const LeadKYCForm = () => {
                     icon="MdOutlineMessage"
                     placeholder="Enter Message"
                     name="message"
-                    maxLength={11}
+                    maxLength={50}
                     type="text"
                     {...setBank.getFieldProps("message")}
                   />
@@ -855,7 +885,8 @@ const LeadKYCForm = () => {
                     <ErrorMsg error={setBank.errors.message} />
                   )}
                 </div>
-                <div className="col-span-1">
+
+                {/* <div className="col-span-1">
                   <DateInput
                     label="Expiry Date"
                     name="expiry_date"
@@ -872,7 +903,7 @@ const LeadKYCForm = () => {
                     setBank.errors.expiry_date && (
                       <ErrorMsg error={setBank.errors.expiry_date} />
                     )}
-                </div>
+                </div> */}
 
                 {/* <div className="col-span-1">
                   <DateInput

@@ -106,36 +106,23 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
   };
 
   const verifyBank = async () => {
-    // const req = {
-    //   account_number: formik.values.accountNumber,
-    //   account_ifsc: formik.values.ifscCode,
-    //   verification_type: "pennyless",
-    //   lead_id: leadInfo.lead_id,
-    //   user_id: leadInfo.user_id,
-    //   type: 0,
-    // };
-
     const req = {
       accNo: formik.values.accountNumber,
       ifsc: formik.values.ifscCode,
       beneficiaryName: formik.values.accountHolder, // optional but recommended
       address: "", //optional
       paymentMode: "IMPS",
-      // partnerLoanId: leadInfo.lead_id,
-      partnerLoanId: "4787891", // static to use api
-      productinfo: {
-        comapnyName: import.meta.env.VITE_COMPANY_ID,
-        productName: import.meta.env.VITE_PRODUCT_NAME,
-        userId: leadInfo.user_id,
-        leadId: leadInfo.lead_id,
-        createdBy: adminUser.emp_code
-      }
+      comapny_id: import.meta.env.VITE_COMPANY_ID,
+      product_name: import.meta.env.VITE_PRODUCT_NAME,
+      user_id: leadInfo.user_id,
+      lead_id: leadInfo.lead_id,
+      created_by: adminUser.emp_code
     };
 
     try {
       const response = await VerifyBankDetailsBySalora(req);
 
-      if (response?.data?.model?.status === "SUCCESS") {
+      if (response?.model?.status === "SUCCESS") {
         toast.success("Bank verified successfully.");
         return true;
       } else {

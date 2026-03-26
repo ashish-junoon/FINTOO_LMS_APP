@@ -297,159 +297,38 @@ const GetScore = ({ btnEnable = false }) => {
     const getSaloraCreditScore = async () => {
         setLoading(true);
 
-        const saloraReq = {
-            "partnerLoanId": "4787891",
-            "serviceCode": "CN1CAS0004",
-            "monitoringDate": "12062023",
-            "consumerInputSubject": {
-                "tuefHeader": {
-                    "headerType": "TUEF",
-                    "version": "12",
-                    "gstStateCode": "06",
-                    "enquiryPurpose": "05",
-                    "enquiryAmount": "000010000",
-                    "scoreType": "17",
-                    "outputFormat": "03",
-                    "responseSize": "1",
-                    "ioMedia": "CC",
-                    "authenticationMethod": "L"
-                },
-                "names": [
-                    {
-                        "index": "N01",
-                        "firstName": "SUKHVINDRA",
-                        "middleName": "",
-                        "lastName": "SINGH",
-                        "birthDate": "20101987",
-                        "gender": "2"
-                    }
-                ],
-                "ids": [
-                    {
-                        "index": "I01",
-                        "idNumber": "FPKPS8995Q",
-                        "idType": "01"
-                    }
-                ],
-                "telephones": [
-                    {
-                        "index": "T01",
-                        "telephoneNumber": "9587296562",
-                        "telephoneType": "01",
-                        "enquiryEnriched": "Y"
-                    }
-                ],
-                "addresses": [
-                    {
-                        "index": "A01",
-                        "line1": "A01 Akrauli",
-                        "stateCode": "06",
-                        "pinCode": "123401",
-                        "addressCategory": "04",
-                        "residenceCode": "01"
-                    }
-                ],
-                "enquiryAccounts": [
-                    {
-                        "index": "I01",
-                        "accountNumber": ""
-                    }
-                ]
-            },
-            productinfo: {
-                comapnyName: import.meta.env.VITE_COMPANY_ID,
-                productName: import.meta.env.VITE_PRODUCT_NAME,
-                userId: leadInfo?.user_id,
-                leadId: leadInfo?.lead_id,
-                createdBy: adminUser?.emp_code
-            }
-        }
-
         const req = {
-            partnerLoanId: "4787891", //*
-            serviceCode: "CN1CAS0004",
-            monitoringDate: new Date().toLocaleDateString('en-GB').replaceAll('/', ''), //
-            consumerInputSubject: {
-                tuefHeader: {
-                    headerType: "TUEF",
-                    version: "12",
-                    gstStateCode: "06",
-                    enquiryPurpose: "05",
-                    enquiryAmount: "000010000",
-                    scoreType: "17",
-                    outputFormat: "03",
-                    responseSize: "1",
-                    ioMedia: "CC",
-                    authenticationMethod: "L"
-                },
-                names: [
-                    {
-                        index: "N01",
-                        firstName: firstName,
-                        middleName: middleName,
-                        lastName: lastName,
-                        birthDate: dob.replaceAll("-", ""), //ddmmyyyy fixed
-                        gender: "2" //*
-                    }
-                ],
-                ids: [
-                    {
-                        index: "I01",
-                        idNumber: leadInfo?.kycInfo[0].pan_card_number, // PAN number
-                        idType: "01" //* for PAN
-                    }
-                ],
-                // ... 
-                telephones: [
-                    {
-                        index: "T01",
-                        telephoneNumber: leadInfo?.mobile_number,
-                        telephoneType: "01", //*
-                        enquiryEnriched: "Y" //*
-                    }
-                ],
-                addresses: [
-                    {
-                        index: "A01",
-                        line1: leadInfo?.addressInfo[0]?.address, //
-                        stateCode: "06", //*
-                        pinCode: leadInfo?.addressInfo[0]?.zip_code, //
-                        addressCategory: "04", //*
-                        residenceCode: "01" //*
-                    }
-                ],
-                enquiryAccounts: [
-                    {
-                        index: "I01",
-                        accountNumber: leadInfo?.bankInfo[0]?.account_number,
-                    }
-                ]
-            },
-            productinfo: {
-                comapnyName: import.meta.env.VITE_COMPANY_ID,
-                productName: import.meta.env.VITE_PRODUCT_NAME,
-                userId: leadInfo?.user_id,
-                leadId: leadInfo?.lead_id,
-                createdBy: adminUser?.emp_code
-            }
+            firstName: firstName,
+            // middleName: middleName,
+            lastName: lastName,
+            dob: formattedDOB.replaceAll("-", ""), //ddmmyyyy fixed
+            pan: leadInfo?.kycInfo[0].pan_card_number,
+            mobile: leadInfo?.mobile_number,
+            city: "Delhi", //*
+            state: "07",
+            pinCode: leadInfo?.addressInfo[0]?.zip_code,
+            comapny_id: import.meta.env.VITE_COMPANY_ID,
+            product_name: import.meta.env.VITE_PRODUCT_NAME,
+            user_id: leadInfo?.user_id,
+            lead_id: leadInfo?.lead_id,
+            created_by: adminUser?.emp_code,
+            // amount: leadInfo?.selectedproduct?.loan_amount,
+            amount: "20000",
         }
-
-        // console.log("req to salora", req);
-        // return;
 
         try {
-            const response = await ScoreFromSalora(saloraReq);
+            const response = await ScoreFromSalora(req);
 
-            if (response?.rawResponse?.controlData?.success) {
+            if (response?.data?.bureauScore) {
                 setLeadInfo(prev => {
                     const updatedScores = [...(prev.cibilCreditScores || [])];
 
                     updatedScores[1] = {
-                        name: response?.rawResponse?.consumerCreditData[0]?.names[0]?.name,
-                        mobile: response?.rawResponse?.consumerCreditData[0]?.telephones[0]?.telephoneNumber,
-                        pan_number: response?.rawResponse?.consumerCreditData[0]?.ids[0]?.idNumber, // 01 type
-                        credit_score: response?.rawResponse?.consumerCreditData[0]?.scores[0]?.score,
-                        credit_report_link: response?.fileUrl,
+                        name: `${response?.data?.applicant?.firstName} ${response?.data?.applicant?.lastName}`,
+                        mobile: response?.data?.applicant?.mobile,
+                        pan_number: response?.data?.applicant?.pan,
+                        credit_score: response?.data?.bureauScore,
+                        credit_report_link: response?.pdfUrl,
                         // provider: response.provider,
                         provider: "SALORA",
                     };
@@ -466,7 +345,7 @@ const GetScore = ({ btnEnable = false }) => {
                 toast.success(response.message);
             } else {
                 // toast.error(response.message);
-                toast.error(response?.rawResponse?.controlData?.errorResponseArray?.[0]?.errorMessage || "CIBIL Data not found");
+                toast.error(response?.data?.userMessage || "CIBIL Data not found");
             }
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -734,6 +613,7 @@ const GetScore = ({ btnEnable = false }) => {
                                     name="panNumber"
                                     disabled={true}
                                     id="panNumber"
+                                    style={" uppercase "}
                                     onChange={uploadCR.handleChange}
                                     onBlur={uploadCR.handleBlur}
                                     value={uploadCR.values.panNumber}

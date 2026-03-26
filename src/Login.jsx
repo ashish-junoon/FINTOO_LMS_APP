@@ -76,11 +76,11 @@ const Login = () => {
                     }}
                     className="max-w-sm bg-white rounded-lg overflow-hidden shadow-lg mx-auto">
                     <div className="flex justify-center mt-8">
-                        <div className="w-20 h-20 rounded-full flex items-center justify-center shadow-md p-3">
+                        <div className="w-20 h-20 rounded-full flex items-center justify-center shadow-md p-1">
                             <img
                                 src={Images.logo}
                                 alt="logo"
-                                className="w-full h-full object-cover rounded-full"
+                                className="w-full h-full object-cover rounded-md m-4"
                             />
                         </div>
                     </div>

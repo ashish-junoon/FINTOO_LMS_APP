@@ -322,10 +322,10 @@ function OfferLoan({btnEnable = false}) {
 
             </div>
 
-            <div className="px-5">
+            <div className="px-5 ">
                 {!isPayday && (
                     <>
-                        <div className="my-5">
+                        <div className="my-5 hidden">
                             {permission && (
                                 <MultiSelect
                                     options={loanOptions}
@@ -339,7 +339,7 @@ function OfferLoan({btnEnable = false}) {
 
 
                         {/* Selected Loan Products Card */}
-                        <div className="">
+                        <div className="hidden">
                             <div className="grid grid-cols-3 gap-8 my-5">
                                 {searchResults.length > 0 ? (
                                     searchResults.map((loan) => (
