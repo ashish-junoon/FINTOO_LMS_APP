@@ -89,6 +89,19 @@ const AddBank = () => {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       setSubmitting(true);
       try {
+        // check if primary bank is verified
+        if (values.accountType == "1" && !leadInfo?.is_bank_verified) {
+          toast.error("Verify primary bank first!");
+          return;
+        }
+
+        //check if added bank is existing primary bank
+        if(leadInfo?.bankInfo?.[0]?.account_number === values.accountNumber) {
+          toast.error("Bank details exists as primary bank!");
+          return;
+        }
+
+        // verify added bank
         const isVerified = await verifyBank(values);
         if (!isVerified) {
           setSubmitting(false);
@@ -195,7 +208,7 @@ const AddBank = () => {
         return true;
       } else {
         toast.error(
-          response?.message || "Bank verification failed.",
+          response?.model?.desc || "Bank verification failed.",
         );
         return false;
       }
@@ -206,13 +219,48 @@ const AddBank = () => {
     }
   };
 
+  const verifyPrimaryBank = async () => {
+    const req = {
+      accNo: leadInfo?.bankInfo?.[0]?.account_number,
+      ifsc: leadInfo?.bankInfo?.[0]?.ifsc_code,
+      beneficiaryName: leadInfo?.bankInfo?.[0]?.account_holder_name,
+      address: "",
+      paymentMode: "IMPS",
+      comapny_id: import.meta.env.VITE_COMPANY_ID,
+      product_name: import.meta.env.VITE_PRODUCT_NAME,
+      user_id: leadInfo.user_id,
+      lead_id: leadInfo.lead_id,
+      created_by: adminUser.emp_code
+    }
+
+    // console.log("this fx running...", req)
+
+    try {
+
+      const response = await VerifyBankDetailsBySalora(req);
+
+      if (response?.model?.status === "SUCCESS") {
+        toast.success("Primary bank verified successfully.");
+      }
+      else {
+        toast.error(
+          response?.model?.desc || "Bank verification failed.",
+        );
+        return false;
+      }
+
+    } catch (error) {
+      console.log("Error fetching data:", error);
+      toast.error("An error occurred while verifying primary bank.");
+    }
+  }
 
   useEffect(() => {
     const fetchState = async () => {
       try {
         const response = await GetBankList();
         // console.log("bank list: ", response.data)
-        if(response?.status) {
+        if (response?.status) {
           setBankList(response?.bankName);
           // console.log("banklist: ", response?.bankName)
         } else {
@@ -236,15 +284,23 @@ const AddBank = () => {
         <h2 className="font-semibold">Add Bank Accounts</h2>
       </div>
 
-      <div className="flex items-center justify-end mt-0">
+      <div className="flex items-center justify-end mt-0 gap-4">
         {/* {permission && ( */}
         <Button
           btnName={"Add Bank"}
-          btnIcon={"IoCloseCircleOutline"}
+          btnIcon={"IoAddCircleOutline"}
           type={"IoCheckmarkCircleSharp"}
           onClick={() => setIsOpen(true)}
           // disabled={btnEnable}
-          style="min-w-[150px] text-sm italic font-semibold md:w-auto my-4 py-1 border-success px-4 text-white bg-success border hover:border-success text-primary hover:bg-white hover:text-success"
+          style="min-w-[120px] text-sm italic font-semibold md:w-auto my-4 py-1 border-success px-2 gap-1 text-white bg-success border hover:border-success text-primary hover:bg-white hover:text-success"
+        />
+        <Button
+          btnName={"Verify Primary Bank"}
+          btnIcon={"IoVerifyCircleOutline"}
+          type={"IoCheckmarkCircleSharp"}
+          onClick={verifyPrimaryBank}
+          // disabled={btnEnable}
+          style="min-w-[130px] text-sm italic font-semibold md:w-auto my-4 py-1 border-success px-4 text-white bg-success border hover:border-success text-primary hover:bg-white hover:text-success"
         />
         {/* )} */}
       </div>
