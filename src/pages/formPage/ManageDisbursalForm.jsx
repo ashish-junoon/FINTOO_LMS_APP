@@ -346,7 +346,7 @@ const ManageDisbursalForm = () => {
         toast.success("Bank verified successfully.");
         fetchData();
       } else {
-        toast.error(response?.message || "Bank verification failed.");
+        toast.error(response?.model?.desc || "Bank verification failed.");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -615,6 +615,7 @@ const ManageDisbursalForm = () => {
           <LoanHistory
             btnEnable={isOnHold}
             pan={userData?.kycInfo[0]?.pan_card_number}
+            data={userData}
           />
         </div>
       ),
