@@ -332,7 +332,8 @@ const ManageDisbursalForm = () => {
       product_name: import.meta.env.VITE_PRODUCT_NAME,
       user_id: user_id,
       lead_id: lead_id,
-      created_by: adminUser.emp_code
+      created_by: adminUser.emp_code,
+      type: 1
     }
 
     try {

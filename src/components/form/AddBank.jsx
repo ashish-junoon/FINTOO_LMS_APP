@@ -198,7 +198,7 @@ const AddBank = () => {
       user_id: leadInfo.user_id,
       lead_id: leadInfo.lead_id,
       created_by: adminUser.emp_code,
-      // type: addBank.accountType,
+      type: Number(addBank.accountType),
     }
 
     try {
@@ -231,7 +231,8 @@ const AddBank = () => {
       product_name: import.meta.env.VITE_PRODUCT_NAME,
       user_id: leadInfo.user_id,
       lead_id: leadInfo.lead_id,
-      created_by: adminUser.emp_code
+      created_by: adminUser.emp_code,
+      type: 1,
     }
 
     // console.log("this fx running...", req)
