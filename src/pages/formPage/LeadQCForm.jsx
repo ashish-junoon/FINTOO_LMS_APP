@@ -46,8 +46,9 @@ const LeadQCForm = () => {
     const permission = pageAccess?.[0].read_write_permission;
     const funder = adminUser.role === 'Funder' ? true : false
 
-    //Get Open Lead Info
+    // console.log(leadInfo)
 
+    //Get Open Lead Info
     const fetchData = async () => {
         setIsLoading(true);
         const req = {
@@ -131,6 +132,18 @@ const LeadQCForm = () => {
 
     // handle Approve confirm Yes button
     const handleApproveYes = () => {
+        // check if email_is_verified
+        if(!leadInfo?.email_otp_verified){
+            toast.error("Email is not verified yet by user!");
+            return;
+        }
+
+        // check if selfi_is_uploaded
+        if(!leadInfo?.selfie_uploaded_verified){
+            toast.error("Selfie is not uploaded yet by user!");
+            return;
+        }
+
         const req = {
             lead_id: lead_id,
             step_status: 3,

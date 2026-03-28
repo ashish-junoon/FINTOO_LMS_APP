@@ -19,15 +19,16 @@ function LoanHistory({ btnEnable = false, pan, data, loan_Id }) {
   const [loanId, setloanId] = useState(null);
   // const loanId = data?.selectedproduct?.[0]?.loan_id;
   const userId = data?.user_id;
-  const leadId = data?.lead_id;
+  let leadId = data?.lead_id;
   const activeLoan = schedule?.activeLoanDetails;
   const closedLoan = schedule?.closedLoanDetails;
   const funder = adminUser?.role === "Funder" ? true : false;
 
   const isOverdue = schedule?.payment_status === "Overdue";
   const isActive = schedule?.payment_status === 'pending' || schedule?.payment_status === 'active' || schedule?.payment_status === 'Processing' && schedule?.payment_status !== "Overdue" && schedule?.payment_status !== "Due";
-
+// console.log("sssssssss",data)
   const handleShowCloseLead = (loanid) => {
+    // console.log("leadid, ",loanid)
     setloanId(loanid);
     setisHistoryOpen(true);
   };
@@ -377,6 +378,7 @@ function LoanHistory({ btnEnable = false, pan, data, loan_Id }) {
   // Newly Added End
 
   useEffect(() => {
+    console.log("--------",loanId, leadId)
     if (!loanId || !leadId) return; // Changed Loan id loan_id to loanId
     const fetchData = async () => {
       try {

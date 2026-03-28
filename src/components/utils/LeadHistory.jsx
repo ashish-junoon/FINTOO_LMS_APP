@@ -67,6 +67,7 @@ function LeadHistory({ data, btnEnable = false }) {
                     }));
 
                     toast.success("Remark added successfully!");
+                    window.location.reload();
                     formik.resetForm();
                 } else {
                     toast.error(response.message);

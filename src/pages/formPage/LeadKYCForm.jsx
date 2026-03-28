@@ -550,6 +550,7 @@ const LeadKYCForm = () => {
           <LoanHistory
             btnEnable={isOnHold}
             pan={userData?.kycInfo[0]?.pan_card_number}
+            data={userData}
           />
         </div>
       ),

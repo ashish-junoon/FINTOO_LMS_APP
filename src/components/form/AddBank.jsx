@@ -197,7 +197,8 @@ const AddBank = () => {
       product_name: import.meta.env.VITE_PRODUCT_NAME,
       user_id: leadInfo.user_id,
       lead_id: leadInfo.lead_id,
-      created_by: adminUser.emp_code
+      created_by: adminUser.emp_code,
+      // type: addBank.accountType,
     }
 
     try {

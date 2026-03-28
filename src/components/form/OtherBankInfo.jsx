@@ -124,6 +124,7 @@ const OtherBankInfo = ({ btnEnable = false, incomplete }) => {
     }
 
     return (
+        bankData.length !== 0 &&
         <Accordion
             title="Secondary Bank Details"
             verified={leadInfo?.bank_info_verified}
