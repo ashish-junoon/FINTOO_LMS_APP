@@ -26,9 +26,9 @@ function LoanHistory({ btnEnable = false, pan, data, loan_Id }) {
 
   const isOverdue = schedule?.payment_status === "Overdue";
   const isActive = schedule?.payment_status === 'pending' || schedule?.payment_status === 'active' || schedule?.payment_status === 'Processing' && schedule?.payment_status !== "Overdue" && schedule?.payment_status !== "Due";
-// console.log("sssssssss",data)
+console.log("sssssssss",data)
   const handleShowCloseLead = (loanid) => {
-    // console.log("leadid, ",loanid)
+    console.log("leadid, ",loanid)
     setloanId(loanid);
     setisHistoryOpen(true);
   };
@@ -446,7 +446,7 @@ function LoanHistory({ btnEnable = false, pan, data, loan_Id }) {
                     <td className="border px-2 py-2 text-xs">
                       {/* {item.loan_closed_date && item.loan_status && ( */}
                         <button
-                          onClick={() => handleShowCloseLead(item.loan_id)}
+                          onClick={() => handleShowCloseLead(item.loan_id,item.leadId)}
                           className="text-primary font-bold w-full"
                         >
                           View

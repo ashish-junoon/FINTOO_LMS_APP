@@ -133,7 +133,7 @@ const LeadCreditForm = () => {
         {
             label: 'Loan History',
             content: <div className='mb-5'>
-                <LoanHistory btnEnable={isOnHold} pan={userData?.kycInfo[0]?.pan_card_number} />
+                <LoanHistory btnEnable={isOnHold} pan={userData?.kycInfo[0]?.pan_card_number} data={userData} />
             </div>
         },
     ];
