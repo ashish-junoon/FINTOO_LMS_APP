@@ -484,11 +484,11 @@ const ManageDisbursalForm = () => {
           <div className="flex justify-end items-center mt-5 gap-5">
             {permission && (
               <Button
-                btnName={"Verify Bank"}
+                btnName={isLoading? "Verifying...": "Verify Bank"}
                 btnIcon={"PiBank"}
                 type={"button"}
                 onClick={verifyBank}
-                disabled={isOnHold}
+                disabled={isOnHold || isLoading}
                 style="max-w-42 border border-primary hover:bg-primary hover:text-white text-primary font-medium py-2 px-4 rounded"
               />
             )}

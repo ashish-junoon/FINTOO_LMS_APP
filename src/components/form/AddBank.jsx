@@ -28,6 +28,7 @@ const AddBank = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [bankList, setBankList] = useState([]);
   const [initialFile, setInitialFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { leadInfo } = useOpenLeadContext();
   const { adminUser } = useAuth();
@@ -198,7 +199,7 @@ const AddBank = () => {
       user_id: leadInfo.user_id,
       lead_id: leadInfo.lead_id,
       created_by: adminUser.emp_code,
-      type: Number(addBank.accountType),
+      type: Number(addBank.values.accountType),
     }
 
     try {
@@ -221,6 +222,7 @@ const AddBank = () => {
   };
 
   const verifyPrimaryBank = async () => {
+    setIsLoading(true);
     const req = {
       accNo: leadInfo?.bankInfo?.[0]?.account_number,
       ifsc: leadInfo?.bankInfo?.[0]?.ifsc_code,
@@ -254,6 +256,8 @@ const AddBank = () => {
     } catch (error) {
       console.log("Error fetching data:", error);
       toast.error("An error occurred while verifying primary bank.");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -297,11 +301,11 @@ const AddBank = () => {
           style="min-w-[120px] text-sm italic font-semibold md:w-auto my-4 py-1 border-success px-2 gap-1 text-white bg-success border hover:border-success text-primary hover:bg-white hover:text-success"
         />
         <Button
-          btnName={"Verify Primary Bank"}
+          btnName={isLoading? "Verifying..." : "Verify Primary Bank"}
           btnIcon={"IoVerifyCircleOutline"}
           type={"IoCheckmarkCircleSharp"}
           onClick={verifyPrimaryBank}
-          // disabled={btnEnable}
+          disabled={isLoading}
           style="min-w-[130px] text-sm italic font-semibold md:w-auto my-4 py-1 border-success px-4 text-white bg-success border hover:border-success text-primary hover:bg-white hover:text-success"
         />
         {/* )} */}

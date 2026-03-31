@@ -300,7 +300,7 @@ const GetScore = ({ btnEnable = false }) => {
         const req = {
             firstName: firstName,
             // middleName: middleName,
-            lastName: lastName,
+            lastName: lastName || firstName,
             dob: formattedDOB.replaceAll("-", ""), //ddmmyyyy fixed
             pan: leadInfo?.kycInfo[0].pan_card_number,
             mobile: leadInfo?.mobile_number,

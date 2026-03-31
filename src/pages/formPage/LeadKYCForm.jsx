@@ -350,7 +350,7 @@ const LeadKYCForm = () => {
         contact: values.phone || userData?.mobile_number,
         mandateType: values.authMode,
         description: values.message,
-        maxAmount: userData?.getAssignProduct[0]?.loan_amount * 4 * 100 || 100000, // *100 for Rs
+        maxAmount: Math?.trunc(userData?.getAssignProduct[0]?.loan_amount * 4 * 100) || 100000, // *100 for Rs
         accountNumber: values.account_number,
         ifsc: values.ifsc,
       };
