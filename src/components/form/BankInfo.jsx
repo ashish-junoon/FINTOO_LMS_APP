@@ -44,6 +44,9 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
   const docData = documents?.bank_statement?.[0];
   const [BankId, setBankId] = useState(null);
 
+  // correct primary bank statement
+  const selectedDoc = documents?.bank_statement?.find(doc => doc?.id === bankData?.id);
+
   // console.log(bankData.bank_name.toLowerCase().replaceAll(" ",""));
 
   // Convert base64 to File object
@@ -524,21 +527,21 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
               </div>
             )}
 
-            {!isEditing && docData?.bank_statement_data_url && (
-              <div className="col-span-2">
-                {!funder && (
-                  <DownloadDoc
-                    fileUrl={docData?.bank_statement_data_url}
-                    // fileUrl="https://devapi.earlywages.in/document/PU02531/JPU2397_Other_BankStatement625759.pdf"
-                    fileType="application/pdf"
-                    fileName={`Bank_Statement_${leadInfo?.lead_id}`}
-                    btnName="View & Download"
-                    label="Bank Statement"
-                    disabled={funder}
-                  />
-                )}
-              </div>
-            )}
+            {
+              !isEditing && selectedDoc?.bank_statement_data_url && (
+                <div className="col-span-2">
+                  {!funder && (
+                    <DownloadDoc
+                      fileUrl={selectedDoc?.bank_statement_data_url}
+                      fileType="application/pdf"
+                      fileName={`Bank_Statement_${leadInfo?.lead_id}`}
+                      btnName="View & Download"
+                      label="Bank Statement"
+                      disabled={funder}
+                    />
+                  )}
+                </div>
+              )}
           </div>
           {isEditing && (
             <div className="col-span-2">

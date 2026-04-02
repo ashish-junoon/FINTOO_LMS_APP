@@ -26,7 +26,7 @@ const OtherBankInfo = ({ btnEnable = false, incomplete }) => {
     // const leadStatus = leadInfo.lead_status;
     const funder = adminUser.role === "Funder" ? true : false;
     const docData = documents?.bank_statement; // array
-    console.log("docs : ", docData)
+    // console.log("docs : ", docData)
     // const docData = documents?.bank_statement?.[0]; // array
 
 
@@ -131,7 +131,9 @@ const OtherBankInfo = ({ btnEnable = false, incomplete }) => {
             reset={leadInfo?.bank_info_fill}
             actionButtons={null}
         >
-                {bankData.length === 0 ? (<div className="ps-4">N/A</div>) : bankData.map((bank, index) => (
+            {bankData.length === 0 ? (<div className="ps-4">N/A</div>) : bankData.map((bank, index) => {
+                const secDocument = docData?.find(doc => doc?.id === bank?.id);
+                return (
                     <div className="px-1 mb-0" key={index}>
                         <form onSubmit={formik.handleSubmit}>
                             <Accordion
@@ -200,26 +202,28 @@ const OtherBankInfo = ({ btnEnable = false, incomplete }) => {
                                         />
                                     </div>
 
-                                    {/* {docData?.[index]?.bank_statement_data_url && (
-                                    <div className="col-span-2">
-                                        {!funder && (
-                                            <DownloadDoc
-                                                fileUrl={docData?.[index]?.bank_statement_data_url}
-                                                // fileUrl="https://devapi.earlywages.in/document/PU02531/JPU2397_Other_BankStatement625759.pdf"
-                                                fileType="application/pdf"
-                                                fileName={`Bank_Statement_${leadInfo?.lead_id}`}
-                                                btnName="View & Download"
-                                                label="Bank Statement"
-                                                disabled={funder}
-                                            />
+                                    {
+                                        secDocument?.bank_statement_data_url && (
+                                            <div className="col-span-2">
+                                                {!funder && (
+                                                    <DownloadDoc
+                                                        fileUrl={secDocument?.bank_statement_data_url}
+                                                        // fileUrl="https://devapi.earlywages.in/document/PU02531/JPU2397_Other_BankStatement625759.pdf"
+                                                        fileType="application/pdf"
+                                                        fileName={`Bank_Statement_${leadInfo?.lead_id}`}
+                                                        btnName="View & Download"
+                                                        label="Bank Statement"
+                                                        disabled={funder}
+                                                    />
+                                                )}
+                                            </div>
                                         )}
-                                    </div>
-                                )} */}
                                 </div>
                             </Accordion>
                         </form>
                     </div>
-                ))}
+                )
+            })}
         </Accordion>
     );
 };
