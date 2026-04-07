@@ -42,7 +42,7 @@ import TimeInput from "../fields/TimeInput";
 // Extend dayjs with the plugin
 dayjs.extend(isSameOrBefore);
 
-function EMISchedule({ data, loan_Id }) {
+function EMISchedule({ data, loan_Id, hideincollection }) {
   const [tableData, setTableData] = useState([]);
   const [schedule, setSchedule] = useState(null);
   const [IsOpen, setIsOpen] = useState(false);
@@ -854,6 +854,7 @@ function EMISchedule({ data, loan_Id }) {
   return (
     <>
       <div>
+        {!hideincollection &&
         <div className="flex justify-between items-center my-5 gap-5">
           <div>
             <h2>
@@ -909,7 +910,7 @@ function EMISchedule({ data, loan_Id }) {
               </>
             )}
           </div>
-        </div>
+        </div>}
 
         <div className="max-full mx-auto p-6">
           <div className="overflow-hidden rounded-xl shadow-lg bg-white">
@@ -936,7 +937,7 @@ function EMISchedule({ data, loan_Id }) {
                   </p>
                 </div>
               ))}
-              {!funder && (
+              {!funder && !hideincollection &&  (
                 <>
                   <div className="px-4 py-2">
                     <p className="text-sm text-gray-800 font-bold mb-1">

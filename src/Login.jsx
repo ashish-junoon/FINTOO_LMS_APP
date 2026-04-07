@@ -8,16 +8,62 @@ import Images from "./components/content/Images";
 import ErrorMsg from "./components/utils/ErrorMsg";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { UserLogin } from "./api/ApiFunction";
+import { GetIPAdress, UserLogin } from "./api/ApiFunction";
 import { useAuth } from "./context/AuthContext";
 import { Helmet } from "react-helmet";
+import {
+    osName,
+    osVersion,
+    browserName,
+    browserVersion,
+    engineName,
+    engineVersion,
+} from "react-device-detect";
 
 const Login = () => {
 
     const { login } = useAuth();
     const navigate = useNavigate();
 
+    const [location, setLoaction] = useState({
+        lat: "", long: ""
+    });
+
     const isFocus = useRef();
+
+    
+    //-----------------------
+      //Get Users Location
+      //-----------------------
+    
+      const getUserLocation = () => {
+        try {
+          if (!navigator.geolocation) {
+            toast.error("Geolocation is not supported by your browser.");
+            return;
+          }
+    
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+    
+              setLoaction({lat: lat, long: lng})
+            },
+            (error) => {
+              console.error(error);
+              toast.error("Location permission denied.");
+            },
+          );
+        } catch (err) {
+          console.error(err);
+          toast.error("Something went wrong while fetching location.");
+        }
+      };
+    
+      useEffect(() => {
+        getUserLocation();
+      }, []);
 
     const formik = useFormik({
         initialValues: {
@@ -30,9 +76,18 @@ const Login = () => {
         }),
         onSubmit: async ({ userName, password }) => {
             try {
+                const ipAddress = await GetIPAdress();
                 const request = {
-                    user_name: userName,
+                    // user_name: userName,
+                    official_email: userName,
                     password: password,
+                    system_ip: ipAddress?.ip,
+                    device_info: browserName + " " + browserVersion,
+                    operating_system: osName + " " + osVersion,
+                    company_id: import.meta.env.VITE_COMPANY_ID,
+                    product_name: import.meta.env.VITE_PRODUCT_NAME,
+                    latitude: String(location.lat),
+                    longitude: String(location.long),
                 };
 
                 const response = await UserLogin(request);
@@ -96,7 +151,7 @@ const Login = () => {
                                     placeholder="Enter Username"
                                     name="userName"
                                     type="text"
-                                    isFocused = {isFocus}
+                                    isFocused={isFocus}
                                     {...formik.getFieldProps("userName")}
                                 />
                                 {renderError("userName")}

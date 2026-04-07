@@ -14,7 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Loader } from "lucide-react";
 
-function ClosedCard({ data }) {
+function ClosedCard({ data, hideincollection }) {
   const product = data?.selectedproduct?.[0];
   const isClosed = data?.lead_status === 10;
   const navigate = useNavigate();
@@ -168,19 +168,19 @@ function ClosedCard({ data }) {
       loan_id: product?.loan_id
     };
     try {
-        setIsLoading(true)
-        const response = await GenerateAndSendNoc(req);
-        if (response.status) {
-            toast.success(response.message);
-            setIsNocSend(true)
+      setIsLoading(true)
+      const response = await GenerateAndSendNoc(req);
+      if (response.status) {
+        toast.success(response.message);
+        setIsNocSend(true)
       } else {
         toast.error(response.message);
       }
     } catch (error) {
       console.error("Error Sending NOC data:", error);
       toast.error("An error occurred while Sending NOC.");
-    } finally{
-        setIsLoading(false)
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -193,10 +193,9 @@ function ClosedCard({ data }) {
     <div className="w-full mx-auto font-sans">
       <div
         className={`relative rounded-2xl p-6 transition-all duration-300 overflow-hidden
-          ${
-            isClosed
-              ? "bg-gradient-to-br from-green-50 to-emerald-100/80 shadow-lg hover:shadow-green-200/60"
-              : "bg-gradient-to-br from-gray-50 to-blue-50/70 shadow-lg hover:shadow-gray-200/60"
+          ${isClosed
+            ? "bg-gradient-to-br from-green-50 to-emerald-100/80 shadow-lg hover:shadow-green-200/60"
+            : "bg-gradient-to-br from-gray-50 to-blue-50/70 shadow-lg hover:shadow-gray-200/60"
           }`}
       >
         {/* Decorative elements */}
@@ -219,12 +218,13 @@ function ClosedCard({ data }) {
               />
               Closed Credit Line Details
             </h2>
-            {isClosed && (
+
+            {isClosed && !hideincollection && (
               <div className="flex gap-2">
                 <button
                   disabled={isNocsend}
                   onClick={HandleSendNOC}
-                  className={`text-base font-semibold ${ !isNocsend ? "bg-gradient-to-r from-blue-900 to-blue-600 text-white cursor-pointer" : "bg-gray-50 text-gray-500 cursor-not-allowed"} px-5 py-1 rounded-full shadow-lg flex items-center gap-1`}
+                  className={`text-base font-semibold ${!isNocsend ? "bg-gradient-to-r from-blue-900 to-blue-600 text-white cursor-pointer" : "bg-gray-50 text-gray-500 cursor-not-allowed"} px-5 py-1 rounded-full shadow-lg flex items-center gap-1`}
                 >
                   {isLoading ? "Sending NOC" : "Generate & Send NOC"}
                 </button>
@@ -333,15 +333,17 @@ function ClosedCard({ data }) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-5">
-            <Button
-              btnName={"Reloan"}
-              btnIcon={"RiFileList3Line"}
-              type={""}
-              onClick={() => setIsReloan(!isReloan)}
-              style="min-w-[150px] md:w-auto my-4 py-1 px-4 border border-primary text-primary hover:border-success hover:text-success hover:font-semibold"
-            />
-          </div>
+          {!hideincollection &&
+            <div className="flex justify-end gap-5">
+              <Button
+                btnName={"Reloan"}
+                btnIcon={"RiFileList3Line"}
+                type={""}
+                onClick={() => setIsReloan(!isReloan)}
+                style="min-w-[150px] md:w-auto my-4 py-1 px-4 border border-primary text-primary hover:border-success hover:text-success hover:font-semibold"
+              />
+            </div>
+          }
         </div>
       </div>
 
