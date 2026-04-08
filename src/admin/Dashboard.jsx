@@ -8,6 +8,7 @@ import { GetDashboardData } from '../api/ApiFunction';
 import Loader from '../components/utils/Loader';
 import getFirstDayOfCurrentMonth from '../components/utils/getFirstDayOfCurrentMonth';
 import NumberFormatter from '../components/utils/NumberFormatter';
+import Icon from '../components/utils/Icon';
 
 function Dashboard() {
     const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -20,6 +21,62 @@ function Dashboard() {
     const dateToday = new Date().toISOString().split("T")[0];
     const firstDay = getFirstDayOfCurrentMonth();
 
+    const dummyCards = [{
+        amount: '91',
+        title: 'Leads Landed',
+        change: '+12%'
+    },
+    {
+        amount: '25',
+        title: 'Loans Disbursed',
+        change: '+12%'
+    },
+    {
+        amount: '1030K',
+        title: 'Loan Disbursed',
+        change: '+12%'
+    },
+    {
+        amount: '6',
+        title: 'Cases Underwaiting',
+        change: '+12%'
+    },
+     {
+        amount: '7',
+        title: 'New Cases Disbursed',
+        change: '+12%'
+    },
+     {
+        amount: '185K',
+        title: 'New Cases Disbursed Amount',
+        change: '+12%'
+    },
+    {
+        amount: '844K',
+        title: 'Repeat Cases Disbursed',
+        change: '+12%'
+    },
+    {
+        amount: '1645K',
+        title: 'Repeat Cases Disbursed Amount',
+        change: '+12%'
+    },
+    {
+        amount: '1320K',
+        title: 'Demand of the Day',
+        change: '+12%'
+    },
+    {
+        amount: '80.24%',
+        title: 'Collected Amount',
+        change: '+12%'
+    },
+    {
+        amount: '7',
+        title: 'Collection effieciency againsed demand',
+        change: '+12%'
+    },
+]
 
     const updateDateTime = () => {
         setCurrentDateTime(new Date());
@@ -69,7 +126,7 @@ function Dashboard() {
             setIsLoading(false);
         }
     };
-    
+
     const fetchDayWiseData = async () => {
         const req = {
             from_date: dateToday,
@@ -124,7 +181,7 @@ function Dashboard() {
         for (let i = 0; i < stats.length; i += 2) {
             statPairs.push(stats.slice(i, i + 2));
         }
-        
+
         return (
             <>
                 <span className="font-bold text-base bg-primary text-white px-5 py-1 rounded-t-lg">
@@ -187,7 +244,7 @@ function Dashboard() {
             </Helmet>
 
             <div className="container mx-auto">
-                <div className="flex justify-between items-center mb-3">
+                <div className="flex justify-between items-center mb-3 my-6">
                     <div className="text-xl font-bold"></div>
                     <div className="flex items-center">
                         <span className="text-dark pr-5 text-xs">
@@ -201,6 +258,29 @@ function Dashboard() {
                         />
                     </div>
                 </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 mb-4">
+                {/* stats card  */}
+                {!dummyCards?.map((card) => (
+                    <div className="w-full h-32 p-4 rounded-2xl min-w-0 bg-[#0db3a5]/90 backdrop-blur-md border border-white/20 shadow-lg shadow-teal-500/30 flex flex-col sm:flex-row overflow-hidden hover:scale-[1.02] transition-all duration-200">
+
+                    {/* Left: Icon Section */}
+                    <div className="w-full sm:w-2/5 flex items-center  bg-white/10 backdrop-blur-sm border-b border-white/10 sm:border-b-0 sm:border-r">
+                        <div className="p-3 rounded-xl bg-white/20">
+                            <Icon name="IoKeyOutline" color="white" size={48} />
+                        </div>
+                    </div>
+
+                    {/* Right: Content */}
+                    <div className="w-full sm:w-3/5 flex flex-col justify-center px-4 py-3">
+                        <div className="text-2xl font-bold text-white leading-tight">{card?.amount}</div>
+                        <div className="text-sm text-white/90">{card?.title}</div>
+                        <div className="text-xs text-green-300 mt-1 font-medium">{card?.change}</div>
+                    </div>
+                </div>
+                ))}
+
             </div>
 
             <div className="">

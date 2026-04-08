@@ -207,6 +207,19 @@ export default function EditCollectionForm({ data }) {
     formik.setFieldValue("transactions", updated);
   };
 
+  //util
+function formatToISO(dateStr) {
+  const [day, monthStr, year] = dateStr.split(" ");
+
+  const months = {
+    Jan: "01", Feb: "02", Mar: "03", Apr: "04",
+    May: "05", Jun: "06", Jul: "07", Aug: "08",
+    Sep: "09", Oct: "10", Nov: "11", Dec: "12",
+  };
+
+  return `${year}-${months[monthStr]}-${day.padStart(2, "0")}`;
+}
+
   return (
     <form onSubmit={formik.handleSubmit} className="">
       <div className="bg-white border border-gray-300/80 rounded-md shadow overflow-x-auto">
@@ -220,21 +233,21 @@ export default function EditCollectionForm({ data }) {
           <p>Action</p> */}
         </div>
 
-        <div className="grid grid-cols-5 px-4 font-semibold text-gray-800 mt-2 text-sm -mb-2">
-          <p>Amount</p>
-          <p>Transaction Id</p>
-          <p>File</p>
-          <p>Date</p>
-          <p>Action</p>
+        <div className="grid grid-cols-9 px-4 font-semibold text-gray-800 mt-2 text-sm -mb-2 gap-3">
+          <p className="col-span-2">Amount</p>
+          <p className="col-span-2">Transaction Id</p>
+          <p className="col-span-2">File</p>
+          <p className="col-span-2">Date</p>
+          {/* <p className="col-span-1 mx-auto">Action</p> */}
         </div>
 
         {/* 🔥 Rows */}
         {formik.values.transactions.map((item, index) => (
           <div
             key={index}
-            className="grid grid-cols-5 gap-1 mb-1 items-start p-1 md:py-2 md:px-3"
+            className="grid grid-cols-9 gap-2 mb-1 items-start p-1 md:py-2 md:px-3"
           >
-            <div>
+            <div className="col-span-2">
               <TextInput
                 //   label={index === 0 && "Amount"}
                 icon="MdOutlineCurrencyRupee"
@@ -251,7 +264,8 @@ export default function EditCollectionForm({ data }) {
                 error={formik.errors.transactions?.[index]?.collection_amount}
               />
             </div>
-            <div>
+
+            <div className="col-span-2">
               <TextInput
                 //   label={index === 0 && "UTR"}
                 icon="MdNumbers"
@@ -269,7 +283,7 @@ export default function EditCollectionForm({ data }) {
               />
             </div>
 
-            <div className="max-md:col-span-2 md:col-span-1">
+            <div className="max-md:col-span-2 md:col-span-2">
               <UploadInput
                 //   label={index === 0 && "File"}
                 name="file"
@@ -285,7 +299,7 @@ export default function EditCollectionForm({ data }) {
               <ErrorMsg error={formik.errors.transactions?.[index]?.file} />
             </div>
 
-            <div>
+            <div className="col-span-2">
               <DateInput
                 //   label={index === 0 && "Collection Date"}
                 icon="IoCalendarOutline"
@@ -294,6 +308,7 @@ export default function EditCollectionForm({ data }) {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 // max={new Date().toLocaleDateString("en-CA")}
+                min={formatToISO(data?.created_date)}
                 error={
                   formik.touched.transactions?.[index]?.collection_date &&
                   formik.errors.transactions?.[index]?.collection_date
@@ -310,7 +325,7 @@ export default function EditCollectionForm({ data }) {
                 type="button"
                 onClick={() => addRow(index)}
                 disabled={!isRowValid(item)}
-                className={`w-9 h-9 rounded-lg text-white ${
+                className={`w-full h-9 rounded-lg text-white ${
                   isRowValid(item)
                     ? "bg-green-500 hover:bg-green-600"
                     : "bg-gray-300 cursor-not-allowed"
