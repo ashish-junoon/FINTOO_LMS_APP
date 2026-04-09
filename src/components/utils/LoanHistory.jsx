@@ -8,9 +8,11 @@ import Modal from "./Modal";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import Icon from "./Icon";
+import { useNavigate } from "react-router-dom";
 
 function LoanHistory({ btnEnable = false, pan, data, loan_Id }) {
   const { adminUser } = useAuth();
+  const navigate = useNavigate();
   const [historyData, setHistoryData] = useState([]);
   const [schedule, setSchedule] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,186 +21,209 @@ function LoanHistory({ btnEnable = false, pan, data, loan_Id }) {
   const [loanId, setloanId] = useState(null);
   // const loanId = data?.selectedproduct?.[0]?.loan_id;
   const userId = data?.user_id;
-  let leadId = data?.lead_id;
+  const leadId = data?.lead_id;
   const activeLoan = schedule?.activeLoanDetails;
   const closedLoan = schedule?.closedLoanDetails;
   const funder = adminUser?.role === "Funder" ? true : false;
 
-  const isOverdue = schedule?.payment_status === "Overdue";
-  const isActive = schedule?.payment_status === 'pending' || schedule?.payment_status === 'active' || schedule?.payment_status === 'Processing' && schedule?.payment_status !== "Overdue" && schedule?.payment_status !== "Due";
-console.log("sssssssss",data)
+  //Loan history Status
+  const paymentStatus = schedule?.payment_status
+    ?.toLowerCase()
+    .replaceAll(" ", "");
+  const isActive =
+    paymentStatus === "pending" ||
+    paymentStatus === "processing" ||
+    paymentStatus === "active" ||
+    paymentStatus === "partially" ||
+    paymentStatus === "due" ||
+    schedule?.payment_status == 1;
+  const isClosed =
+    paymentStatus === "paid" ||
+    paymentStatus === "settled" ||
+    paymentStatus === "foreclosure" ||
+    paymentStatus === "waiveoff";
+  const isOverdue =
+    isActive &&
+    schedule?.activeLoanDetails?.loan_status?.toLowerCase() == "overdue";
+
   const handleShowCloseLead = (loanid) => {
-    console.log("leadid, ",loanid)
     setloanId(loanid);
     setisHistoryOpen(true);
+    console.log(loanid);
   };
 
   // Newly Added for Loan History
-  const loanDetails = isActive ? [
-    {
-      label: "Loan Amount",
-      value: `₹${activeLoan?.loan_amount}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Interest Rate",
-      value: `${activeLoan?.interest_rate}% PD`,
-      className: "text-gray-500",
-    },
-    { label: "Tenure", 
-      value: activeLoan?.tenure, 
-      className: "text-gray-500" },
-    {
-      label: "Number of EMIs",
-      value: activeLoan?.number_of_installment,
-      className: "text-gray-500",
-    },
-    {
-      label: "Repay Frequency",
-      value: activeLoan?.repayment_frequency,
-      className: "text-gray-500",
-    },
+  const loanDetails = isActive
+    ? [
+        {
+          label: "Loan Amount",
+          value: `₹${activeLoan?.loan_amount}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Interest Rate",
+          value: `${activeLoan?.interest_rate}% PD`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Tenure",
+          value: activeLoan?.tenure,
+          className: "text-gray-500",
+        },
+        {
+          label: "Number of EMIs",
+          value: activeLoan?.number_of_installment,
+          className: "text-gray-500",
+        },
+        {
+          label: "Repay Frequency",
+          value: activeLoan?.repayment_frequency,
+          className: "text-gray-500",
+        },
 
-    {
-      label: "Disbursed Amount",
-      value: `₹${activeLoan?.disbursed_amount}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Repayment Amount",
-      value: `₹${activeLoan?.repayment_amount}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Disbursement Date",
-      value: activeLoan?.disbursement_date,
-      className: "text-gray-500",
-    },
-    {
-      label: "Repayment Date",
-      value: `${activeLoan?.repayment_date}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Loan Status",
-      value: `${activeLoan?.loan_status}`,
-      className: "text-gray-500",
-    },
+        {
+          label: "Disbursed Amount",
+          value: `₹${activeLoan?.disbursed_amount}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Repayment Amount",
+          value: `₹${activeLoan?.repayment_amount}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Disbursement Date",
+          value: activeLoan?.disbursement_date,
+          className: "text-gray-500",
+        },
+        {
+          label: "Repayment Date",
+          value: `${activeLoan?.repayment_date}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Loan Status",
+          value: `${activeLoan?.loan_status}`,
+          className: "text-gray-500",
+        },
 
-    {
-      label: "Current Tenure",
-      value: `${activeLoan?.current_tenure}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Penal Day",
-      value: `${activeLoan?.penalty_days}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Total Interest",
-      value: `₹${activeLoan?.due_interest_on_current_day}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Penal Charges",
-      value: `₹${activeLoan?.penal_charges}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Total Outstanding",
-      value: `₹${activeLoan?.due_amount_on_current_day}`,
-      className: "text-gray-500",
-    },
-  ] :[
-    {
-      label: "Loan Amount",
-      value: `₹${closedLoan?.loan_amount}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Interest Rate",
-      value: `${closedLoan?.interest_rate}% PD`,
-      className: "text-gray-500",
-    },
-    { label: "Current Tenure", 
-      value: closedLoan?.tenure, 
-      className: "text-gray-500" },
-    {
-      label: "Number of EMIs",
-      value: closedLoan?.number_of_installment,
-      className: "text-gray-500",
-    },
-    {
-      label: "Repay Frequency",
-      value: closedLoan?.repayment_frequency,
-      className: "text-gray-500",
-    },
+        {
+          label: "Current Tenure",
+          value: `${activeLoan?.current_tenure}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Penal Day",
+          value: `${activeLoan?.penalty_days}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Total Interest",
+          value: `₹${activeLoan?.due_interest_on_current_day}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Penal Charges",
+          value: `₹${activeLoan?.penal_charges}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Total Outstanding",
+          value: `₹${activeLoan?.due_amount_on_current_day}`,
+          className: "text-gray-500",
+        },
+      ]
+    : [
+        {
+          label: "Loan Amount",
+          value: `₹${closedLoan?.loan_amount}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Interest Rate",
+          value: `${closedLoan?.interest_rate}% PD`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Current Tenure",
+          value: closedLoan?.tenure,
+          className: "text-gray-500",
+        },
+        {
+          label: "Number of EMIs",
+          value: closedLoan?.number_of_installment,
+          className: "text-gray-500",
+        },
+        {
+          label: "Repay Frequency",
+          value: closedLoan?.repayment_frequency,
+          className: "text-gray-500",
+        },
 
-    {
-      label: "Disbursed Amount",
-      value: `₹${closedLoan?.disbursed_amount}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Repayment Amount",
-      value: `₹${closedLoan?.repayment_amount}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Disbursement Date",
-      value: closedLoan?.disbursement_date,
-      className: "text-gray-500",
-    },
-    {
-      label: "Repayment Date",
-      value: `${closedLoan?.repayment_date}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Loan Status",
-      value: `${closedLoan?.loan_status}`,
-      className: "text-gray-500",
-    },
+        {
+          label: "Disbursed Amount",
+          value: `₹${closedLoan?.disbursed_amount}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Repayment Amount",
+          value: `₹${closedLoan?.repayment_amount}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Disbursement Date",
+          value: closedLoan?.disbursement_date,
+          className: "text-gray-500",
+        },
+        {
+          label: "Repayment Date",
+          value: `${closedLoan?.repayment_date}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Loan Status",
+          value: `${closedLoan?.loan_status}`,
+          className: "text-gray-500",
+        },
 
-    {
-      label: "Total Tenure",
-      value: `${closedLoan?.total_tenure}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Total Penal Days",
-      value: `${closedLoan?.penalty_days}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Total Interest",
-      value: `₹${closedLoan?.total_interest_amount}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Total Penal Charges",
-      value: `₹${closedLoan?.total_penal_interest}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Closing Amount",
-      value: `₹${closedLoan?.total_collection_amount}`,
-      className: "text-gray-500",
-    },
-    {
-      label: "Closing Date",
-      value: closedLoan?.closed_date,
-      className: "text-gray-500",
-    },
-    {
-      label: "Waive Off Amount",
-      value: `₹${closedLoan?.waive_off_amount}`,
-      className: "text-gray-500",
-    },
-  ];
+        {
+          label: "Total Tenure",
+          value: `${closedLoan?.total_tenure}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Total Penal Days",
+          value: `${closedLoan?.penalty_days}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Total Interest",
+          value: `₹${closedLoan?.total_interest_amount}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Total Penal Charges",
+          value: `₹${closedLoan?.total_penal_interest}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Closing Amount",
+          value: `₹${closedLoan?.total_collection_amount}`,
+          className: "text-gray-500",
+        },
+        {
+          label: "Closing Date",
+          value: closedLoan?.closed_date,
+          className: "text-gray-500",
+        },
+        {
+          label: "Waive Off Amount",
+          value: `₹${closedLoan?.waive_off_amount}`,
+          className: "text-gray-500",
+        },
+      ];
 
-  // Document Data 
+  // Document Data
   const documentData = [
     {
       doc_type: "sanction_letter",
@@ -378,7 +403,6 @@ console.log("sssssssss",data)
   // Newly Added End
 
   useEffect(() => {
-    console.log("--------",loanId, leadId)
     if (!loanId || !leadId) return; // Changed Loan id loan_id to loanId
     const fetchData = async () => {
       try {
@@ -397,6 +421,17 @@ console.log("sssssssss",data)
 
     fetchData();
   }, [loanId, leadId]); // Changed Loan id loan_id to loanId
+
+  const handleOpen = (item) => {
+    const data = {
+      user_id: userId,
+      lead_id: leadId,
+      loan_Id: item?.loan_id,
+    };
+    console.log(data);
+    sessionStorage.setItem("newWindowData", JSON.stringify(data));
+    window.open("/loan/loan-history", "_blank");
+  };
 
   useEffect(() => {
     history();
@@ -444,14 +479,34 @@ console.log("sssssssss",data)
                       {item.loan_closed_date}
                     </td>
                     <td className="border px-2 py-2 text-xs">
-                      {/* {item.loan_closed_date && item.loan_status && ( */}
-                        <button
-                          onClick={() => handleShowCloseLead(item.loan_id,item.leadId)}
+                      <button
+                        // onClick={() => handleShowCloseLead(item.loan_id)}
+                        // onClick={() => navigate('/loan/loan-history', {state: { loan_id: item?.loan_id, lead_id: leadId, user_id: userId }})}
+                        // onClick={() => {
+                        //   window.open(
+                        //     `/loan/loan-history?loan_id=${item?.loan_id}&lead_id=${leadId}&user_id=${userId}`,
+                        //     "_blank",
+                        //   );
+                        // }}
+                        onClick={() => handleOpen(item)}
+                        className="text-primary font-bold w-full"
+                      >
+                        View
+                      </button>
+
+                      {/* <Link
+                          to="/loan/loan-history"
+                          state={{
+                            loan_id: item?.loan_id,
+                            lead_id: leadId,
+                            user_id: userId
+                          }}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="text-primary font-bold w-full"
                         >
                           View
-                        </button>
-                      {/* )} */}
+                        </Link> */}
                     </td>
                   </tr>
                 ))}
@@ -498,111 +553,41 @@ console.log("sssssssss",data)
                   </p>
                 </div>
               ))}
-              
             </div>
             {!funder && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 bg-white">
-                  {/* <div className="px-4 py-2">
-                    <p className="text-sm text-gray-800 font-bold mb-1">
-                      Sanction Letter
-                    </p>
-                    {btnEnable ? (
-                      <button className="bg-primary/50 text-white py-1 px-4 w-full shadow rounded cursor-not-allowed">
-                        View
-                      </button>
-                    ) : (
-                      <button
-                        className="bg-primary text-white py-1 px-4 w-full shadow rounded"
-                        onClick={GetSanction}
-                      >
-                        View
-                      </button>
-                    )}
-                  </div>
-                  <div className="px-4 py-2">
-                    <p className="text-sm text-gray-800 font-bold mb-1">
-                      Loan Agreement
-                    </p>
-                    {btnEnable ? (
-                      <button className="bg-primary/50 text-white py-1 px-4 w-full shadow rounded cursor-not-allowed">
-                        View
-                      </button>
-                    ) : (
-                      <button
-                        className="bg-primary text-white py-1 px-4 w-full shadow rounded"
-                        onClick={GetAgreement}
-                      >
-                        View
-                      </button>
-                    )}
-                  </div>
-                  <div className="px-4 py-2">
-                    <p className="text-sm text-gray-800 font-bold mb-1">
-                      Disbursal Letter{" "}
-                    </p>
-                    {btnEnable ? (
-                      <button className="bg-primary/50 text-white py-1 px-4 w-full shadow rounded cursor-not-allowed">
-                        View
-                      </button>
-                    ) : (
-                      <button
-                        className="bg-primary text-white py-1 px-4 w-full shadow rounded"
-                        onClick={GetDisbursal}
-                      >
-                        View
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="px-4 py-2">
-                    <p className="text-sm text-gray-800 font-bold mb-1">
-                      NOC{" "}
-                    </p>
-                    {btnEnable ? (
-                      <button className="bg-primary/50 text-white py-1 px-4 w-full shadow rounded cursor-not-allowed">
-                        View
-                      </button>
-                    ) : (
-                      <button
-                        className="bg-primary text-white py-1 px-4 w-full shadow rounded"
-                        onClick={GetNOC}
-                      >
-                        View
-                      </button>
-                    )}
-                  </div> */}
-
-                  {/* To Get Documents */}
-                  {documentData?.map((document, i) => {
-                    return (
-                      <>
-                      {isActive && document.doc_type == "NOC_letter" ? "" :
-                      <div key={i} className="px-4 py-2">
-                        <p className="text-sm text-gray-800 font-bold mb-1">
-                          {document?.label}
-                        </p>
-                        {btnEnable ? (
-                          <button className="bg-primary/50 text-white py-1 px-4 w-full shadow rounded cursor-not-allowed">
-                            View
-                          </button>
-                        ) : (
-                          <button
-                            className="bg-primary text-white py-1 px-4 w-full shadow rounded flex justify-center items-center gap-2 hover:bg-primary/80"
-                            onClick={() => GetDocuments(document.doc_type)}
-                          >
-                            <Icon name="IoDocumentTextOutline" size={15} />
-                            <span>View</span>
-                          </button>
-                        )}
-                      </div>}
-                      </>
-                    );
-                  })}
-                </div>
-              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 bg-white">
+                {/* To Get Documents */}
+                {documentData?.map((document, i) => {
+                  return (
+                    <div key={i}>
+                      {isActive && document.doc_type == "NOC_letter" ? (
+                        ""
+                      ) : (
+                        <div className="px-4 py-2">
+                          <p className="text-sm text-gray-800 font-bold mb-1">
+                            {document?.label}
+                          </p>
+                          {btnEnable ? (
+                            <button className="bg-primary/50 text-white py-1 px-4 w-full shadow rounded cursor-not-allowed">
+                              View
+                            </button>
+                          ) : (
+                            <button
+                              className="bg-primary text-white py-1 px-4 w-full shadow rounded flex justify-center items-center gap-2 hover:bg-primary/80"
+                              onClick={() => GetDocuments(document.doc_type)}
+                            >
+                              <Icon name="IoDocumentTextOutline" size={15} />
+                              <span>View</span>
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-
-          
         </div>
       </Modal>
     </>

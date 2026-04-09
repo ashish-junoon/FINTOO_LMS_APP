@@ -40,6 +40,7 @@ import LoanHistory from "../../components/utils/LoanHistory";
 import { paymentType } from "../../components/content/Data";
 import OtherBankInfo from "../../components/form/OtherBankInfo";
 import DateInput from "../../components/fields/DateInput";
+import MandateHistory from "../../components/utils/MandateHistory";
 
 const LeadKYCForm = () => {
   const [openApporve, setOpenApporve] = useState(false);
@@ -317,7 +318,7 @@ const LeadKYCForm = () => {
       //   lead_id: userData?.lead_id,
       //   user_id: userData?.user_id,
       //   loan_id: "",
-      //   company_id: "JUNOON",
+      //   company_id: "SALORA",
       //   product_code: import.meta.env.VITE_PRODUCT_NAME,
       //   message: values.message,
       //   expiry_date: formattedDate,
@@ -550,6 +551,16 @@ const LeadKYCForm = () => {
           <LoanHistory
             btnEnable={isOnHold}
             pan={userData?.kycInfo[0]?.pan_card_number}
+            data={userData}
+          />
+        </div>
+      ),
+    },
+    {
+      label: "Mandate History",
+      content: (
+        <div className="mb-5">
+          <MandateHistory
             data={userData}
           />
         </div>

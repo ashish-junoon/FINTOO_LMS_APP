@@ -47,6 +47,7 @@ import LoginPageFinder from "../../components/utils/LoginPageFinder";
 import Images from "../../components/content/Images";
 import LoanHistory from "../../components/utils/LoanHistory";
 import OtherBankInfo from "../../components/form/OtherBankInfo";
+import MandateHistory from "../../components/utils/MandateHistory";
 
 const ManageDisbursalForm = () => {
   const [open, setOpen] = useState(false);
@@ -615,6 +616,16 @@ const ManageDisbursalForm = () => {
           <LoanHistory
             btnEnable={isOnHold}
             pan={userData?.kycInfo[0]?.pan_card_number}
+            data={userData}
+          />
+        </div>
+      ),
+    },
+    {
+      label: "Mandate History",
+      content: (
+        <div className="mb-5">
+          <MandateHistory
             data={userData}
           />
         </div>

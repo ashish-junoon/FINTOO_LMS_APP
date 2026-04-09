@@ -68,25 +68,25 @@ export default function EditCollectionForm({ data }) {
       transactions:
         TableData.length > 0
           ? TableData.map((item) => ({
-              collection_amount: item.total_paid_amount || "",
-              transction_id: item.transaction_id || "",
-              file: "",
-              collection_date: formatDate(item.paid_on),
-              waive_off_amount: item.waive_off_amount || "0",
-              payment_mode: item.payment_mode || "UPI",
-              receiver_bank_name: "RAZORPAY",
-            }))
+            collection_amount: item.total_paid_amount || "",
+            transction_id: item.transction_id || "",
+            file: "",
+            collection_date: formatDate(item.paid_on),
+            waive_off_amount: item.waive_off_amount || "0",
+            payment_mode: item.payment_mode || "UPI",
+            receiver_bank_name: "RAZORPAY",
+          }))
           : [
-              {
-                collection_amount: "",
-                transction_id: "",
-                file: "",
-                collection_date: "",
-                waive_off_amount: "0",
-                payment_mode: "UPI",
-                receiver_bank_name: "RAZORPAY",
-              },
-            ],
+            {
+              collection_amount: "",
+              transction_id: "",
+              file: "",
+              collection_date: "",
+              waive_off_amount: "0",
+              payment_mode: "UPI",
+              receiver_bank_name: "RAZORPAY",
+            },
+          ],
     },
 
     validationSchema: Yup.object({
@@ -208,17 +208,40 @@ export default function EditCollectionForm({ data }) {
   };
 
   //util
-function formatToISO(dateStr) {
-  const [day, monthStr, year] = dateStr.split(" ");
+  const normalizeDate = (dateStr) => {
+    if (!dateStr) return "";
 
-  const months = {
-    Jan: "01", Feb: "02", Mar: "03", Apr: "04",
-    May: "05", Jun: "06", Jul: "07", Aug: "08",
-    Sep: "09", Oct: "10", Nov: "11", Dec: "12",
+    // Case 1: Already correct format (YYYY-MM-DD)
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return dateStr;
+    }
+
+    // Case 2: DD-MMM-YYYY (09-Jan-2026)
+    const [day, mon, year] = dateStr.split("-");
+
+    const months = {
+      Jan: "01",
+      Feb: "02",
+      Mar: "03",
+      Apr: "04",
+      May: "05",
+      Jun: "06",
+      Jul: "07",
+      Aug: "08",
+      Sep: "09",
+      Oct: "10",
+      Nov: "11",
+      Dec: "12",
+    };
+
+    return `${year}-${months[mon]}-${day.padStart(2, "0")}`;
   };
 
-  return `${year}-${months[monthStr]}-${day.padStart(2, "0")}`;
-}
+  const rawDate1 = Schedule?.activeLoanDetails?.disbursement_date;
+  const rawDate2 = Schedule?.closedLoanDetails?.disbursement_date;
+
+  // pick whichever exists
+  const minDate = normalizeDate(rawDate1 || rawDate2);
 
   return (
     <form onSubmit={formik.handleSubmit} className="">
@@ -308,7 +331,7 @@ function formatToISO(dateStr) {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 // max={new Date().toLocaleDateString("en-CA")}
-                min={formatToISO(data?.created_date)}
+                min={minDate}
                 error={
                   formik.touched.transactions?.[index]?.collection_date &&
                   formik.errors.transactions?.[index]?.collection_date
@@ -325,11 +348,10 @@ function formatToISO(dateStr) {
                 type="button"
                 onClick={() => addRow(index)}
                 disabled={!isRowValid(item)}
-                className={`w-full h-9 rounded-lg text-white ${
-                  isRowValid(item)
+                className={`w-full h-9 rounded-lg text-white ${isRowValid(item)
                     ? "bg-green-500 hover:bg-green-600"
                     : "bg-gray-300 cursor-not-allowed"
-                }`}
+                  }`}
               >
                 +
               </button>
@@ -367,7 +389,7 @@ function formatToISO(dateStr) {
                 name="collection_status"
                 placeholder="Collection Status"
                 options={[
-                  { label: "Sattle", value: 12 },
+                  { label: "Settle", value: 12 },
                   { label: "Close", value: 10 },
                 ]}
                 {...formik.getFieldProps("collection_status")}

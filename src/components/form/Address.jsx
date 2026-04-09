@@ -245,6 +245,7 @@ const Address = ({ btnEnable = false, incomplete }) => {
 
   const handleUpdateYes = () => {
     formik.submitForm();
+    setOpenApprove(false);
   };
 
   const handleResubmit = () => {
@@ -452,8 +453,8 @@ const Address = ({ btnEnable = false, incomplete }) => {
                   }
                   type="button"
                   onClick={handleUpdate}
-                  disabled={!formik.isValid}
-                  style="min-w-[150px] md:w-auto text-xs my-4 py-0.5 px-4 border border-primary text-primary hover:border-success hover:text-success hover:font-semibold"
+                  // disabled={!formik.isValid}
+                  style="min-w-[150px] md:w-auto text-xs my-4 py-0.5 px-4 border border-primary text-primary hover:border-success hover:text-success hover:font-semibold cursor-pointer"
                 />
               </div>
             </div>

@@ -58,6 +58,7 @@ import VerifyOtp from "./pages/formPage/VerifyOtp";
 import FailurePage from "./pages/Response/FailurePage";
 import DisbursalReady from "./pages/loan/DisbursalReady";
 import EditCollection from "./pages/formPage/EditCollection";
+import LoanHistoryPage from "./pages/loan/LoanHistoryPage";
 
 function App() {
   const { adminUser } = useAuth();
@@ -146,6 +147,7 @@ function App() {
               <Route path="/lead/disbursal-details" element={<ManageDisbursalForm />} />
               <Route path="/lead/rejected-application" element={<ManageAppForm />} />
               <Route path="/loan/loan-details" element={<ManageLoanForm />} />
+              <Route path="/loan/loan-history" element={<LoanHistoryPage />} />
 
               {/* Admin Page Routes */}
               {/* <Route path="/admin/add-user" element={<AddUser />} /> */}

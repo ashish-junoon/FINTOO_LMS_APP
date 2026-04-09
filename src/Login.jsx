@@ -78,7 +78,7 @@ const Login = () => {
             try {
                 const ipAddress = await GetIPAdress();
                 const request = {
-                    // user_name: userName,
+                    user_name: userName,
                     official_email: userName,
                     password: password,
                     system_ip: ipAddress?.ip,

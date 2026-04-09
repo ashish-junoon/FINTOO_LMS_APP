@@ -1089,9 +1089,29 @@ export const reuploadPic = async (req) => {
     }
 }
 
+export const reuploadVideoKyc = async (req) => {
+    try {
+        const response = await api.post("/Admin/RejectCustomerVideoKyc", req);
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Get incomplete error :", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+
 export const getLoanHistory = async (req) => {
     try {
         const response = await api.post("/Admin/LoanHistory", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const getMandateHistory = async (req) => {
+    try {
+        const response = await api.post("/User/GetMandateHistory", req);
         return response.data;
     } catch (error) {
         console.error("Loan History:", error.response?.data || error.message);

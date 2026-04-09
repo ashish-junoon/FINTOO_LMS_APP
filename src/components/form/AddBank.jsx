@@ -24,7 +24,7 @@ const accountType = [
   { label: "Secondary", value: "2" },
 ]
 
-const AddBank = () => {
+const AddBank = ({fetchData}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [bankList, setBankList] = useState([]);
   const [initialFile, setInitialFile] = useState(null);
@@ -143,7 +143,7 @@ const AddBank = () => {
           toast.success(response.message);
           setIsOpen(false);
           resetForm()
-          window.location.reload()
+          fetchData();
         } else {
           toast.error(response.message);
         }
@@ -245,6 +245,7 @@ const AddBank = () => {
 
       if (response?.model?.status === "SUCCESS") {
         toast.success("Primary bank verified successfully.");
+        fetchData();
       }
       else {
         toast.error(
@@ -306,7 +307,7 @@ const AddBank = () => {
           type={"IoCheckmarkCircleSharp"}
           onClick={verifyPrimaryBank}
           disabled={isLoading}
-          style="min-w-[130px] text-sm italic font-semibold md:w-auto my-4 py-1 border-success px-4 text-white bg-success border hover:border-success text-primary hover:bg-white hover:text-success"
+          style={`min-w-[130px] text-sm italic font-semibold md:w-auto my-4 py-1 border-success px-4 text-white bg-success border ${isLoading? '': 'hover:border-success'} text-primary hover:bg-white hover:text-success`}
         />
         {/* )} */}
       </div>

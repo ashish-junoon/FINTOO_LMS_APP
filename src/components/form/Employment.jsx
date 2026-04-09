@@ -172,9 +172,9 @@ const Employment = ({ btnEnable = false, incomplete }) => {
           toast.error(response.message);
         }
 
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 1000);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
         setIsLoading(false);
       } catch (error) {
         toast.error("Something went wrong. Please try again.");

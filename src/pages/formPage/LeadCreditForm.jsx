@@ -25,6 +25,7 @@ import LoanHistory from '../../components/utils/LoanHistory';
 import Button from '../../components/utils/Button';
 import AddBank from '../../components/form/AddBank';
 import OtherBankInfo from '../../components/form/OtherBankInfo';
+import MandateHistory from '../../components/utils/MandateHistory';
 
 
 const LeadCreditForm = () => {
@@ -43,6 +44,7 @@ const LeadCreditForm = () => {
     const permission = pageAccess?.[0].read_write_permission;
     const funder = adminUser.role === 'Funder' ? true : false
 
+    // console.log(userData);
 
     useEffect(() => {
         if (lead_id && user_id) {
@@ -96,7 +98,7 @@ const LeadCreditForm = () => {
                     </div>
 
                     <div className='py-5'>
-                        <AddBank/>
+                        <AddBank fetchData={fetchData} />
                     </div>
 
                     <div className='py-5'>
@@ -135,6 +137,16 @@ const LeadCreditForm = () => {
             content: <div className='mb-5'>
                 <LoanHistory btnEnable={isOnHold} pan={userData?.kycInfo[0]?.pan_card_number} data={userData} />
             </div>
+        },
+        {
+            label: "Mandate History",
+            content: (
+                <div className="mb-5">
+                    <MandateHistory
+                        data={userData}
+                    />
+                </div>
+            ),
         },
     ];
 

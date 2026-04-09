@@ -312,7 +312,7 @@ function OfferLoan({btnEnable = false}) {
                 {permission && (
                     <Button
                         btnName={"Create Payday Product"}
-                        btnIcon={"IoCloseCircleOutline"}
+                        btnIcon={"IoAddCircleOutline"}
                         type={"IoCheckmarkCircleSharp"}
                         onClick={() => setIsOpen(true)}
                         disabled={btnEnable}
@@ -725,7 +725,7 @@ function OfferLoan({btnEnable = false}) {
                             />) : (
                                 <Button
                                 btnName="Assign"
-                                btnIcon="IoCloseCircleOutline"
+                                btnIcon="IoAddCircleOutline"
                                 type="submit"
                                 style="mt-5 bg-primary text-white min-w-32"
                             />

@@ -22,6 +22,11 @@ function KYCStatusCard() {
             doneText: "Done",
         },
         {
+            label: "Video KYC Completed",
+            status: !!leadInfo?.video_kyc_verified,
+            doneText: "Yes",
+        },
+        {
             label: "Adhaar Verified",
             status: !!leadInfo?.aadhaar_verified,
             doneText: "Verified",
@@ -71,7 +76,7 @@ function KYCStatusCard() {
                 className={`w-full px-5 py-5 ${isDone ? "border-green-200" : "border-gray-300"
                     }`}
             >
-                <div className="grid grid-cols-6 gap-4">
+                <div className="grid grid-cols-7 gap-4">
                     {statusItems.map((item, index) => (
                         <StatusItem
                             key={index}

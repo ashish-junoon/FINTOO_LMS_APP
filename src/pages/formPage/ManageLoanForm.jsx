@@ -31,6 +31,7 @@ import LoginPageFinder from '../../components/utils/LoginPageFinder';
 import ClosedCard from '../../components/utils/ClosedCard';
 import LoanHistory from '../../components/utils/LoanHistory';
 import OtherBankInfo from '../../components/form/OtherBankInfo';
+import MandateHistory from '../../components/utils/MandateHistory';
 
 const ManageAppForm = () => {
     // const [openApporve, setOpenApporve] = useState(false);
@@ -268,6 +269,16 @@ const ManageAppForm = () => {
             content: <div className='mb-5'>
                 <LoanHistory pan={userData?.kycInfo[0]?.pan_card_number} data={userData} loan_Id={loanId} />
             </div>
+        },
+        {
+            label: "Mandate History",
+            content: (
+                <div className="mb-5">
+                    <MandateHistory
+                        data={userData}
+                    />
+                </div>
+            ),
         },
     ];
 
