@@ -98,6 +98,9 @@ const OthersDocs = ({ btnEnable = false }) => {
           response = await UploadOtherDocumentsVideo(formData);
           setLoading(false);
           setOpen(false);
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
         } else if (values.documentType != "VideoKyc" && isDocType) {
           setLoading(true);
           response = await UploadOtherDocuments(req);

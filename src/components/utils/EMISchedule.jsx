@@ -86,6 +86,9 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
       ? true
       : false;
 
+      const role = adminUser?.role;
+  const emp_code = adminUser?.emp_code;
+
   // Get today and yesterday for validation
   const today = dayjs().startOf("day");
   const threeDaysAgo = today.subtract(3, "day");
@@ -228,12 +231,35 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
     checkDisbursementStatus();
   }, [disbursedDate]);
 
-  const getMinDate = () => {
-    const today = new Date();
-    today.setDate(today.getDate() - 4); // 5 days after today
-    const mindate = today.toISOString().split("T")[0];
-    return mindate;
-  }
+  // const getMinDate = () => {
+  //   const today = new Date();
+  //   today.setDate(today.getDate() - 4); // 5 days after today
+  //   const mindate = today.toISOString().split("T")[0];
+  //   return mindate;
+  // }
+
+  const getMinDate= (role, emp_code) => {
+    if (
+      emp_code == "JC0002" ||
+      emp_code == "JC0003"
+    ) {
+      return;
+    } else if (
+      role == "admin" ||
+      emp_code == "SC0043"
+      // role == "administrator" ||
+    ) {
+      const today = new Date();
+      today.setDate(today.getDate() - 30); // 30 days after today
+      const mindate = today.toISOString().split("T")[0];
+      return mindate;
+    } else {
+      const today = new Date();
+      today.setDate(today.getDate() - 4); // 5 days after today
+      const mindate = today.toISOString().split("T")[0];
+      return mindate;
+    }
+  };
 
   useEffect(() => {
     getFounder();
@@ -1080,7 +1106,8 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
                   placeholder="DD-MM-YYYY"
                   name="collectionDate"
                   id="collectionDate"
-                  min={getMinDate()}
+                  min={getMinDate(role, emp_code)}
+                  max={new Date().toISOString().split("T")[0]}
                   // onChange={UpdatePayment.handleChange}
                   onChange={(e) => {
                     UpdatePayment.handleChange(e); // Formik function

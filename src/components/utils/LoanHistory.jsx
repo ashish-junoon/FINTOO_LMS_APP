@@ -423,6 +423,8 @@ function LoanHistory({ btnEnable = false, pan, data, loan_Id }) {
   }, [loanId, leadId]); // Changed Loan id loan_id to loanId
 
   const handleOpen = (item) => {
+    console.log(item);
+    
     const data = {
       user_id: userId,
       lead_id: leadId,

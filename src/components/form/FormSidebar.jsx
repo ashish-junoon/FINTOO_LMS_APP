@@ -4,10 +4,14 @@ import Loader from "../utils/Loader";
 import { useOpenLeadContext } from "../../context/OpenLeadContext";
 import Modal from "../utils/Modal";
 import Button from "../utils/Button";
+import { useAuth } from "../../context/AuthContext";
+import { reuploadVideoKyc } from "../../api/ApiFunction";
+import { toast } from "react-toastify";
 
 function FormSidebar() {
     const [loading, setLoading] = useState(true);
     const [isApprove, setIsApprove] = useState(false);
+    const {adminUser} = useAuth();
 
     const { leadInfo } = useOpenLeadContext();    
     const { documents } = useGetDocument();
@@ -18,7 +22,7 @@ function FormSidebar() {
             user_id: leadInfo?.user_id,
             rejected_by: adminUser?.emp_code,
             company_id: import.meta.env.VITE_COMPANY_ID,
-            product_name: VITE_PRODUCT_NAME
+            product_name: import.meta.env.VITE_PRODUCT_NAME
         };
         const res = await reuploadVideoKyc(payload);
         if (res.status) {
