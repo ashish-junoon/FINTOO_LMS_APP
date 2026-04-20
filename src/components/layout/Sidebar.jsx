@@ -63,22 +63,19 @@ function Dropdown({
   return (
     <div>
       <div
-        className={`group flex capitalize items-center px-2 py-[5px] my-2 rounded-lg cursor-pointer hover:bg-primary ${
-          isDropdownOpen(route.index) ? "bg-primary text-white" : ""
-        }`}
+        className={`group flex capitalize items-center px-2 py-[5px] my-2 rounded-lg cursor-pointer hover:bg-primary ${isDropdownOpen(route.index) ? "bg-primary text-white" : ""
+          }`}
         onClick={() => toggleDropdownIndex(route.index)}
       >
         <div
-          className={`mr-4 ${
-            isDropdownOpen(route.index) ? "text-white" : "text-primary"
-          } group-hover:text-white`}
+          className={`mr-4 ${isDropdownOpen(route.index) ? "text-white" : "text-primary"
+            } group-hover:text-white`}
         >
           {route.icon}
         </div>
         <div
-          className={`text-sm flex-1 ${!isOpen && "hidden"} ${
-            isDropdownOpen(route.index) ? "text-white" : "text-black"
-          } group-hover:text-white`}
+          className={`text-sm flex-1 ${!isOpen && "hidden"} ${isDropdownOpen(route.index) ? "text-white" : "text-black"
+            } group-hover:text-white`}
         >
           {route.name}
         </div>
@@ -105,22 +102,19 @@ function Dropdown({
             {route.menuItems.map((subRoute, index) => (
               <div
                 key={index}
-                className={`flex items-center capitalize px-2 my-[3px] py-[6px] rounded-sm cursor-pointer text-xs hover:bg-black hover:text-white ${
-                  activePath === subRoute.path ? "bg-black text-white" : ""
-                }`}
+                className={`flex items-center capitalize px-2 my-[3px] py-[6px] rounded-sm cursor-pointer text-xs hover:bg-black hover:text-white ${activePath === subRoute.path ? "bg-black text-white" : ""
+                  }`}
                 onClick={() => handleClick(subRoute.path)}
               >
                 <div
-                  className={`mr-1 ${
-                    activePath === subRoute.path ? "text-white" : "text-primary"
-                  } hover:text-white`}
+                  className={`mr-1 ${activePath === subRoute.path ? "text-white" : "text-primary"
+                    } hover:text-white`}
                 >
                   {subRoute.icon}
                 </div>
                 <div
-                  className={`text-sm ${
-                    activePath === subRoute.path ? "text-white" : ""
-                  }`}
+                  className={`text-sm ${activePath === subRoute.path ? "text-white" : ""
+                    }`}
                 >
                   {subRoute.name}
                 </div>
@@ -154,7 +148,7 @@ function Sidebar({ children }) {
   const menuItems = generateMenuFromGroups(adminUser?.loginGroupNames || []);
   // const menuItems = menuItem;
 
-  useEffect(()=> {
+  useEffect(() => {
     setActivePath(location.pathname)
   }, [location.pathname])
   return (
@@ -172,11 +166,11 @@ function Sidebar({ children }) {
         >
           <motion.section>
             <div
-              className={`group flex items-center px-2 py-[5px] my-2 whitespace-nowrap rounded-md cursor-pointer hover:bg-primary`}
+              className={`group flex items-center px-2 py-[5px] my-2 whitespace-nowrap rounded-md cursor-pointer ${activePath === "/"? 'bg-black':'hover:bg-primary'}`}
               onClick={() => navigate("/")}
             >
-              <div className="group flex items-center">
-                <div className="mr-4 text-[#003397] group-hover:text-white">
+              <div className={`group flex items-center`}>
+                <div className={`mr-4 text-primary ${activePath === "/"? 'text-white':'group-hover:text-white'}`}>
                   <Icon
                     name="RiDashboardLine"
                     size={20}
@@ -184,9 +178,8 @@ function Sidebar({ children }) {
                   />
                 </div>
                 <div
-                  className={`${
-                    !isOpen && "hidden"
-                  } text-sm text-black group-hover:text-white`}
+                  className={`${!isOpen && "hidden"
+                    } text-sm text-black ${activePath === "/"? 'text-white':'group-hover:text-white'}`}
                 >
                   Dashboard
                 </div>
@@ -207,24 +200,21 @@ function Sidebar({ children }) {
               ) : (
                 <div
                   key={index}
-                  className={`group flex items-center px-2 py-[5px] my-2 whitespace-nowrap rounded-md cursor-pointer hover:bg-primary ${
-                    activePath === route.path
+                  className={`group flex items-center px-2 py-[5px] my-2 whitespace-nowrap rounded-md cursor-pointer hover:bg-primary ${activePath === route.path
                       ? "text-white bg-primary"
                       : "text-primary"
-                  }`}
+                    }`}
                   onClick={() => handleClick(route.path)}
                 >
                   <div
-                    className={`mr-4 ${
-                      activePath === route.path ? "text-white" : "text-primary"
-                    } group-hover:text-white`}
+                    className={`mr-4 ${activePath === route.path ? "text-white" : "text-primary"
+                      } group-hover:text-white`}
                   >
                     {route.icon}
                   </div>
                   <div
-                    className={`text-sm ${!(isHovered || isOpen) && "hidden"} ${
-                      activePath === route.path ? "text-white" : "text-black"
-                    } group-hover:text-white`}
+                    className={`text-sm ${!(isHovered || isOpen) && "hidden"} ${activePath === route.path ? "text-white" : "text-black"
+                      } group-hover:text-white`}
                   >
                     {route.name}
                   </div>
@@ -234,11 +224,10 @@ function Sidebar({ children }) {
           </motion.section>
         </motion.div>
         <motion.main
-          className={`overflow-hidden py-8 px-10 ${
-            isHovered || isOpen ? "ml-[250px]" : "ml-[70px]"
-          } w-full transition-all duration-300`}
+          className={`overflow-hidden py-8 px-10 ${isHovered || isOpen ? "ml-[250px]" : "ml-[70px]"
+            } w-full transition-all duration-300`}
         >
-            <BackButton />
+          <BackButton />
           {children}
         </motion.main>
       </div>

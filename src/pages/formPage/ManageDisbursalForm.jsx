@@ -8,7 +8,7 @@ import AppStatus from "../../components/utils/AppStatus";
 import AppCard from "../../components/form/AppCard";
 import KYCStatusCard from "../../components/form/KYCStatusCard";
 import Button from "../../components/utils/Button";
-import { getLeadDetails, VerifyBankDetailsBySalora } from "../../api/ApiFunction";
+import { getLeadDetails, pushMasterDataToSalora, VerifyBankDetailsBySalora } from "../../api/ApiFunction";
 import TabWrap from "../../components/utils/TabWrap";
 import Modal from "../../components/utils/Modal";
 import SelectInput from "../../components/fields/SelectInput";
@@ -116,6 +116,11 @@ const ManageDisbursalForm = () => {
 
       if (response.status) {
         toast.success(response.message);
+        // push data to salora | phase 3
+        await pushMasterDataToSalora({
+          user_id, lead_id
+        })
+
         navigate("/manage-leads/manage-disbursal");
       } else {
         toast.error(response.message);
@@ -204,7 +209,7 @@ const ManageDisbursalForm = () => {
     }),
     onSubmit: async (values) => {
       // check if primary bank is verified
-      if(!userData?.is_bank_verified){
+      if (!userData?.is_bank_verified) {
         toast.error("Please verify primary bank first!")
         return;
       }
@@ -485,7 +490,7 @@ const ManageDisbursalForm = () => {
           <div className="flex justify-end items-center mt-5 gap-5">
             {permission && (
               <Button
-                btnName={isLoading? "Verifying...": "Verify Bank"}
+                btnName={isLoading ? "Verifying..." : "Verify Bank"}
                 btnIcon={"PiBank"}
                 type={"button"}
                 onClick={verifyBank}

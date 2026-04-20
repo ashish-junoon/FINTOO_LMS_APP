@@ -297,10 +297,10 @@ function UpdateUser() {
                                 name="panNumber"
                                 maxLength={10}
                                 type="text"
-                                style={" uppercase "}
+                                // style={" uppercase "}
                                 disabled={!isEditing}
                                 value={formik.values.panNumber}
-                                onChange={formik.handleChange}
+                                onChange={(e)=> formik.setFieldValue('panNumber', e.target.value?.toUpperCase())}
                                 onBlur={formik.handleBlur}
                             />
                             {renderError("panNumber")}

@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Button from '../utils/Button';
 import { toast } from 'react-toastify';
-import { ScoreFromTransunion, ScoreFromExperian, ScoreFromEquiFax, UploadCreditReport, ScoreFromSalora } from '../../api/ApiFunction';
+import { ScoreFromTransunion, ScoreFromExperian, ScoreFromEquiFax, UploadCreditReport, ScoreFromSalora, pushMasterDataToSalora } from '../../api/ApiFunction';
 import Loader from './Loader';
 import SelectInput from '../fields/SelectInput';
 import TextInput from '../fields/TextInput';
@@ -341,8 +341,14 @@ const GetScore = ({ btnEnable = false }) => {
                     };
                 });
                 setLoading(false)
-                console.log("Res saved from salora API", leadInfo)
+                // console.log("Res saved from salora API", leadInfo)
                 toast.success(response.message);
+
+                // push master data to salora -phase 1
+                await pushMasterDataToSalora({
+                    user_id: leadInfo?.user_id,
+                    lead_id: leadInfo?.lead_id,
+                })
             } else {
                 // toast.error(response.message);
                 toast.error(response?.data?.userMessage || "CIBIL Data not found");

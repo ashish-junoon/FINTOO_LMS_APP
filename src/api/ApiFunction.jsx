@@ -1118,3 +1118,13 @@ export const getMandateHistory = async (req) => {
         throw error;
     }
 }
+
+export const pushMasterDataToSalora = async (req) => {
+    try {
+        const response = await api.post("/Salora/PushMasterDataToSalora", req);
+        return response.data;
+    } catch (error) {
+        console.error("Salora push master:", error.response?.data || error.message);
+        throw error;
+    }
+}

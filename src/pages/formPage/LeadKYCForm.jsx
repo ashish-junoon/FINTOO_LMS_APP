@@ -13,6 +13,7 @@ import {
   getbankCodeListByCode,
   registerEMandateEaseBuze,
   registerEMandateBySalora,
+  pushMasterDataToSalora,
 } from "../../api/ApiFunction";
 import SelectInput from "../../components/fields/SelectInput";
 import TextInput from "../../components/fields/TextInput";
@@ -109,6 +110,7 @@ const LeadKYCForm = () => {
 
       if (response.status) {
         toast.success(response.message);
+
         navigate("/manage-leads/leads-in-kyc");
       } else {
         toast.error(response.message);
@@ -271,7 +273,7 @@ const LeadKYCForm = () => {
           (value) => !value || Yup.string().email().isValidSync(value),
         ),
       // expiry_date: Yup.date().required("Expiry date is required")
-        // .min(new Date(new Date().setHours(0, 0, 0, 0)), "Expiry date cannot be in the past"),
+      // .min(new Date(new Date().setHours(0, 0, 0, 0)), "Expiry date cannot be in the past"),
       // expiry_date: Yup.date()
       //   .min(
       //     new Date(new Date().setHours(0, 0, 0, 0)),
@@ -409,7 +411,7 @@ const LeadKYCForm = () => {
   // };
 
   // handle Approve confirm Yes button
-  const handleApproveYes = () => {
+  const handleApproveYes = async () => {
     const { is_e_kyc_done, is_e_nach_activate, is_loan_consent } = userData;
 
     if (!is_e_kyc_done || !is_e_nach_activate || !is_loan_consent) {
@@ -436,11 +438,16 @@ const LeadKYCForm = () => {
     // return in any case
     if (
       // userData?.secondarybankinfo?.some((bank) => !bank?.is_e_nach_created) ||
-       !primaryBank?.is_e_nach_created) return;
+      !primaryBank?.is_e_nach_created) return;
 
     confirmLead(req);
     setOpenApporve(false); // Close modal after approval
     // navigate("/manage-leads/leads-in-kyc");
+
+    // push master data to salora - phase 2
+    await pushMasterDataToSalora({
+      user_id, lead_id
+    })
   };
 
   //handle Approve confirm No button
@@ -818,7 +825,7 @@ const LeadKYCForm = () => {
                         value: "netbanking",
                         label: "Net Banking",
                       },
-                    {
+                      {
                         value: "upi",
                         label: "UPI",
                       }]

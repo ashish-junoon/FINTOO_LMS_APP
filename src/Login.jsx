@@ -74,7 +74,7 @@ const Login = () => {
             userName: Yup.string().required("Username Required"),
             password: Yup.string().required("Password Required"),
         }),
-        onSubmit: async ({ userName, password }) => {
+        onSubmit: async ({ userName, password }, setSubmitting) => {
             try {
                 const ipAddress = await GetIPAdress();
                 const request = {
@@ -104,6 +104,9 @@ const Login = () => {
             } catch (error) {
                 console.error('Login error:', error);
                 toast.error('Something went wrong. Please try again.');
+            }
+            finally{
+                setSubmitting(false)
             }
         }
     });
@@ -175,6 +178,7 @@ const Login = () => {
                                     btnIcon="RiLoginCircleLine"
                                     type="submit"
                                     style="my-8 bg-primary text-white min-w-full"
+                                    disabled={formik.isSubmitting}
                                 />
                             </div>
                         </form>

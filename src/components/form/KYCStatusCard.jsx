@@ -51,7 +51,7 @@ function KYCStatusCard() {
     const StatusItem = ({ label, status, doneText }) => (
         <div className="flex flex-col justify-center items-center">
             <img src={status ? Images.verified : Images.inprocess} alt="kycStatus" />
-            <div className="text-xs font-bold text-gray-500 my-2">{label}</div>
+            <div className="text-xs font-bold text-gray-500 my-2 text-center">{label}</div>
             <div
                 className={`text-xs font-bold shadow py-0.5 px-4 mt-2 rounded ${status
                     ? "bg-green-200 text-green-500"

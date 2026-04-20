@@ -111,7 +111,7 @@ function ManageURL() {
             </div>
 
             {Array.isArray(urlData) && urlData.length > 0 ? (
-                <div className='mt-8 w-11/12'>
+                <div className='mt-8 w-11/12 mx-auto'>
                     <div className='flex justify-center items-center'>
                         <Table columns={columnsData} data={urlData} title="Page URLs" />
                     </div>

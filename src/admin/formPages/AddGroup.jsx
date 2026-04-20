@@ -103,6 +103,7 @@ function AddGroup() {
                                             <div className="col-span-2">
                                                 <TextInput
                                                     label="Group Name"
+                                                    required
                                                     icon="MdOutlineGroupWork"
                                                     placeholder="Icon Name"
                                                     name="displayName"

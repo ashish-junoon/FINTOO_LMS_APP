@@ -484,6 +484,7 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
       collectionMode: Yup.string().required("Collection Mode is required"),
       collectedAmount: Yup.number()
         .required("Collected Amount is required")
+        .min(0, "Collected amount cannot be negative")
         .test(
           "close-loan-validation",
           "Does not match total outstanding amount",
