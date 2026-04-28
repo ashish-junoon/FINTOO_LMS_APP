@@ -182,58 +182,51 @@ function FundTracker() {
                 <span className=" bg-gray-400 px-6 py-1 rounded-t font-semibold italic text-white">Dashboard</span>
                 <div className="border border-light mt-0.5 p-4 flex justify-center items-center py-10">
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                        <div>
-                            <div className="border rounded shadow p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 hover:shadow-lg h-full">
-                                <div className="flex justify-center flex-col sm:flex-row">
-                                    <div className="flex justify-center border border-primary text-primary p-4 rounded mr-4 shadow-lg">
-                                        <Icon name="GiTakeMyMoney" size={40} />
-                                    </div>
-                                    <div className="text-lg text-center mt-2 font-semibold text-primary italic">
-                                        <div className="font-bold text-xl sm:text-2xl text-black">₹{<NumberFormatter number={funds?.total_funds || 0} />}</div>
-                                        <div>Total Funds</div>
-                                    </div>
+
+                        <div className="border rounded shadow p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 hover:shadow-lg h-full ">
+                            <div className="flex justify-center flex-col sm:flex-row ">
+                                <div className="flex justify-center border border-primary text-primary p-4 rounded mr-4 shadow-lg">
+                                    <Icon name="GiTakeMyMoney" size={40} />
+                                </div>
+                                <div className="text-lg text-center mt-2 font-semibold text-primary italic">
+                                    <div className="font-bold text-xl sm:text-2xl text-black">₹{<NumberFormatter number={funds?.total_funds || 0} />}</div>
+                                    <div>Total Funds</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <div className="border rounded shadow p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 hover:shadow-lg h-full">
-                                <div className="flex justify-center flex-col sm:flex-row">
-                                    <div className="flex justify-center border border-primary text-primary p-4 rounded mr-4 shadow-lg">
-                                        <Icon name="PiMinusFill" size={40} />
-                                    </div>
-                                    <div className="text-lg text-center mt-2 font-semibold text-primary italic">
-                                        <div className="font-bold text-xl sm:text-2xl text-black">₹{<NumberFormatter number={funds?.used_funds || 0} />}</div>
-                                        <div>Funds Used</div>
-                                    </div>
+                        <div className="border rounded shadow p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 hover:shadow-lg h-full">
+                            <div className="flex justify-center flex-col sm:flex-row">
+                                <div className="flex justify-center border border-primary text-primary p-4 rounded mr-4 shadow-lg">
+                                    <Icon name="PiMinusFill" size={40} />
+                                </div>
+                                <div className="text-lg text-center mt-2 font-semibold text-primary italic">
+                                    <div className="font-bold text-xl sm:text-2xl text-black">₹{<NumberFormatter number={funds?.used_funds || 0} />}</div>
+                                    <div>Funds Used</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <div className="border rounded shadow p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 hover:shadow-lg h-full">
-                                <div className="flex justify-center flex-col sm:flex-row">
-                                    <div className="flex justify-center border border-primary text-primary p-4 rounded mr-4 shadow-lg">
-                                        <Icon name="PiPlusFill" size={40} />
-                                    </div>
-                                    <div className="text-lg text-center mt-2 font-semibold text-primary italic">
-                                        <div className="font-bold text-xl sm:text-2xl text-black">₹{<NumberFormatter number={funds?.funds_left || 0} />}</div>
-                                        <div>Funds Left</div>
-                                    </div>
+                        <div className="border rounded shadow p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 hover:shadow-lg h-full">
+                            <div className="flex justify-center flex-col sm:flex-row">
+                                <div className="flex justify-center border border-primary text-primary p-4 rounded mr-4 shadow-lg">
+                                    <Icon name="PiPlusFill" size={40} />
+                                </div>
+                                <div className="text-lg text-center mt-2 font-semibold text-primary italic">
+                                    <div className="font-bold text-xl sm:text-2xl text-black">₹{<NumberFormatter number={funds?.funds_left || 0} />}</div>
+                                    <div>Funds Left</div>
                                 </div>
                             </div>
                         </div>
 
-                        <div>
-                            <div className="border rounded shadow p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 hover:shadow-lg h-full">
-                                <div className="flex justify-center flex-col sm:flex-row">
-                                    <div className="flex justify-center border border-primary text-primary p-4 rounded mr-4 shadow-lg">
-                                        <Icon name="PiUsersBold" size={40} />
-                                    </div>
-                                    <div className="text-lg text-center mt-2 font-semibold text-primary italic">
-                                        <div className="font-bold text-xl sm:text-2xl text-black">{fundStatus?.total_funders || 0}</div>
-                                        <Link to="/admin/funders">Funders</Link>
-                                    </div>
+                        <div className="border rounded shadow p-4 bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 hover:shadow-lg h-full">
+                            <div className="flex justify-center flex-col sm:flex-row">
+                                <div className="flex justify-center border border-primary text-primary p-4 rounded mr-4 shadow-lg">
+                                    <Icon name="PiUsersBold" size={40} />
+                                </div>
+                                <div className="text-lg text-center mt-2 font-semibold text-primary italic">
+                                    <div className="font-bold text-xl sm:text-2xl text-black">{fundStatus?.total_funders || 0}</div>
+                                    <Link to="/admin/funders">Funders</Link>
                                 </div>
                             </div>
                         </div>

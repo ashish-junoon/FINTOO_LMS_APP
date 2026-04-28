@@ -8,6 +8,8 @@ import Icon from "../utils/Icon";
 import { Button } from "@headlessui/react";
 import BackButton from "../utils/BackButton";
 
+const width = window.innerWidth;
+
 const dropdownVariants = {
   hidden: {
     opacity: 0,
@@ -129,7 +131,7 @@ function Dropdown({
 
 function Sidebar({ children }) {
   const { adminUser } = useAuth();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(width > 640);
   const [isHovered, setIsHovered] = useState(false);
   const [activePath, setActivePath] = useState("/");
   const [openDropdowns, setOpenDropdowns] = useState([]);
@@ -156,21 +158,28 @@ function Sidebar({ children }) {
       <Navbar isOpen={isOpen} toggleSidebar={() => setIsOpen(!isOpen)} />
 
       <div className="flex">
+        {/* overlay */}
+        {isOpen && (
+          <div
+            className="fixed inset-0 bg-black/40 z-10 sm:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+        )}
         <motion.div
           initial={{ width: isOpen || isHovered ? "250px" : "70px" }}
           animate={{ width: isHovered || isOpen ? "250px" : "70px" }}
           transition={{ ease: "easeIn", duration: 0.2 }}
-          className="min-h-[calc(100vh-40px)] overflow-y-auto bg-white p-4 mt-4 shadow-lg fixed left-0 top-[40px] bottom-0"
+          className="bg-white min-h-[calc(100vh-40px)] overflow-y-auto p-4 mt-4 shadow-lg fixed left-0 top-[40px] bottom-0 z-20"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           <motion.section>
             <div
-              className={`group flex items-center px-2 py-[5px] my-2 whitespace-nowrap rounded-md cursor-pointer ${activePath === "/"? 'bg-black':'hover:bg-primary'}`}
+              className={`group flex items-center px-2 py-[5px] my-2 whitespace-nowrap rounded-md cursor-pointer ${activePath === "/" ? 'bg-black' : 'hover:bg-primary'}`}
               onClick={() => navigate("/")}
             >
               <div className={`group flex items-center`}>
-                <div className={`mr-4 text-primary ${activePath === "/"? 'text-white':'group-hover:text-white'}`}>
+                <div className={`mr-4 text-primary ${activePath === "/" ? 'text-white' : 'group-hover:text-white'}`}>
                   <Icon
                     name="RiDashboardLine"
                     size={20}
@@ -179,7 +188,7 @@ function Sidebar({ children }) {
                 </div>
                 <div
                   className={`${!isOpen && "hidden"
-                    } text-sm text-black ${activePath === "/"? 'text-white':'group-hover:text-white'}`}
+                    } text-sm text-black ${activePath === "/" ? 'text-white' : 'group-hover:text-white'}`}
                 >
                   Dashboard
                 </div>
@@ -201,8 +210,8 @@ function Sidebar({ children }) {
                 <div
                   key={index}
                   className={`group flex items-center px-2 py-[5px] my-2 whitespace-nowrap rounded-md cursor-pointer hover:bg-primary ${activePath === route.path
-                      ? "text-white bg-primary"
-                      : "text-primary"
+                    ? "text-white bg-primary"
+                    : "text-primary"
                     }`}
                   onClick={() => handleClick(route.path)}
                 >
@@ -224,7 +233,7 @@ function Sidebar({ children }) {
           </motion.section>
         </motion.div>
         <motion.main
-          className={`overflow-hidden py-8 px-10 ${isHovered || isOpen ? "ml-[250px]" : "ml-[70px]"
+          className={`overflow-hidden py-5 sm:py-8 px-5 sm:px-10 ${isHovered || isOpen ? "sm:ml-[250px]" : "ml-[70px]"
             } w-full transition-all duration-300`}
         >
           <BackButton />

@@ -310,7 +310,7 @@ const Guarantor = ({ btnEnable = false, incomplete }) => {
             Guarantor 1
           </span>
           <div className="border-t border-gray-500 p-3 mb-1">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="flex flex-wrap md:grid grid-cols-3 gap-4">
               <div className="col-span-1">
                 <TextInput
                   label="Full Name"
@@ -380,7 +380,7 @@ const Guarantor = ({ btnEnable = false, incomplete }) => {
             Guarantor 2
           </span>
           <div className="border-t border-gray-500 p-3 mb-1">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="flex flex-wrap md:grid grid-cols-3 gap-4">
               <div className="col-span-1">
                 <TextInput
                   label="Full Name"
@@ -448,7 +448,7 @@ const Guarantor = ({ btnEnable = false, incomplete }) => {
 
           <span className="bg-slate-500 text-white text-xs px-6">Nominee </span>
           <div className="border-t border-gray-500 p-3">
-            <div className="grid grid-cols-3 gap-4 ">
+            <div className="flex flex-wrap md:grid grid-cols-3 gap-4 ">
               <div className="col-span-1">
                 <TextInput
                   label="Full Name"

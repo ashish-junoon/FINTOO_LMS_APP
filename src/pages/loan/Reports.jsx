@@ -167,7 +167,7 @@ function Reports() {
 
             <form onSubmit={formik.handleSubmit}>
                 <span className="text-lg italic font-semibold bg-primary text-white rounded-t-lg px-5 py-1">Reports Summary </span>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 border border-gray-200 p-8">
+                <div className="flex flex-wrap max-sm:flex-col gap-5 border border-gray-200 p-8">
                     {/* Data Type */}
                     <div>
                         <SelectInput
@@ -216,11 +216,11 @@ function Reports() {
                     </div>
 
                     {/* Submit Button */}
-                    <div className="col-span-3 flex justify-center items-center mt-4">
+                    <div className="col-span-3 flex justify-center items-end">
                         {reportData === null ? (
                             <button
                                 type="submit"
-                                className="border border-primary  text-primary items-center px-5 py-1 rounded shadow-sm hover:bg-primary hover:text-white transition duration-300 ease-in-out courser-pointer w-1/2 mx-auto font-semibold"
+                                className="border border-primary  text-primary items-center px-5 py-1 rounded shadow-sm hover:bg-primary hover:text-white transition duration-300 ease-in-out courser-pointer font-semibold"
                             >
                                 {isLoading ? (
                                     <div className="flex items-center justify-center">

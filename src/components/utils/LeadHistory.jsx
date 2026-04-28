@@ -93,7 +93,7 @@ function LeadHistory({ data, btnEnable = false }) {
 
     return (
         <div className="">
-            <div className="flex justify-end items-center mr-10">
+            <div className="flex justify-end items-center ">
                 <div>
                     {btnEnable && (
                         <Button

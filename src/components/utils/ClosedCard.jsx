@@ -190,9 +190,9 @@ function ClosedCard({ data, hideincollection }) {
   };
 
   return (
-    <div className="w-full mx-auto font-sans">
+    <div className="w-full mx-auto font-sans py-4">
       <div
-        className={`relative rounded-2xl p-6 transition-all duration-300 overflow-hidden
+        className={`relative rounded-2xl p-2 sm:p-6 transition-all duration-300 overflow-hidden
           ${isClosed
             ? "bg-gradient-to-br from-green-50 to-emerald-100/80 shadow-lg hover:shadow-green-200/60"
             : "bg-gradient-to-br from-gray-50 to-blue-50/70 shadow-lg hover:shadow-gray-200/60"
@@ -209,7 +209,7 @@ function ClosedCard({ data, hideincollection }) {
         ></div>
 
         <div className="relative z-10">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
             <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
               <Icon
                 name="HiBadgeCheck"
@@ -220,11 +220,11 @@ function ClosedCard({ data, hideincollection }) {
             </h2>
 
             {isClosed && !hideincollection && (
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   disabled={isNocsend}
                   onClick={HandleSendNOC}
-                  className={`text-base font-semibold ${!isNocsend ? "bg-gradient-to-r from-blue-900 to-blue-600 text-white cursor-pointer" : "bg-gray-50 text-gray-500 cursor-not-allowed"} px-5 py-1 rounded-full shadow-lg flex items-center gap-1`}
+                  className={`text-base font-semibold ${!isNocsend ? "bg-gradient-to-r from-blue-900 to-blue-600 text-white cursor-pointer" : "bg-gray-50 text-gray-500 cursor-not-allowed"} px-3 sm:px-5 py-1 rounded-full shadow-lg`}
                 >
                   {isLoading ? "Sending NOC" : "Generate & Send NOC"}
                 </button>
@@ -235,8 +235,8 @@ function ClosedCard({ data, hideincollection }) {
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
               <span className="font-medium text-gray-600 flex items-center gap-1.5">
                 <Icon name="HiIdentification" size={18} color="#8b5cf6" />
                 Loan ID:
@@ -246,14 +246,14 @@ function ClosedCard({ data, hideincollection }) {
               </span>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
               <span className="font-medium text-gray-600">Product Name:</span>
               <span className="font-semibold text-gray-800">
                 {product?.product_name || "N/A"}
               </span>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
               <span className="font-medium text-gray-600 flex items-center gap-1.5">
                 <Icon name="HiCurrencyRupee" size={18} color="#16a34a" />
                 Loan Amount:
@@ -266,7 +266,7 @@ function ClosedCard({ data, hideincollection }) {
               </span>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
               <span className="font-medium text-gray-600 flex items-center gap-1.5">
                 <Icon name="HiClock" size={18} color="#3b82f6" />
                 Tenure:
@@ -276,7 +276,7 @@ function ClosedCard({ data, hideincollection }) {
               </span>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
               <span className="font-medium text-gray-600">Loan Status:</span>
               <span>
                 {isClosed ? (
@@ -287,7 +287,7 @@ function ClosedCard({ data, hideincollection }) {
               </span>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm">
               <span className="font-medium text-gray-600 flex items-center gap-1.5">
                 <Icon name="HiIdentification" size={18} color="#8b5cf6" />
                 Repayment Date:
@@ -297,7 +297,7 @@ function ClosedCard({ data, hideincollection }) {
               </span>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm underline">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm underline">
               <button
                 className="flex items-center gap-1.5 font-medium text-blue-600"
                 onClick={GetAgreement}
@@ -306,7 +306,7 @@ function ClosedCard({ data, hideincollection }) {
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm underline">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm underline">
               <button
                 className="flex items-center gap-1.5 font-medium text-blue-600"
                 onClick={GetSanction}
@@ -315,7 +315,7 @@ function ClosedCard({ data, hideincollection }) {
               </button>
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm underline">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm underline">
               <button
                 className="flex items-center gap-1.5 font-medium text-blue-600"
                 onClick={GetDisbursal}
@@ -323,7 +323,7 @@ function ClosedCard({ data, hideincollection }) {
                 View Disbursal Letter
               </button>
             </div>
-            <div className="flex items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm underline">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg bg-white/50 backdrop-blur-sm border border-white/70 shadow-sm underline">
               <button
                 className="flex items-center gap-1.5 font-medium text-blue-600"
                 onClick={GetCertificate}

@@ -1,5 +1,10 @@
 import ReactECharts from 'echarts-for-react';
 
+const width = window.innerWidth;
+const height = window.innerHeight;
+
+console.log(width, height)
+
 /**
  * BarChart Component
  * @param {Array} data - Array of objects containing month, year, and monthwisedata.
@@ -22,7 +27,8 @@ function BarChart({ data = [], metrics = [], labelMap = {} }) {
     const option = {
         tooltip: {},
         legend: {
-            bottom: 0,
+            
+            bottom: width > 640 ? 0 : -10,
             textStyle: {
                 color: '#000',
                 fontSize: 10,

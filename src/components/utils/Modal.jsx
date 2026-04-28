@@ -29,7 +29,7 @@ const Modal = ({
     }, [isOpen, onClose])
 
     return (
-        <Dialog open={isOpen} onClose={onClose} className="relative z-999">
+        <Dialog open={isOpen} onClose={onClose} className="relative z-50">
             <div className="fixed inset-0 z-10 w-screen overflow-y-auto mt-10">
                 <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
                     <DialogPanel

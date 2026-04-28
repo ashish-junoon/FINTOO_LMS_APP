@@ -262,7 +262,7 @@ const PersonalInfo = ({ btnEnable = false, incomplete }) => {
     >
       <div className="px-8 mb-5">
         <form onSubmit={formik.handleSubmit}>
-          <div className="grid grid-cols-6 gap-3">
+          <div className="flex flex-wrap lg:grid grid-cols-6 gap-3">
             <div className="col-span-3">
               <TextInput
                 label="Full Name"

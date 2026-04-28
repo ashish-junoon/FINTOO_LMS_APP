@@ -340,7 +340,7 @@ const OthersDocs = ({ btnEnable = false }) => {
           )}
         </div>
         {!funder && (
-          <div className="grid grid-cols-6 gap-5 mt-2">
+          <div className="flex flex-wrap md:grid grid-cols-6 gap-5 mt-2">
             {otherDocs.map((doc, index) => (
               <div className="col-span-2" key={index}>
                 <DownloadDoc

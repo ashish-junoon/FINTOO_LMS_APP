@@ -211,7 +211,7 @@ const ManageLoan = () => {
             {filterBtn && (
                 <FilterCard onClick={handleFilterBtn}>
                     <div className='pb-5 px-4'>
-                        <div className='p-4 grid grid-cols-5 gap-5'>
+                        <div className='p-4 grid sm:grid-cols-5 gap-y-3 gap-x-5 items-end'>
                             <div>
                                 <DateInput
                                     label={"From Date"}
@@ -256,14 +256,14 @@ const ManageLoan = () => {
                                     onChange={(event) => setType(event.target.value)}
                                 />
                             </div>
-                            <div className='flex justify-center items-center'>
+                            <div className='flex justify-center items-end'>
                                 <Button
                                     btnName={"Apply Filter"}
                                     btnIcon={"MdFilterAlt"}
                                     type="button"
                                     onClick={handleFilter}
                                     title="Search"
-                                    style="bg-primary text-white min-w-48 mt-6"
+                                    style="bg-primary text-white min-w-32 max-sm:mt-3"
                                 />
                             </div>
                         </div>

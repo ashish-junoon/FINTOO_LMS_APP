@@ -118,7 +118,7 @@ const DynamicReporting = () => {
                 {/* Form */}
                 <form onSubmit={formik.handleSubmit} className="p-6 space-y-6">
                     {/* Data Type Field */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+                    <div className="flex flex-wrap max-sm:flex-col gap-5">
                         <div>
                             <SelectInput
                                 label="Data Type"
@@ -185,11 +185,11 @@ const DynamicReporting = () => {
                             )}
                         </div>
                         {/* Submit Button */}
-                        <div className="col-span-4 flex justify-center items-center">
+                        <div className="col-span-4 flex justify-center items-end">
                             {reportData === null ?
                                 <button
                                     type="submit"
-                                    className="border border-primary text-primary font-semibold hover:bg-primary hover:text-white shadow items-center px-5 py-1 rounded w-1/2 mt-3"
+                                    className="border border-primary text-primary font-semibold hover:bg-primary hover:text-white shadow items-center px-5 py-1 rounded mt-3"
                                 >
                                     {isLoading ? (
                                         <div className="flex items-center justify-center">

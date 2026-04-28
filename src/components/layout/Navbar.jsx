@@ -34,23 +34,23 @@ function Navbar({ isOpen, toggleSidebar }) {
         <>
             {/* Navbar Header */}
             <div className="mx-auto h-[58px] w-full bg-white flex items-center z-50 sticky top-0 shadow-lg">
-                <div className="flex flex-wrap mx-10 w-full">
+                <div className="flex flex-wrap justify-between mx-5 w-full">
                     {/* Left Column */}
-                    <div className="w-full md:w-6/12 px-4">
+                    <div className="md:w-6/12">
                         <div className="flex items-center">
                             <button className='text-primary' onClick={toggleSidebar}>
                                 <Icon name="IoMenu" size={26} />
                             </button>
-                            <Link to="/" className='sm:flex hidden ml-5'>
+                            <Link to="/" className='flex ml-5'>
                                 {/* <img src={Images.logo} alt="Logo" className="h-8 w-8 ml-10" /> */}
-                                <span className="text-lg font-bold text-white border bg-primary border-primary rounded-full px-2 py-1 shadow-md">FT</span>
+                                <span className="text-md font-bold text-white border bg-primary border-primary rounded-full w-10 h-10 grid place-items-center shadow-md">FT</span>
                                 <span className="text-lg font-bold ml-2 my-1.5 text-primary">CRM: Fynto</span>
                             </Link>
                         </div>
                     </div>
 
                     {/* Middle Column */}
-                    <div className="w-full md:w-3/12 px-4">
+                    {/* <div className="md:w-3/12 px-4 hidden"> */}
                         {/* <div className="w-8/12">
                             <SearchBox
                                 value={searchQuery}
@@ -60,10 +60,10 @@ function Navbar({ isOpen, toggleSidebar }) {
                                 style={'bg-primary p-[8px] px-4 hover:bg-secondary'}
                             />
                         </div> */}
-                    </div>
+                    {/* </div> */}
 
                     {/* Right Column */}
-                    <div className="hidden md:block w-full md:w-3/12 px-4">
+                    <div className="block md:w-3/12 ">
                         <div className="flex items-center justify-end">
                             {/* Notifications Dropdown */}
                             <Dropdown items={notifyItems} size="w-72" heading="Notifications">

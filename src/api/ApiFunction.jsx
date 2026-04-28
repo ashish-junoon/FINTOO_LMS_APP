@@ -449,9 +449,9 @@ export const registerEMandateBySalora = async (req) => {
 }
 
 //Cancel eMandate Salora
-export const cancelEmandateSalora = async (param) => {
+export const cancelEmandateSalora = async (params) => {
     try {
-        const response = await api.delete(`/api/Salora/DeleteToken/Delete E-Mandate/${param}`);
+        const response = await api.delete(`/Salora/DeleteToken/Delete E-Mandate_V1/?Customer_id=${params.Customer_id}&Token_id=${params.Token_id}&comapny_id=${params.comapny_id}&product_name=${params.product_name}&user_id=${params.user_id}&lead_id=${params.lead_id}&created_by=${params.created_by}`);
         return response.data;
     } catch (error) {
         console.error("Register eMandate:", error.response?.data || error.message);
@@ -628,6 +628,17 @@ export const PullPaymentUsingEaseBuzz = async (req) => {
 export const PullNACHPayment = async (req) => {
     try {
         const response = await api.post("/PayProvider/PullPaymentUsingEMandate", req);
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Pull NACH Payment error:", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+
+//Pull Payment by Salora
+export const PullNACHPaymentBySalora = async (req) => {
+    try {
+        const response = await api.post("/Salora/RecurringcreateOrder/RecurringcreateOrder", req);
         return response.data; // Return the API response data
     } catch (error) {
         console.error("Pull NACH Payment error:", error.response?.data || error.message);

@@ -5,6 +5,8 @@ import Icon from "./utils/Icon";
 import Button from "./utils/Button";
 import Tooltip from "./utils/Tooltip";
 
+const width = window.innerWidth;
+
 const Table = ({ columns, data, title, handleFilter, pagination = true, selectableRows = false, onRowClicked, exportable = false, csvData, filename }) => {
     const [filterText, setFilterText] = useState("");
 
@@ -35,15 +37,15 @@ const Table = ({ columns, data, title, handleFilter, pagination = true, selectab
     // alert(JSON.stringify(filteredData));
 
     return (
-        <div className="shadow">
+        <div className="shadow overflow-auto">
             <div className="py-2 shadow-md px-5">
                 <div className="grid grid-cols-5 gap-4 mb-3">
-                    <div className="col-span-2">
+                    <div className="col-span-5 sm:col-span-2">
                         <span className="font-bold text-xl text-primary">{title}</span>
                     </div>
-                    <div className="col-span-3">
-                        <div className="flex justify-end gap-6">
-                            <div className="flex w-5/12">
+                    <div className="col-span-5 sm:col-span-3">
+                        <div className="flex justify-end gap-2 sm:gap-6">
+                            <div className="flex sm:w-5/12">
                                 <input
                                     type="text"
                                     placeholder="Type to search..."
@@ -75,10 +77,10 @@ const Table = ({ columns, data, title, handleFilter, pagination = true, selectab
                                     <CSVLink
                                         data={csvData ? csvData : filteredData}
                                         filename={filename ? filename : "export.csv"}
-                                        className="px-3 py-0.5 bg-primary text-white text-semibold rounded flex items-center gap-2 shadow"
+                                        className="p-1.5 sm:px-3 sm:py-0.5 bg-primary text-white text-semibold rounded flex items-center gap-2 shadow"
                                     >
                                         <Icon name="RiFileExcel2Line" size={16} color="white" />
-                                        Export
+                                        {width > 640 && "Export"}
                                     </CSVLink>
                                 )}
                             </div>

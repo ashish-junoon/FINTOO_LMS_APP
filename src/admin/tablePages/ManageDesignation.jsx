@@ -146,7 +146,7 @@ const ManageDesignation = () => {
             </Helmet>
 
             <div className="border border-gray-200 shadow px-5 py-2 mb-5 bg-blue-50 rounded">
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid sm:grid-cols-2 gap-5">
                     <div className="flex flex-col justify-start">
                         <h1 className="text-lg font-bold text-black">Manage Designation</h1>
                         <p className="text-xs font-light text-secondary">Add Modify Designation</p>
@@ -295,7 +295,7 @@ const ManageDesignation = () => {
 
 
                 <div className="mt-8">
-                    <div className="container m-auto  w-3/4 p-4 rounded">
+                    <div className="container m-auto  sm:w-3/4 sm:p-4 rounded">
                         {/* Display Loading Message */}
                         {designation === null ? (
                             <div className="flex justify-center items-center h-64">

@@ -168,12 +168,12 @@ function UpdateUser() {
 
     return (
         <>
-            <div className="w-7/12 mx-auto shadow-md rounded">
+            <div className="sm:w-7/12 mx-auto shadow-md rounded">
                 <div className="bg-primary text-white rounded-t-lg px-8 py-1.5">
                     <h2 className="text-base font-bold">Update User</h2>
                 </div>
                 <form onSubmit={formik.handleSubmit} className="px-8 py-5">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
                         <div>
                             <TextInput
                                 label="First Name"
@@ -397,7 +397,7 @@ function UpdateUser() {
                         </div>
                     </div>
 
-                    <div className="mt-6 flex justify-end gap-4">
+                    <div className="mt-6 flex flex-wrap justify-end gap-4">
                         {permission && (
                             <>
                                 {isEditing && (
@@ -420,8 +420,6 @@ function UpdateUser() {
                                 )}
                             </>
                         )}
-
-
 
                         <button
                             type="button"

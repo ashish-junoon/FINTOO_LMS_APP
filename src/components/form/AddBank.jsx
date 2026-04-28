@@ -291,7 +291,7 @@ const AddBank = ({fetchData}) => {
         <h2 className="font-semibold">Add Bank Accounts</h2>
       </div>
 
-      <div className="flex items-center justify-end mt-0 gap-4">
+      <div className="flex flex-col sm:flex-row items-end sm:items-center justify-end mt-5 gap-4">
         {/* {permission && ( */}
         <Button
           btnName={"Add Bank"}
@@ -299,7 +299,7 @@ const AddBank = ({fetchData}) => {
           type={"IoCheckmarkCircleSharp"}
           onClick={() => setIsOpen(true)}
           // disabled={btnEnable}
-          style="min-w-[120px] text-sm italic font-semibold md:w-auto my-4 py-1 border-success px-2 gap-1 text-white bg-success border hover:border-success text-primary hover:bg-white hover:text-success"
+          style="min-w-[120px] text-sm italic font-semibold md:w-auto py-1 border-success px-2 gap-1 text-white bg-success border hover:border-success text-primary hover:bg-white hover:text-success"
         />
         <Button
           btnName={isLoading? "Verifying..." : "Verify Primary Bank"}
@@ -307,7 +307,7 @@ const AddBank = ({fetchData}) => {
           type={"IoCheckmarkCircleSharp"}
           onClick={verifyPrimaryBank}
           disabled={isLoading}
-          style={`min-w-[130px] text-sm italic font-semibold md:w-auto my-4 py-1 border-success px-4 text-white bg-success border ${isLoading? '': 'hover:border-success'} text-primary hover:bg-white hover:text-success`}
+          style={`min-w-[130px] text-sm italic font-semibold md:w-auto py-1 border-success px-4 text-white bg-success border ${isLoading? '': 'hover:border-success'} text-primary hover:bg-white hover:text-success`}
         />
         {/* )} */}
       </div>

@@ -487,7 +487,7 @@ const ManageDisbursalForm = () => {
       label: "Disbursal Details",
       content: (
         <div>
-          <div className="flex justify-end items-center mt-5 gap-5">
+          <div className="flex flex-wrap justify-end items-center mt-5 gap-5">
             {permission && (
               <Button
                 btnName={isLoading ? "Verifying..." : "Verify Bank"}
@@ -533,7 +533,7 @@ const ManageDisbursalForm = () => {
           </div>
           <hr className="my-5"></hr>
           <div className="my-5 px-5">
-            <div className="grid grid-cols-4 gap-10">
+            <div className="grid md:grid-cols-4 gap-10">
               <div className="col-span-1">
                 <div
                   className={`border rounded mt-5 ${bankVerified || isBankVerified
@@ -549,7 +549,7 @@ const ManageDisbursalForm = () => {
                   >
                     Bank Details
                   </span>
-                  <div className="px-5 mb-0.5 ">
+                  <div className="px-5 mb-0.5 flex flex-wrap justify-between">
                     {Object.entries(bankDetails).map(([key, value]) => (
                       <div key={key} className="mt-2">
                         <h5 className="text-xs">{capitalizeWords(key)}</h5>
@@ -571,8 +571,8 @@ const ManageDisbursalForm = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-span-3 gap-5">
-                <div className="grid grid-cols-4 mb-5 gap-1">
+              <div className="col-span-1 md:col-span-3 gap-5">
+                <div className="grid grid-cols-2 sm:grid-cols-4 mb-5 gap-1">
                   {Object.entries(applicantData).map(([key, value]) => (
                     <div key={key} className="mt-2">
                       <h5 className="text-xs text-primary">
@@ -592,10 +592,10 @@ const ManageDisbursalForm = () => {
       label: "Borrower Application",
       content: (
         <div className="grid grid-cols-7 gap-4 mt-5">
-          <div className="col-span-2 py-5">
+          <div className="col-span-full sm:col-span-2 py-5">
             <div>{!funder && <FormSidebar data={userData} />}</div>
           </div>
-          <div className={`${!funder ? "col-span-5" : "col-span-7"} py-5`}>
+          <div className={`${!funder ? "col-span-full sm:col-span-5" : "col-span-7"} py-5`}>
             <Personal />
             <Employment />
             <Address />

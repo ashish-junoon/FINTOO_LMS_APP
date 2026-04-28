@@ -402,7 +402,7 @@ const LoanHistoryPage = () => {
                   >
                     {item.label}
                   </p>
-                  <p className="bg-gray-000 text-primary py-1 px-4">
+                  <p className="bg-gray-000 text-primary py-1">
                     {item.value}
                   </p>
                 </div>

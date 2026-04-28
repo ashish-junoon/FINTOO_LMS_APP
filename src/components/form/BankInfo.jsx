@@ -430,7 +430,7 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
     >
       <div className="px-8 mb-5">
         <form onSubmit={formik.handleSubmit}>
-          <div className="grid grid-cols-6 gap-4">
+          <div className="flex flex-wrap md:grid grid-cols-6 gap-4">
             <div className="col-span-3">
               <SelectInput
                 label="Bank Name"

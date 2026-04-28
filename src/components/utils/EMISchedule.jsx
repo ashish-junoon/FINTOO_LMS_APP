@@ -86,7 +86,7 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
       ? true
       : false;
 
-      const role = adminUser?.role;
+  const role = adminUser?.role;
   const emp_code = adminUser?.emp_code;
 
   // Get today and yesterday for validation
@@ -238,7 +238,7 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
   //   return mindate;
   // }
 
-  const getMinDate= (role, emp_code) => {
+  const getMinDate = (role, emp_code) => {
     if (
       emp_code == "JC0002" ||
       emp_code == "JC0003"
@@ -303,10 +303,19 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
   // cancel mandate by salora
   const handleCancelMandate = async () => {
     try {
-      const leadid = "4787894123";
-      const res = cancelEmandateSalora(leadid);
-      if(res?.status){
-        toast.info("eMandate Cancelled");
+      const queryParams = {
+        Customer_id: "",
+        Token_id: "",
+        comapny_id: import.meta.env.VITE_COMPANY_ID,
+        product_name: import.meta.env.VITE_PRODUCT_NAME,
+        user_id: userId,
+        lead_id: leadId,
+        created_by: adminUser.emp_code,
+      }
+
+      const res = cancelEmandateSalora(queryParams);
+      if (res?.status) {
+        toast.info("eMandate cancel request success");
       } else {
         toast.error("something went wrong cancelling eMandate")
       }
@@ -621,6 +630,13 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
     },
   });
 
+  // const cancelMandateForm = useFormik({
+  //   initialValues:{
+  //     customerId: "",
+
+  //   }
+  // })
+
   const pullNachPaymentRazorPay = async () => {
     setIsPullNach(false);
     setIsLoading(true);
@@ -882,17 +898,17 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
     <>
       <div>
         {!hideincollection &&
-        <div className="flex justify-between items-center my-5 gap-5">
-          <div>
-            <h2>
-              Loan Account:{" "}
-              <span className="text-lg font-semibold">{loan_Id}</span>
-            </h2>
-          </div>
-          <div className="flex gap-5">
-            {permission && (
-              <>
-                {/* <Button
+          <div className="flex flex-col sm:flex-row justify-between items-center my-5 gap-5">
+            <div>
+              <h2>
+                Loan Account:{" "}
+                <span className="text-lg font-semibold">{loan_Id}</span>
+              </h2>
+            </div>
+            <div className="flex flex-wrap justify-end gap-5">
+              {permission && (
+                <>
+                  {/* <Button
                                     btnName={"Write Off Amount"}
                                     btnIcon={"MdOutlineReceipt"}
                                     type={"button"}
@@ -900,33 +916,33 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
                                     onClick={() => setIsWriteoff(true)}
                                     style="min-w-[170px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
                                 /> */}
-                <Button
-                  btnName={"Pull Payment"}
-                  btnIcon={"RiSecurePaymentLine"}
-                  type={"button"}
-                  disabled={!permission}
-                  onClick={() => setIsPullNach(true)}
-                  style="min-w-[150px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
-                />
-                <Button
-                  btnName={"Update Collection"}
-                  btnIcon={"MdOutlineReceipt"}
-                  type={"button"}
-                  disabled={!permission}
-                  onClick={() => setIsOpen(true)}
-                  style="min-w-[170px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
-                />
-                {isDisbursed && (
                   <Button
-                    btnName={"Update UTR"}
+                    btnName={"Pull Payment"}
+                    btnIcon={"RiSecurePaymentLine"}
+                    type={"button"}
+                    disabled={!permission}
+                    onClick={() => setIsPullNach(true)}
+                    style="min-w-[150px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
+                  />
+                  <Button
+                    btnName={"Update Collection"}
                     btnIcon={"MdOutlineReceipt"}
                     type={"button"}
                     disabled={!permission}
-                    onClick={() => setUtrUpdate(true)}
-                    style="min-w-[140px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
+                    onClick={() => setIsOpen(true)}
+                    style="min-w-[170px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
                   />
-                )}
-                {/* <Button
+                  {isDisbursed && (
+                    <Button
+                      btnName={"Update UTR"}
+                      btnIcon={"MdOutlineReceipt"}
+                      type={"button"}
+                      disabled={!permission}
+                      onClick={() => setUtrUpdate(true)}
+                      style="min-w-[140px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
+                    />
+                  )}
+                  {/* <Button
                   btnName={"Cancel eMandate"}
                   btnIcon={"MdCancel"}
                   type={"button"}
@@ -934,12 +950,12 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
                   onClick={() => setCancelMandate(true)}
                   style="min-w-[170px] hover:shadow-lg bg-danger text-white font-medium py-2 px-4 rounded"
                 /> */}
-              </>
-            )}
-          </div>
-        </div>}
+                </>
+              )}
+            </div>
+          </div>}
 
-        <div className="max-full mx-auto p-6">
+        <div className="max-full mx-auto sm:p-6">
           <div className="overflow-hidden rounded-xl shadow-lg bg-white">
             <div
               className={`px-6 py-1 ${activeLoan?.loan_status === "Overdue"
@@ -964,7 +980,7 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
                   </p>
                 </div>
               ))}
-              {!funder && !hideincollection &&  (
+              {!funder && !hideincollection && (
                 <>
                   <div className="px-4 py-2">
                     <p className="text-sm text-gray-800 font-bold mb-1">
@@ -1059,9 +1075,9 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
         onClose={() => setIsOpen(false)}
         heading={"Update Payment"}
       >
-        <div className="px-5">
-          <div className="flex justify-evenly items-center gap-2 border border-primary py-2 rounded shadow-sm">
-            <div className="flex flex-col justify-center items-center">
+        <div className="sm:px-5">
+          <div className="flex justify-evenly items-center gap-2 border border-primary p-2 rounded shadow-sm">
+            <div className="flex flex-col justify-center sm:items-center">
               <p className="text-sm font-semibold italic text-primary">
                 Current Outstanding{" "}
               </p>
@@ -1074,7 +1090,7 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
               </p>
             </div>
 
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col justify-center sm:items-center">
               <p className="text-sm font-semibold italic text-primary">
                 Current Interest
               </p>
@@ -1086,7 +1102,7 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
               </p>
             </div>
 
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col justify-center sm:items-center">
               <p className="text-sm font-semibold italic text-primary">
                 Penal Charges
               </p>
@@ -1913,6 +1929,25 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
               <h2 className="text-lg font-semibold italic mt-2 text-amber-500">
                 Are you sure?
               </h2>
+              <div>
+                <div className="col-span-1">
+                <TextInput
+                  label="Customer Id"
+                  icon="RiMoneyRupeeCircleFill"
+                  placeholder=""
+                  name="customerId"
+                  id="customerId"
+                  onChange={UpdatePayment.handleChange}
+                  onBlur={UpdatePayment.handleBlur}
+                  value={UpdatePayment.values.customerId}
+                />
+                {UpdatePayment.touched.customerId &&
+                  UpdatePayment.errors.customerId && (
+                    <ErrorMsg error={UpdatePayment.errors.customerId} />
+                  )}
+              </div>
+
+              </div>
               <h6 className="text-center text-xs text-gray-500 mt-2">
                 This action will cancel the existing eMandate.
               </h6>

@@ -80,7 +80,7 @@ const VerifyOtp = () => {
 
         <div className="mt-5 px-8 mb-5">
           <form onSubmit={formik.handleSubmit}>
-            <div className="grid grid-cols-5 gap-5">
+            <div className="grid sm:grid-cols-5 gap-x-5 gap-y-3">
                 <div className="">
                     <SelectInput
                         label="Service Type"
@@ -130,22 +130,22 @@ const VerifyOtp = () => {
                 )}
               </div>
               
-              <div>
+              <div className="flex items-end mt-2">
                 <Button
                     btnName={isLoading ? "Verifying..." : "Verify"}
                     btnIcon="GrValidate"
                     type="submit"
                     disabled={isLoading}
-                    style="bg-primary text-white py-1.5 px-4 rounded mt-6 w-full cursor-pointer hover:bg-blue-600"
+                    style="bg-primary text-white py-1.5 px-4 rounded w-full cursor-pointer hover:bg-blue-600"
                 />
               </div>
-              <div>
+              <div className="flex items-end mt-2">
                 <Button
                     btnName="Reset"
                     btnIcon="RiResetLeftFill"
                     type="reset"
                     onClick={()=> {formik.resetForm(), setOtp(null)}}
-                    style="bg-primary text-white py-1.5 px-4 rounded mt-6 w-full cursor-pointer hover:bg-blue-600"
+                    style="bg-primary text-white py-1.5 px-4 rounded w-full cursor-pointer hover:bg-blue-600"
                 />
               </div>
             </div>

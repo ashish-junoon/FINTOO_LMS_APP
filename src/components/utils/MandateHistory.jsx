@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
-import { getMandateHistory } from "../../api/ApiFunction";
+import { cancelEmandateSalora, getMandateHistory } from "../../api/ApiFunction";
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Loader } from "lucide-react";
+import Modal from './Modal';
+import TextInput from "../fields/TextInput";
+import { useAuth } from "../../context/AuthContext";
 
 const MandateHistory = () => {
   const [historyData, setHistoryData] = useState(null);
   const [loading, setIsLoading] = useState(null);
+  const [cancelMandate, setCancelMandate] = useState(null);
+
+  const { adminUser } = useAuth();
 
   const location = useLocation();
   const lead_id = location?.state?.lead_id;
-  // const user_id = location?.state?.user_id
+  const user_id = location?.state?.user_id
 
   const fetchMandateHistory = async () => {
     const req = { lead_id: lead_id };
@@ -38,6 +44,35 @@ const MandateHistory = () => {
   const LowerCaseConvert = (value) => {
     return value?.toLowerCase().trim().replaceAll(" ", "");
   };
+
+  // cancel mandate by salora
+  const handleCancelMandate = async () => {
+    console.log("mandate details: ", cancelMandate)
+    try {
+      const queryParams = {
+        Customer_id: cancelMandate?.mandate_id,
+        Token_id: cancelMandate?.transaction_id,
+        comapny_id: import.meta.env.VITE_COMPANY_ID,
+        product_name: import.meta.env.VITE_PRODUCT_NAME,
+        user_id: user_id,
+        lead_id: lead_id,
+        created_by: adminUser.emp_code,
+      }
+
+      const res = await cancelEmandateSalora(queryParams);
+      // console.log("res", res)
+      if (res?.status === "SUCCESS") {
+        toast.info("eMandate cancel request success");
+      } else {
+        toast.error(res?.message || "something went wrong cancelling eMandate")
+      }
+    } catch (error) {
+      console.error("error in cancel mandate, ", error);
+      toast.error("An error occurred while fetching data.");
+    } finally {
+      setCancelMandate(false);
+    }
+  }
 
   if (loading) {
     return <Loader />;
@@ -86,6 +121,9 @@ const MandateHistory = () => {
                     </th> */}
                     <th className="border px-2 py-2 text-xs text-left">
                       Status
+                    </th>
+                    <th className="border px-2 py-2 text-xs text-left">
+                      Action
                     </th>
                   </tr>
                 </thead>
@@ -137,14 +175,14 @@ const MandateHistory = () => {
                           {item?.status}
                         </p>
                       </td>
-                      {/* <td className="border px-2 py-1 text-xs">
+                      <td className="border px-2 py-1 text-xs">
                         <button
-                          onClick={() => handleShowCloseLead(item.loan_id)}
-                          className="text-primary font-bold w-full"
+                          onClick={() => setCancelMandate(item)}
+                          className="text-red-600 font-bold w-full"
                         >
-                          View
+                          Cancel
                         </button>
-                    </td> */}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -157,6 +195,70 @@ const MandateHistory = () => {
           )}
         </div>
       </div>
+
+      <Modal isOpen={!!cancelMandate} onClose={() => setCancelMandate(null)}>
+        <div className="py-6 border border-gray-200 rounded flex flex-col items-center justify-center">
+          {true && (
+            <div className="flex flex-col justify-center">
+              <h2 className="text-lg font-semibold italic text-amber-500">
+                Are you sure?
+              </h2>
+              <div>
+
+              </div>
+
+              <h6 className="text-base font-semibold text-gray-800 my-2 border-b max-w-32">
+                Mandate Details
+              </h6>
+
+              <div className="bg-white mb-4">
+                <div className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
+
+                  <div className="text-gray-500">Customer Name</div>
+                  <div className="text-gray-800 font-medium">
+                    {cancelMandate?.customer_name || "-"}
+                  </div>
+
+                  <div className="text-gray-500">Bank Name</div>
+                  <div className="text-gray-800 font-medium">
+                    {cancelMandate?.bank_name || "-"}
+                  </div>
+
+                  <div className="text-gray-500">Account Type</div>
+                  <div className="text-gray-800 font-medium">
+                    {cancelMandate?.account_type === 1 ? "Primary" : "Secondary"}
+                  </div>
+
+                  <div className="text-gray-500">Current Status</div>
+                  <div className="text-gray-800 font-medium">
+                    {cancelMandate?.status || "-"}
+                  </div>
+
+                </div>
+              </div>
+
+              <h6 className=" text-xs text-gray-500 mt-2">
+                This action will cancel the existing eMandate.
+              </h6>
+
+              <div className="grid grid-cols-2 gap-3 my-2">
+                <button
+                  className="px-8 mt-4 shadow-md text-primary border border-primary hover:bg-primary hover:text-white text-xs w-full font-bold py-2 rounded"
+                  onClick={handleCancelMandate}
+                >
+                  Yes
+                </button>
+                <button
+                  className="px-8 mt-4 shadow-md text-primary border border-primary hover:bg-primary hover:text-white text-xs w-full font-bold py-2 rounded"
+                  onClick={() => setCancelMandate(false)}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </Modal>
     </>
   );
 };

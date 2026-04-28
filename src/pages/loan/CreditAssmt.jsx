@@ -133,8 +133,8 @@ const CreditAssmnt = () => {
         </button>
       ),
       ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
+      allowoverflow: true,
+      button: "true",
     },
     {
       name: "Lead ID",

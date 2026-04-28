@@ -255,7 +255,7 @@ const ManageDue = () => {
                                     <h3 className="text-lg text-primary font-semibold ">Disbursement Details</h3>
                                 </div>
                                 <div className="pt-2 px-4 pb-2">
-                                    <div className="space-y-2">
+                                    <div className="flex flex-wrap gap-6 gap-y-2">
                                         <div>
                                             <p className="text-sm text-muted-foreground">Loan Amount</p>
                                             <p className="text-xl font-bold text-primary">₹{selectedIds?.loan_amount}</p>
@@ -280,7 +280,7 @@ const ManageDue = () => {
                                     <h3 className="text-lg text-primary font-semibold">Collection Details</h3>
                                 </div>
                                 <div className="pt-2 px-4 pb-2">
-                                    <div className="space-y-2">
+                                    <div className="flex flex-wrap gap-6 gap-y-2">
                                         <div>
                                             <p className="text-sm text-muted-foreground">Collection Amount</p>
                                             <p className="text-xl font-bold text-primary">₹{selectedIds?.loan_collection_amount}</p>

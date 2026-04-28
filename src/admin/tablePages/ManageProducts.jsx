@@ -157,7 +157,7 @@ const ManageProducts = () => {
                 <meta name="Leads Verification" content="Leads Verification" />
             </Helmet>
             <div className="border border-gray-200 shadow px-5 py-2 mb-5 bg-blue-50 rounded">
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid sm:grid-cols-2 gap-5">
                     <div className="flex flex-col justify-start">
                         <h1 className="text-lg font-bold text-black">Product Management</h1>
                         <p className="text-xs font-light text-secondary">Manage & Control Product</p>

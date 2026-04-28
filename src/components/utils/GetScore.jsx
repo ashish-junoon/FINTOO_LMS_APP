@@ -8,7 +8,7 @@ import Loader from './Loader';
 import SelectInput from '../fields/SelectInput';
 import TextInput from '../fields/TextInput';
 import ErrorMsg from './ErrorMsg';
-import { scorePlatform } from '../content/Data'
+import { scorePlatform, stateMap } from '../content/Data'
 import { useOpenLeadContext } from '../../context/OpenLeadContext'
 import { useAuth } from '../../context/AuthContext';
 import Modal from '../utils/Modal';
@@ -26,7 +26,7 @@ const GetScore = ({ btnEnable = false }) => {
 
 
     const scoreData = leadInfo?.cibilCreditScores
-    console.log("score data, ", scoreData)
+    // console.log("score data, ", scoreData)
     const score = parseInt(leadInfo?.cibilCreditScores?.[0]?.credit_score) || 0;
     const funder = adminUser.role === 'Funder' ? true : false
 
@@ -304,8 +304,8 @@ const GetScore = ({ btnEnable = false }) => {
             dob: formattedDOB.replaceAll("-", ""), //ddmmyyyy fixed
             pan: leadInfo?.kycInfo[0].pan_card_number,
             mobile: leadInfo?.mobile_number,
-            city: "Delhi", //*
-            state: "07",
+            city: leadInfo?.addressInfo?.[0]?.state, //*
+            state: stateMap[leadInfo?.addressInfo?.[0]?.state?.toLowerCase()], // stateCodelist .lable .value
             pinCode: leadInfo?.addressInfo[0]?.zip_code,
             comapny_id: import.meta.env.VITE_COMPANY_ID,
             product_name: import.meta.env.VITE_PRODUCT_NAME,
@@ -323,7 +323,7 @@ const GetScore = ({ btnEnable = false }) => {
                 setLeadInfo(prev => {
                     const updatedScores = [...(prev.cibilCreditScores || [])];
 
-                    updatedScores[1] = {
+                    updatedScores[0] = {
                         name: `${response?.data?.applicant?.firstName} ${response?.data?.applicant?.lastName}`,
                         mobile: response?.data?.applicant?.mobile,
                         pan_number: response?.data?.applicant?.pan,
@@ -332,8 +332,6 @@ const GetScore = ({ btnEnable = false }) => {
                         // provider: response.provider,
                         provider: "SALORA",
                     };
-
-                    // console.log("updated salora score, ", updatedScores)
 
                     return {
                         ...prev,
@@ -368,59 +366,62 @@ const GetScore = ({ btnEnable = false }) => {
     // alert(JSON.stringify(parseInt(score)))
 
     return (
-        <div className="my-8">
-
-            <div className='grid grid-cols-2 gap-5'>
+        <div className="my-4">
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-5'>
                 {/* Get Credit Score section */}
                 {permission && !funder && (
                     <div className='col-span-1 shadow rounded-t-xl'>
-                        <div className=''>
-                            <div className='bg-gray-600 px-5 py-0.5 font-semibold text-white rounded-t-xl'>Get Credit Score</div>
-                            <div className='grid grid-cols-3 px-5 py-5'>
-                                <div className='col-span-2 flex gap-5 border-r-2 border-r-gray-300 '>
-                                    <form onSubmit={creditPlatform.handleSubmit} className="flex gap-5">
-                                        <div>
-                                            <SelectInput
-                                                label=""
-                                                placeholder="Select Platform"
-                                                icon="IoSpeedometerOutline"
-                                                name="platform"
-                                                id="platform"
-                                                disabled={!permission || funder}
-                                                options={scorePlatform}
-                                                onChange={creditPlatform.handleChange}
-                                                onBlur={creditPlatform.handleBlur}
-                                                value={creditPlatform.values.platform}
-                                            />
-                                            {creditPlatform.touched.platform && creditPlatform.errors.platform && (
-                                                <ErrorMsg error={creditPlatform.errors.platform} />
-                                            )}
-                                        </div>
-
-                                        <div className='mt-1'>
-                                            <Button
-                                                btnName="Get Score"
-                                                disabled={!permission || funder || btnEnable}
-                                                type="submit"
-                                                btnIcon="IoCheckmarkCircleOutline"
-                                                style="bg-primary text-white hover:shadow-2xl min-w-[120px]"
-                                            />
-                                        </div>
-                                    </form>
+                        <div className='bg-gray-600 px-5 py-0.5 font-semibold text-white rounded-t-xl'>Get Credit Score</div>
+                        <div className=' px-5 py-5'>
+                            <form
+                                onSubmit={creditPlatform.handleSubmit}
+                                className="gap-4 grid grid-cols-6 md:flex md:flex-wrap"
+                            >
+                                {/* Select */}
+                                <div className="col-span-full md:col-span-2 lg:max-w-36">
+                                    <SelectInput
+                                        label=""
+                                        placeholder="Select Platform"
+                                        icon="IoSpeedometerOutline"
+                                        name="platform"
+                                        id="platform"
+                                        disabled={!permission || funder}
+                                        options={scorePlatform}
+                                        onChange={creditPlatform.handleChange}
+                                        onBlur={creditPlatform.handleBlur}
+                                        value={creditPlatform.values.platform}
+                                    />
+                                    {creditPlatform.touched.platform &&
+                                        creditPlatform.errors.platform && (
+                                            <ErrorMsg error={creditPlatform.errors.platform} />
+                                        )}
                                 </div>
-                                <div className='col-span-1 mt-1'>
-                                    <div className='flex justify-center items-center'>
+
+                                <div className='flex gap-5 col-span-full md:col-span-4'>
+                                    {/* Get Score */}
+                                    <div className="">
+                                        <Button
+                                            btnName="Get Score"
+                                            disabled={!permission || funder || btnEnable}
+                                            type="submit"
+                                            btnIcon="IoCheckmarkCircleOutline"
+                                            style="bg-primary text-white hover:shadow-2xl md:min-w-[120px]"
+                                        />
+                                    </div>
+
+                                    {/* Upload */}
+                                    <div className="">
                                         <Button
                                             btnName="Upload Score"
                                             type="button"
                                             disabled={!permission || funder || btnEnable}
                                             onClick={() => setIsUplaod(true)}
                                             btnIcon="IoCheckmarkCircleOutline"
-                                            style="bg-primary text-white hover:shadow-2xl min-w-[120px]"
+                                            style="bg-primary text-white hover:shadow-2xl md:min-w-[120px]"
                                         />
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 )}
@@ -433,46 +434,40 @@ const GetScore = ({ btnEnable = false }) => {
                             Credit Report
                         </div>
 
-                        {/* {(!isSuccess) ? ( */}
-                        {(true) ? (
+                        {isSuccess ? (
                             <>
-                                {scoreData?.[0]?.provider && <div className='grid grid-cols-5 ps-2 py-1.5 gap-5'>
-                                    {/* <h2>Credit Score by </h2> */}
-                                    {/* Score Display */}
-                                    <div className='col-span-1 mt-1'>
-                                        <div className='flex justify-center items-center'>
-                                            <div
-                                                className={`${!score || score <= 0
-                                                    ? "bg-white text-primary"
-                                                    : score >= 675
-                                                        ? "bg-green-100 text-green-500"
-                                                        : score >= 600
-                                                            ? "bg-yellow-100 text-yellow-500"
-                                                            : "bg-red-100 text-red-500"
-                                                    } border border-gray-300 p-5 py-1 font-semibold rounded-lg shadow`}
-                                            >
-                                                <span className='text-4xl font-bold'>
-                                                    {scoreData?.[0]?.credit_score || 'N/A'}
-                                                </span>
+                                {scoreData?.[0]?.provider &&
+                                    <div className='flex flex-wrap sm:grid grid-cols-4 py-1.5 gap-5 mt-4 max-sm:ps-5 pe-3'>
+                                        {/* <h2>Credit Score by </h2> */}
+                                        <div className=''>
+                                            <div className='flex justify-center items-center'>
+                                                <div
+                                                    className={`${!score || score <= 0
+                                                        ? "bg-white text-primary"
+                                                        : score >= 675
+                                                            ? "bg-green-100 text-green-500"
+                                                            : score >= 600
+                                                                ? "bg-yellow-100 text-yellow-500"
+                                                                : "bg-red-100 text-red-500"
+                                                        } border border-gray-300 p-5 py-1 font-semibold rounded-lg shadow`}
+                                                >
+                                                    <span className='text-4xl font-bold'>
+                                                        {scoreData?.[0]?.credit_score || 'N/A'}
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    {/* Report Details */}
-                                    <div className='col-span-4 flex gap-5'>
 
                                         {/* Provider & PAN */}
-                                        <div className="grid grid-cols-2 gap-0 mb-6 ms-0">
-                                            <div>
-                                                <p className="text-sm text-gray-900">Platform</p>
-                                                <p className="font-medium text-primary">{scoreData?.[0]?.provider || "N/A"}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-sm text-gray-900">PAN Number</p>
-                                                <p className="font-medium text-primary">
-                                                    {funder ? maskData(scoreData?.[0]?.pan_number, 'pan') : scoreData?.[0]?.pan_number || "N/A"}
-                                                </p>
-                                            </div>
+                                        <div>
+                                            <p className="text-sm text-gray-900">Platform</p>
+                                            <p className="font-medium text-primary">{scoreData?.[0]?.provider || "N/A"}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-gray-900">PAN Number</p>
+                                            <p className="font-medium text-primary">
+                                                {funder ? maskData(scoreData?.[0]?.pan_number, 'pan') : scoreData?.[0]?.pan_number || "N/A"}
+                                            </p>
                                         </div>
 
                                         {/* Download Button */}
@@ -500,79 +495,8 @@ const GetScore = ({ btnEnable = false }) => {
                                                 </div>
                                             )}
                                         </div>
-
                                     </div>
-                                </div>}
-                                <hr />
-                                {scoreData?.[1]?.provider && <div className='grid grid-cols-5 ps-2 py-1.5 gap-5'>
-                                    {/* <h2>Credit Score by </h2> */}
-                                    {/* Score Display */}
-                                    <div className='col-span-1 mt-1'>
-                                        <div className='flex justify-center items-center'>
-                                            <div
-                                                className={`${!score || score <= 0
-                                                    ? "bg-white text-primary"
-                                                    : score >= 675
-                                                        ? "bg-green-100 text-green-500"
-                                                        : score >= 600
-                                                            ? "bg-yellow-100 text-yellow-500"
-                                                            : "bg-red-100 text-red-500"
-                                                    } border border-gray-300 p-5 py-1 font-semibold rounded-lg shadow`}
-                                            >
-                                                <span className='text-4xl font-bold'>
-                                                    {scoreData?.[1]?.credit_score
-                                                        ? Number(scoreData[1].credit_score)
-                                                        : 'N/A'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Report Details */}
-                                    <div className='col-span-4 flex gap-5'>
-
-                                        {/* Provider & PAN */}
-                                        <div className="grid grid-cols-2 gap-0 mb-6 ms-0">
-                                            <div>
-                                                <p className="text-sm text-gray-900">Platform</p>
-                                                <p className="font-medium text-primary">{scoreData?.[1]?.provider || "N/A"}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-sm text-gray-900">PAN Number</p>
-                                                <p className="font-medium text-primary">
-                                                    {funder ? maskData(scoreData?.[1]?.pan_number, 'pan') : scoreData?.[1]?.pan_number || "N/A"}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        {/* Download Button */}
-                                        <div className="flex justify-center items-center">
-                                            {scoreData?.[1]?.credit_report_link ? (
-                                                <div className='flex flex-col gap-2'>
-                                                    <a
-                                                        href={scoreData?.[1].credit_report_link}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="block w-full text-center bg-primary text-white font-semibold py-1 px-4 rounded"
-                                                    >
-                                                        Download Report
-                                                    </a>
-                                                    <span className='text-xs text-red-500 italic font-semibold'>
-                                                        Report link expires on refresh
-                                                    </span>
-                                                </div>
-                                            ) : (
-                                                <div className="mb-6">
-                                                    <p className="text-sm text-gray-900">Generated On</p>
-                                                    <p className="font-medium text-primary">
-                                                        {scoreData?.[1]?.generate_date || "N/A"}
-                                                    </p>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                    </div>
-                                </div>}
+                                }
                             </>
                         ) : (
                             <div className='flex flex-col justify-center items-center py-5'>
@@ -594,7 +518,7 @@ const GetScore = ({ btnEnable = false }) => {
             >
                 <div className='px-5'>
                     <form className='my-4' onSubmit={uploadCR.handleSubmit}>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-4 gap-4">
                             <div className="col-span-1">
                                 <TextInput
                                     label="Applicant Name"

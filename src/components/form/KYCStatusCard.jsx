@@ -76,7 +76,7 @@ function KYCStatusCard() {
                 className={`w-full px-5 py-5 ${isDone ? "border-green-200" : "border-gray-300"
                     }`}
             >
-                <div className="grid grid-cols-7 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7  gap-4">
                     {statusItems.map((item, index) => (
                         <StatusItem
                             key={index}

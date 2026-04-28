@@ -118,8 +118,8 @@ const AppCard = ({ data }) => {
   return (
     <Card heading={"Lead Information"} style={"py-4"}>
       <div className="grid grid-cols-4 border-b border-primary">
-        <div className="col-span-1">
-          <div className="h-48 w-48 m-auto">
+        <div className="col-span-full sm:col-span-1">  
+          <div className="sm:h-48 sm:w-48 m-auto">
             <img
               src={
                 documents.profileImages?.[0]?.profile_image_code_url
@@ -144,8 +144,8 @@ const AppCard = ({ data }) => {
             )}
           </div>
         </div>
-        <div className="col-span-3 gap-5">
-          <div className="grid grid-cols-4 mb-5 gap-1">
+        <div className="col-span-4 sm:col-span-3 gap-5 max-sm:px-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 mb-5 gap-2">
             {Object.entries(applicantData).map(([key, value]) => (
               <div key={key} className="mt-2">
                 <h5 className="text-base font-semibold">

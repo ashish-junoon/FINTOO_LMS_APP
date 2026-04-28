@@ -11,7 +11,7 @@ const BackButton = () => {
       {!hidebtn ? (
         <button
           onClick={() => navigate(-1)}
-          className="bg-primary text-white font-semibold px-4 py-1 rounded-md flex w-fit items-center gap-1 block mb-2"
+          className="bg-primary text-white font-semibold px-3 py-1 rounded-md flex w-fit items-center gap-1 mb-2"
           to="/"
         >
           <Icon name="TiArrowBack" size="18" color="white" />

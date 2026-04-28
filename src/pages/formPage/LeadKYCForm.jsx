@@ -485,7 +485,7 @@ const LeadKYCForm = () => {
         <div div className="my-8">
           <KYCStatusCard />
           <div className="mt-5 w-10/12 mx-auto">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="">
                 <SelectedLoan />
               </div>
@@ -525,11 +525,11 @@ const LeadKYCForm = () => {
       label: "Borrower Application",
       content: (
         <div className="grid grid-cols-7 gap-4 mt-5">
-          <div className="col-span-2 py-5">
+          <div className="col-span-full sm:col-span-2 py-5">
             <div>{!funder && <FormSidebar data={userData} />}</div>
           </div>
-          <div className={`${!funder ? "col-span-5" : "col-span-7"} py-5`}>
-            <div className="px-5">
+          <div className={`${!funder ? "col-span-full sm:col-span-5" : "col-span-7"} py-5`}>
+            <div className="sm:px-5">
               <Personal />
               <Employment />
               <Address />

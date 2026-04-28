@@ -90,7 +90,7 @@ const DisbursalReady = () => {
             setUserLocation(userRequest);
           } catch (error) {
             console.error(error);
-            toast.error("Failed to fetch address details.");
+            // toast.error("Failed to fetch address details.");
           }
         },
         (error) => {
@@ -456,7 +456,7 @@ const DisbursalReady = () => {
       </Helmet>
 
       {/* Page Tab and Amount Section  */}
-      <div className="flex justify-between">
+      <div className="flex flex-col sm:flex-row gap-y-10 justify-between">
         <div className="flex gap-2">
           {Pages?.map((page) => {
             return (

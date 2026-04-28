@@ -82,7 +82,7 @@ const EditLeads = () => {
 
                 <div className="mt-5 px-8 mb-5">
                     <form onSubmit={formik.handleSubmit}>
-                        <div className="grid grid-cols-3 gap-5">
+                        <div className="grid sm:grid-cols-3 gap-5">
                             <div>
                                 <TextInput
                                     label="User ID"
@@ -115,9 +115,9 @@ const EditLeads = () => {
                                     <ErrorMsg error={formik.errors.leadId} />
                                 )}
                             </div>
-                            <div>
+                            <div className='flex items-end'>
                                 <button
-                                    className="bg-primary text-white py-1.5 px-4 rounded mt-6 w-full cursor-pointer hover:bg-blue-600"
+                                    className="bg-primary text-white py-1.5 px-4 rounded w-full cursor-pointer hover:bg-blue-600"
                                     type="submit"
                                     disabled={isLoading}
                                 >
@@ -139,7 +139,6 @@ const EditLeads = () => {
                         <div className='grid grid-cols-7 gap-4 mt-5'>
                             <div className='col-span-2 py-5'>
                                 <div>
-
                                     <FormSidebar data={userData} />
                                 </div>
                             </div>

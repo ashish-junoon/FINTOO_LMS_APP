@@ -109,12 +109,12 @@ const LeadCreditForm = () => {
         {
             label: 'Lead Application',
             content: <div className='grid grid-cols-7 gap-4 mt-5'>
-                <div className='col-span-2 py-5'>
+                <div className='col-span-full md:col-span-2 py-5'>
                     <div>
                         {!funder && <FormSidebar data={userData} />}
                     </div>
                 </div>
-                <div className={`${!funder ? 'col-span-5' : 'col-span-7'} py-5`}>
+                <div className={`${!funder ? 'col-span-full md:col-span-5' : 'col-span-7'} py-5`}>
                     <Personal />
                     <Employment />
                     <Address />
@@ -128,7 +128,7 @@ const LeadCreditForm = () => {
         },
         {
             label: 'History',
-            content: <div className='p-8'>
+            content: <div className='sm:p-8'>
                 <LeadHistory data={userData} btnEnable={!isOnHold && permission} />
             </div>
         },
