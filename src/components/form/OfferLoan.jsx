@@ -7,7 +7,7 @@ import Button from "../utils/Button";
 import { useNavigate } from "react-router-dom";
 import Card from "../utils/Card";
 import Icon from "../utils/Icon";
-import { GetLoanProductList, AssignLoanProducts, AddPaydayLoanProducts, UpdateUserLead } from "../../api/ApiFunction";
+import { GetLoanProductList, AssignLoanProducts, AddPaydayLoanProducts, UpdateUserLead, pushMasterDataToSalora } from "../../api/ApiFunction";
 import Modal from "../utils/Modal";
 import { useOpenLeadContext } from "../../context/OpenLeadContext";
 import { useAuth } from "../../context/AuthContext";
@@ -20,7 +20,7 @@ import ErrorMsg from "../utils/ErrorMsg";
 import LoginPageFinder from "../utils/LoginPageFinder";
 
 
-function OfferLoan({btnEnable = false}) {
+function OfferLoan({ btnEnable = false }) {
 
     const [loanOptions, setLoanOptions] = useState([]);
     const [selected, setSelected] = useState([]);
@@ -105,6 +105,12 @@ function OfferLoan({btnEnable = false}) {
 
             if (response.status) {
                 toast.success(response.message);
+
+                // push master data to salora-phase 1
+                await pushMasterDataToSalora({
+                    user_id: leadInfo?.user_id,
+                    lead_id: leadInfo?.lead_id,
+                })
                 navigate("/manage-leads/credit-assessment");
             } else {
                 toast.error(response.message);
@@ -236,10 +242,10 @@ function OfferLoan({btnEnable = false}) {
             // eir: Yup.number()
             //     .max(15, 'EIR must not exceed 15%'),
         }),
-        
+
 
         onSubmit: async (values, { setSubmitting }) => {
-            if(!isConfirm){
+            if (!isConfirm) {
                 setisConfirm(true);
                 return;
             }
@@ -249,6 +255,14 @@ function OfferLoan({btnEnable = false}) {
             // Check if CIBIL score is missing
             if (!leadInfo?.cibilCreditScores || leadInfo.cibilCreditScores.length === 0) {
                 toast.error("Please get CIBIL score first.");
+                setSubmitting(false);
+                setIsPayday(false);
+                return;
+            }
+
+            // check if primary bank is verified
+            if (!leadInfo?.is_bank_verified) {
+                toast.error("Please verify primary bank first.");
                 setSubmitting(false);
                 setIsPayday(false);
                 return;
@@ -507,8 +521,6 @@ function OfferLoan({btnEnable = false}) {
                                     <ErrorMsg error={formik.errors.remarks} />
                                 )}
                             </div>
-
-
                         </div>
                         <div className="flex justify-end gap-4 mt-2">
                             <Button
@@ -614,7 +626,7 @@ function OfferLoan({btnEnable = false}) {
 
                             <div className="col-span-1">
                                 <TextInput
-                                disabled={true}
+                                    disabled={true}
                                     label="Insurance (%)"
                                     icon="CiPercent"
                                     placeholder="Enter Insurance"
@@ -715,20 +727,20 @@ function OfferLoan({btnEnable = false}) {
                                 onClick={() => setIsOpen(false)}
                                 style="mt-5 border border-red-500 text-red-500 min-w-32"
                             />
-                            
+
                             {isConfirm ? (
-                            <Button
-                                btnName="Approve"
-                                btnIcon="IoAddCircleSharp"
-                                type="submit"
-                                style="mt-5 bg-primary text-white min-w-32"
-                            />) : (
                                 <Button
-                                btnName="Assign"
-                                btnIcon="IoAddCircleOutline"
-                                type="submit"
-                                style="mt-5 bg-primary text-white min-w-32"
-                            />
+                                    btnName="Approve"
+                                    btnIcon="IoAddCircleSharp"
+                                    type="submit"
+                                    style="mt-5 bg-primary text-white min-w-32"
+                                />) : (
+                                <Button
+                                    btnName="Assign"
+                                    btnIcon="IoAddCircleOutline"
+                                    type="submit"
+                                    style="mt-5 bg-primary text-white min-w-32"
+                                />
                             )}
 
                             {/* <Button

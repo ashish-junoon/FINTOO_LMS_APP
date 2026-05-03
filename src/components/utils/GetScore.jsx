@@ -342,11 +342,11 @@ const GetScore = ({ btnEnable = false }) => {
                 // console.log("Res saved from salora API", leadInfo)
                 toast.success(response.message);
 
-                // push master data to salora -phase 1
-                await pushMasterDataToSalora({
-                    user_id: leadInfo?.user_id,
-                    lead_id: leadInfo?.lead_id,
-                })
+                // push master data to salora-phase 1
+                // await pushMasterDataToSalora({
+                //     user_id: leadInfo?.user_id,
+                //     lead_id: leadInfo?.lead_id,
+                // })
             } else {
                 // toast.error(response.message);
                 toast.error(response?.data?.userMessage || "CIBIL Data not found");
