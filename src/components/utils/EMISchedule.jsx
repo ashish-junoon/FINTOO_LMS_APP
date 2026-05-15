@@ -13,6 +13,8 @@ import {
   PullNACHPaymentEaseBuzz,
   PullPaymentUsingEaseBuzz,
   cancelEmandateSalora,
+  PullNACHPaymentBySalora,
+  ExecuteNACHPaymentBySalora,
 } from "../../api/ApiFunction";
 import Button from "./Button";
 import Modal from "./Modal";
@@ -339,48 +341,48 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
       request_is_process_status: "",
     },
     validationSchema: Yup.object({
-      collection_status: Yup.string().required("Collection status is required"),
-      amount: Yup.number().required("Amount is required").min(10).max(activeLoan?.due_amount_on_current_day),
-      collection_date: Yup.date()
-        .min(
-          new Date(new Date().setHours(0, 0, 0, 0)),
-          "Collection date cannot be in the past"
-        )
-        .required("Collection date is required"),
-      collection_time: Yup.string()
-        .required("Collection time is required")
-        .test(
-          "valid-time-window",
-          "Collection time must be between 6:00 AM and 11:59 PM",
-          function (time) {
-            if (!time) return true;
+      // collection_status: Yup.string().required("Collection status is required"),
+      // amount: Yup.number().required("Amount is required").min(10).max(activeLoan?.due_amount_on_current_day),
+      // collection_date: Yup.date()
+      //   .min(
+      //     new Date(new Date().setHours(0, 0, 0, 0)),
+      //     "Collection date cannot be in the past"
+      //   )
+      //   .required("Collection date is required"),
+      // collection_time: Yup.string()
+      //   .required("Collection time is required")
+      //   .test(
+      //     "valid-time-window",
+      //     "Collection time must be between 6:00 AM and 11:59 PM",
+      //     function (time) {
+      //       if (!time) return true;
 
-            const [hours, minutes] = time.split(":").map(Number);
+      //       const [hours, minutes] = time.split(":").map(Number);
 
-            // 06:00 → 23:59
-            const isAfterSixAM =
-              hours > 6 || (hours === 6 && minutes >= 0);
+      //       // 06:00 → 23:59
+      //       const isAfterSixAM =
+      //         hours > 6 || (hours === 6 && minutes >= 0);
 
-            const isBeforeMidnight =
-              hours < 24 && !(hours === 24 || hours === 0);
+      //       const isBeforeMidnight =
+      //         hours < 24 && !(hours === 24 || hours === 0);
 
-            return isAfterSixAM && isBeforeMidnight;
-          }
-        )
-        .test("future-time", "Collection time cannot be in the past", function (time) {
-          const { collection_date } = this.parent;
-          if (!collection_date || !time) return true;
+      //       return isAfterSixAM && isBeforeMidnight;
+      //     }
+      //   )
+      //   .test("future-time", "Collection time cannot be in the past", function (time) {
+      //     const { collection_date } = this.parent;
+      //     if (!collection_date || !time) return true;
 
-          const now = new Date();
-          const selected = new Date(collection_date);
-          const [h, m] = time.split(":");
-          selected.setHours(h, m, 0, 0);
+      //     const now = new Date();
+      //     const selected = new Date(collection_date);
+      //     const [h, m] = time.split(":");
+      //     selected.setHours(h, m, 0, 0);
 
-          return (
-            selected.toDateString() !== now.toDateString() ||
-            selected > now
-          );
-        }),
+      //     return (
+      //       selected.toDateString() !== now.toDateString() ||
+      //       selected > now
+      //     );
+      //   }),
       comment: Yup.string().notRequired(),
     }),
 
@@ -391,7 +393,8 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
           toast.error("Please select a bank")
           return;
         }
-        isEasebuzz ? pullNachPaymentEaseBuz(values) : pullNachPaymentRazorPay()
+        // isEasebuzz ? pullNachPaymentEaseBuz(values) : pullNachPaymentRazorPay()
+        pullNachPaymentRazorPay()
 
       } catch (error) {
         toast.error(error.message || "Something went wrong");
@@ -637,38 +640,73 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
   //   }
   // })
 
+  // modified: changed as per salora
   const pullNachPaymentRazorPay = async () => {
     setIsPullNach(false);
     setIsLoading(true);
     try {
       const req = {
         lead_id: leadId,
-        name: data?.personalInfo[0]?.full_name,
-        email: data?.personalInfo[0]?.email_id,
-        contact: data?.mobile_number,
+        user_id: userId,
+        created_by: emp_code,
+        // name: data?.personalInfo[0]?.full_name,
+        // email: data?.personalInfo[0]?.email_id,
+        // contact: data?.mobile_number,
         amount: activeLoan?.due_amount_on_current_day,
-        loan_account: loanId,
-        receipt: "Receipt No " + data?.mobile_number,
-        currency: "INR",
-        order_notes: {
-          notes_key_1: `EMI Payment Pull for loan id ${loanId}`,
-          notes_key_2: `EMI Payment Pull for ${data?.personalInfo[0]?.full_name}`,
+        // amount: 100,
+        // loan_account: loanId,
+        // receipt: "Receipt No " + data?.mobile_number,
+        // currency: "INR",
+        // order_notes: {
+        //   notes_key_1: `EMI Payment Pull for loan id ${loanId}`,
+        //   notes_key_2: `EMI Payment Pull for ${data?.personalInfo[0]?.full_name}`,
+        // },
+        notes: {
+          name: leadId
         },
-        company_id: import.meta.env.VITE_COMPANY_ID,
+        comapny_id: import.meta.env.VITE_COMPANY_ID,
         product_name: import.meta.env.VITE_PRODUCT_NAME,
       };
 
-      const response = await PullNACHPayment(req);
-      if (response.success) {
-        setPaymentInfo(response);
-        setIsCollected(true);
+      // const response = await PullNACHPayment(req);
+      // creating order
+      const response = await PullNACHPaymentBySalora(req);
+      // return;
+      if (response.success || response.status === "created") {
+        const pullReq = {
+          comapny_id: import.meta.env.VITE_COMPANY_ID,
+          product_name: import.meta.env.VITE_PRODUCT_NAME,
+          lead_id: leadId,
+          user_id: userId,
+          created_by: emp_code,
+          amount: activeLoan?.due_amount_on_current_day,
+          // amount: 100,
+          email: data?.personalInfo?.[0]?.email_id,
+          contact: data?.mobile_number,
+          orderId: response?.id,
+          customerId: mandateAccountDetails?.mandate_id,
+          tokenId: mandateAccountDetails?.token_id,
+        }
 
-        setTimeout(() => {
-          setIsCollected(false);
-          navigate("/manage-loans/accounts");
-        }, 5000);
+        // executing order
+        const pullResponse = await ExecuteNACHPaymentBySalora(pullReq);
+
+        if (pullResponse?.razorpay_payment_id && pullResponse?.razorpay_order_id && pullResponse?.razorpay_signature) {
+          toast.success("Payment pulled successfully!")
+          // setPaymentInfo(pullResponse);
+          // setIsCollected(true);
+
+          // setTimeout(() => {
+          //   setIsCollected(false);
+          //   navigate("/manage-loans/accounts");
+          // }, 5000);
+        }
+        else {
+          toast.error(pullResponse.message || "Something went wrong");
+        }
+
       } else {
-        toast.error(response.message);
+        toast.error(response?.status === "FAILED" ? "Razorpay order creation failed": "Something went wrong");
       }
     } catch (error) {
       toast.error(error.message || "Something went wrong");
@@ -1526,7 +1564,7 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
           </div>
 
           <form onSubmit={pullPaymentFormik.handleSubmit} >
-            <div className="grid grid-cols-6 gap-4 gap-y-3 mt-5">
+            {/* <div className="grid grid-cols-6 gap-4 gap-y-3 mt-5">
               <div className="col-span-3">
                 <SelectInput
                   label="Collection Status"
@@ -1624,7 +1662,7 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
                 )}
               </div>
 
-            </div>
+            </div> */}
 
             <div className="pt-0">
               <div className="mt-2 p-2">
@@ -1647,13 +1685,14 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
 
               <Button
                 // disabled={!isEasebuzz}
-                disabled={!isEasebuzz || pullPaymentFormik.isSubmitting}
-                btnName={isEasebuzz ? "Easebuzz Pull Amount" : "RazorPay Pull Amount"}
+                // disabled={!isEasebuzz || pullPaymentFormik.isSubmitting}
+                disabled={pullPaymentFormik.isSubmitting}
+                // btnName={isEasebuzz ? "Easebuzz Pull Amount" : "RazorPay Pull Amount"}
+                btnName={"Pull Amount"}
                 style={
                   `${isEasebuzz ? "bg-primary hover:bg-primary" : "bg-gray-600 hover:bg-gray-700"} text-white font-medium py-2 px-4 rounded`
                 }
-                btnIcon={"IoArrowForwardOutline"}
-                // onClick={isEasebuzz ? pullNachPaymentEaseBuz : pullNachPaymentRazorPay}
+                btnIcon={""}
                 type="submit"
               />
 
@@ -1676,7 +1715,7 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
       {/* Payment Information */}
       <Modal isOpen={isCollected} onClose={() => setIsCollected(false)}>
         <div className="p-6 border border-gray-200 rounded shadow-md flex flex-col items-center justify-center">
-          {paymentInfo?.success === true && (
+          {paymentInfo?.success === true || paymentInfo?.status === "created" && (
             <div className="flex flex-col items-center justify-center">
               <img src={Images.verified} alt="Success" />
               <h2 className="text-lg font-semibold italic mt-2 text-green-500">
@@ -1726,7 +1765,7 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
               </button>
             </div>
           )}
-          {paymentInfo?.success === false && (
+          {paymentInfo?.success === false || paymentInfo?.status !== "created" && (
             <div className="flex flex-col items-center justify-center">
               <img src={Images.verified} alt="Failed" />
               <h2 className="text-lg font-semibold italic mt-2 text-danger">
@@ -1931,21 +1970,21 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
               </h2>
               <div>
                 <div className="col-span-1">
-                <TextInput
-                  label="Customer Id"
-                  icon="RiMoneyRupeeCircleFill"
-                  placeholder=""
-                  name="customerId"
-                  id="customerId"
-                  onChange={UpdatePayment.handleChange}
-                  onBlur={UpdatePayment.handleBlur}
-                  value={UpdatePayment.values.customerId}
-                />
-                {UpdatePayment.touched.customerId &&
-                  UpdatePayment.errors.customerId && (
-                    <ErrorMsg error={UpdatePayment.errors.customerId} />
-                  )}
-              </div>
+                  <TextInput
+                    label="Customer Id"
+                    icon="RiMoneyRupeeCircleFill"
+                    placeholder=""
+                    name="customerId"
+                    id="customerId"
+                    onChange={UpdatePayment.handleChange}
+                    onBlur={UpdatePayment.handleBlur}
+                    value={UpdatePayment.values.customerId}
+                  />
+                  {UpdatePayment.touched.customerId &&
+                    UpdatePayment.errors.customerId && (
+                      <ErrorMsg error={UpdatePayment.errors.customerId} />
+                    )}
+                </div>
 
               </div>
               <h6 className="text-center text-xs text-gray-500 mt-2">

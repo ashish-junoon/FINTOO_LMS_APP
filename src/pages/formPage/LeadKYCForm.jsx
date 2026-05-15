@@ -482,7 +482,7 @@ const LeadKYCForm = () => {
     {
       label: "Application Status",
       content: (
-        <div div className="my-8">
+        <div className="my-8">
           <KYCStatusCard />
           <div className="mt-5 w-10/12 mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

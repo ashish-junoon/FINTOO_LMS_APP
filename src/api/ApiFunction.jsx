@@ -635,10 +635,21 @@ export const PullNACHPayment = async (req) => {
     }
 }
 
-//Pull Payment by Salora
+// Create pull payment order by Salora
 export const PullNACHPaymentBySalora = async (req) => {
     try {
-        const response = await api.post("/Salora/RecurringcreateOrder/RecurringcreateOrder", req);
+        const response = await api.post("/Salora/RecurringcreateOrder_V1/RecurringcreateOrder_V1", req);
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Pull NACH Payment error:", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+
+//Execute pull payment by Salora
+export const ExecuteNACHPaymentBySalora = async (req) => {
+    try {
+        const response = await api.post("/Salora/ExecutesrecurringPayment_V1/ExecutesrecurringPayment_V1", req);
         return response.data; // Return the API response data
     } catch (error) {
         console.error("Pull NACH Payment error:", error.response?.data || error.message);

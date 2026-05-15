@@ -201,7 +201,7 @@ const MandateHistory = () => {
           {true && (
             <div className="flex flex-col justify-center">
               <h2 className="text-lg font-semibold italic text-amber-500">
-                Are you sure?
+                Are you sure to cancel the mandate?
               </h2>
               <div>
 

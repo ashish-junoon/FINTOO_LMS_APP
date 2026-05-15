@@ -178,7 +178,7 @@ const ManageBranch = () => {
 
 
             {Array.isArray(tableData) && tableData.length > 0 ? (
-                <div className='flex justify-center items-center mt-5 max-w-full'>
+                <div className='flex justify-center items-center mt-10 max-w-full'>
                     <Table columns={columnsData} data={tableData} title="Manage Branch" handleFilter={handleFilterBtn} />
                 </div>
             ) : (

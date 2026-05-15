@@ -77,7 +77,10 @@ const Employment = ({ btnEnable = false, incomplete }) => {
         let convertedBase64 = null;
 
         // If a new file was uploaded, use that
+        // console.log("initial file",initialFile) // initial file is always null
+        // console.log("file... exiting", values.file)
         if (values.file && values.file !== initialFile) {
+          console.log("new file")
           convertedBase64 = await FileConverter(values.file);
         }
         // Otherwise, use the existing base64 data if available
@@ -167,14 +170,14 @@ const Employment = ({ btnEnable = false, incomplete }) => {
               console.error("Error in Fetching Leads Again:", error);
             }
           }
-          // window.location.reload();
+          window.location.reload();
         } else {
           toast.error(response.message);
         }
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
         setIsLoading(false);
       } catch (error) {
         toast.error("Something went wrong. Please try again.");
@@ -192,6 +195,7 @@ const Employment = ({ btnEnable = false, incomplete }) => {
     if (initialFile) {
       formik.setFieldValue("file", initialFile);
     }
+    // console.log('is it running?')
   }, [initialFile]);
 
   const handleEdit = () => {

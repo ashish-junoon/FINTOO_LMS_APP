@@ -267,14 +267,28 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
             bank_statement_image_extn: documentsData?.bank_statement_image_extn,
             bank_statement_data: documentsData?.bank_statement_data,
           };
+          // console.log("salary slip, ", salarySlip)
           setLeadInfo((prev) => ({
             ...prev,
             ...response,
           }));
-          setDocuments((prev) => ({
-            ...prev,
-            bank_statement: [salarySlip],
-          }));
+
+          // below code will not work as it saves the current input file,
+          // which does not have the url attribute
+          // await setDocuments((prev) => {
+          //   let result = {
+          //     ...prev,
+          //     bank_statement: prev.bank_statement.map((item) =>
+          //       item.id === salarySlip.id ? salarySlip : item
+          //     ),
+          //   }
+          //   // console.log("result ", result)
+          //   return result;
+          // });
+
+          //updating the docs to set the newly generated document
+          
+
           toast.success(response.message);
           setIsEditing(false);
 
@@ -297,9 +311,9 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
           toast.error(response.message);
         }
         setIsLoading(false);
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        // setTimeout(() => {
+        //   // window.location.reload();
+        // }, 1000);
       } catch (error) {
         toast.error("Something went wrong. Please try again.");
         console.error("Error updating bank info:", error);
