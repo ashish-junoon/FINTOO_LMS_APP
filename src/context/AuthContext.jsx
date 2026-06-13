@@ -14,7 +14,7 @@ const AuthContext = createContext();
 
 // Expiry times in milliseconds
 const EXPIRY_TIME = 5 * 60 * 60 * 1000; // 5 hours if inactive
-const EXTEND_TIME = 2 * 60 * 60 * 1000; // 2 hour if active
+const EXTEND_TIME = 2 * 60 * 60 * 1000; // add 2 hour if active
 
 let LogedInuser;
 const authReducer = (state, action) => {

@@ -15,6 +15,7 @@ import {
   VerifyBankDetails,
   VerifyIFSC,
   VerifyBankDetailsBySalora,
+  getLeadDocuments,
 } from "../../api/ApiFunction";
 import Accordion from "../utils/Accordion";
 import Modal from "../utils/Modal";
@@ -141,6 +142,19 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
     }
   };
 
+    const FetchDocData = async () => {
+      try {
+        const response = await getLeadDocuments({
+          user_id: leadInfo.user_id,
+          lead_id: leadInfo.lead_id,
+        });
+  
+        setDocuments(response);
+      } catch (error) {
+        console.log(error)
+      }
+    };
+
   const formik = useFormik({
     initialValues: {
       bankName: bankData?.bank_name || "",
@@ -179,7 +193,7 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
       setIsEditing(false);
       setOpenApprove(false);
       setIsLoading(true);
-      // console.log(BankId, " ",  values?.ifscCode.slice(0,4));
+      console.log(BankId, " ",  values?.ifscCode.slice(0,4));
 
       try {
         if (false) {
@@ -275,7 +289,7 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
 
           // below code will not work as it saves the current input file,
           // which does not have the url attribute
-          // await setDocuments((prev) => {
+          // setDocuments((prev) => {
           //   let result = {
           //     ...prev,
           //     bank_statement: prev.bank_statement.map((item) =>
@@ -287,7 +301,8 @@ const BankInfo = ({ btnEnable = false, incomplete }) => {
           // });
 
           //updating the docs to set the newly generated document
-          
+          FetchDocData();
+          console.log("api called success")
 
           toast.success(response.message);
           setIsEditing(false);

@@ -13,6 +13,7 @@ import {
   ResubmitApp,
   UpdateIncompleteUserApp,
   getInCompleteLeadDetails,
+  getLeadDocuments,
 } from "../../api/ApiFunction";
 import { FileConverter } from "../utils/FileConverter";
 import Modal from "../utils/Modal";
@@ -40,6 +41,19 @@ const Employment = ({ btnEnable = false, incomplete }) => {
   const employeeData = leadInfo?.employmentInfo[0];
   const leadStatus = leadInfo.lead_status;
   const funder = adminUser.role === "Funder" ? true : false;
+
+  const FetchDocData = async () => {
+    try {
+      const response = await getLeadDocuments({
+        user_id: leadInfo.user_id,
+        lead_id: leadInfo.lead_id,
+      });
+
+      setDocuments(response);
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -136,22 +150,26 @@ const Employment = ({ btnEnable = false, incomplete }) => {
         if (response.status) {
           const employmentData = userRequest.employmentInfo[0];
 
-          const salaryPdf = {
-            id: employmentData?.id,
-            salary_slip_pdf_name: employmentData?.salary_slip_pdf_name,
-            salary_slip_pdf_extn: employmentData?.salary_slip_pdf_extn,
-            salary_slip_pdf_data: employmentData?.salary_slip_pdf_data,
-          };
+          // const salaryPdf = {
+          //   id: employmentData?.id,
+          //   salary_slip_pdf_name: employmentData?.salary_slip_pdf_name,
+          //   salary_slip_pdf_extn: employmentData?.salary_slip_pdf_extn,
+          //   salary_slip_pdf_data: employmentData?.salary_slip_pdf_data,
+          // };
 
           setLeadInfo((prev) => ({
             ...prev,
             ...response,
           }));
 
-          setDocuments((prev) => ({
-            ...prev,
-            salary_slip: [salaryPdf],
-          }));
+          // setDocuments((prev) => ({
+          //   ...prev,
+          //   salary_slip: [salaryPdf],
+          // }));
+
+          // instead of updating context, call api
+          FetchDocData();
+
           toast.success(response.message);
           setIsEditing(false);
 
@@ -170,7 +188,7 @@ const Employment = ({ btnEnable = false, incomplete }) => {
               console.error("Error in Fetching Leads Again:", error);
             }
           }
-          window.location.reload();
+          // window.location.reload();
         } else {
           toast.error(response.message);
         }
@@ -241,8 +259,8 @@ const Employment = ({ btnEnable = false, incomplete }) => {
         isEditing
           ? "Cancel"
           : leadStatus === 1
-          ? "Edit Employment Info"
-          : "Update & Verify"
+            ? "Edit Employment Info"
+            : "Update & Verify"
       }
       verified={leadInfo?.employment_info_verified}
       // reset={leadInfo?.gurantor_nominee_fill}
@@ -269,18 +287,18 @@ const Employment = ({ btnEnable = false, incomplete }) => {
       actionButtons={
         btnEnable && !(incomplete && leadInfo?.employment_info_fill)
           ? [
-              {
-                icon: isEditing
-                  ? "IoClose"
-                  : leadStatus === 1
+            {
+              icon: isEditing
+                ? "IoClose"
+                : leadStatus === 1
                   ? "RiEdit2Fill"
                   : "MdOutlineCheckCircle",
-                onClick: handleEdit,
-                className: isEditing
-                  ? "border border-danger text-danger hover:bg-danger hover:border-danger hover:text-white"
-                  : "border border-primary text-primary hover:bg-success hover:border-success hover:text-white",
-              },
-            ]
+              onClick: handleEdit,
+              className: isEditing
+                ? "border border-danger text-danger hover:bg-danger hover:border-danger hover:text-white"
+                : "border border-primary text-primary hover:bg-success hover:border-success hover:text-white",
+            },
+          ]
           : null
       }
     >

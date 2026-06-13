@@ -59,6 +59,7 @@ import FailurePage from "./pages/Response/FailurePage";
 import DisbursalReady from "./pages/loan/DisbursalReady";
 import EditCollection from "./pages/formPage/EditCollection";
 import LoanHistoryPage from "./pages/loan/LoanHistoryPage";
+import Dashboardv3 from "./admin/Dashboardv3";
 
 function App() {
   const { adminUser } = useAuth();
@@ -69,7 +70,8 @@ function App() {
   const routeComponents = {
 
     //  Menu URL Components
-    "/": Dashboard,
+    // "/": Dashboard,
+    "/": Dashboardv3,
 
     //Manage Leads
     "/manage-leads/incomplete-leads": IncompleteLead,
@@ -186,7 +188,8 @@ function App() {
                 <Route
                   key={path}
                   path={path}
-                  element={React.createElement(routeComponents[path] || Dashboard)}
+                  // element={React.createElement(routeComponents[path] || Dashboard)}
+                  element={React.createElement(routeComponents[path] || Dashboardv3)}
                 />
               ))}
 

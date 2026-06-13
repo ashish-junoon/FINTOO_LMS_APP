@@ -11,6 +11,7 @@ import {
   ResubmitApp,
   UpdateIncompleteUserApp,
   getInCompleteLeadDetails,
+  getLeadDocuments,
 } from "../../api/ApiFunction";
 import Accordion from "../utils/Accordion";
 import { FileConverter } from "../utils/FileConverter";
@@ -49,6 +50,19 @@ const KycInfo = ({ btnEnable = false, incomplete }) => {
   const { documents, setDocuments } = useGetDocument();
   const docData = documents?.aadhaar_pan?.[0];
   const funder = adminUser.role === "Funder" ? true : false;
+
+   const FetchDocData = async () => {
+    try {
+      const response = await getLeadDocuments({
+        user_id: leadInfo.user_id,
+        lead_id: leadInfo.lead_id,
+      });
+
+      setDocuments(response);
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -175,10 +189,11 @@ const KycInfo = ({ btnEnable = false, incomplete }) => {
             ...prev,
             ...response,
           }));
-          setDocuments((prev) => ({
-            ...prev,
-            aadhaar_pan: [aadhaar_pan],
-          }));
+          // setDocuments((prev) => ({
+          //   ...prev,
+          //   aadhaar_pan: [aadhaar_pan],
+          // }));
+          FetchDocData();
 
           toast.success(response.message);
           setIsEditing(false);
@@ -203,9 +218,9 @@ const KycInfo = ({ btnEnable = false, incomplete }) => {
         } else {
           toast.error(response.message || "Update failed");
         }
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
         setIsLoading(false);
       } catch (error) {
         // toast.error('Something went wrong. Please try again.');

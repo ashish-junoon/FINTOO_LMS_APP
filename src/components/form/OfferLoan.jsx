@@ -130,7 +130,6 @@ function OfferLoan({ btnEnable = false }) {
             updated_by: adminUser.emp_code,
             reason: "Credit Approved ",
             remarks: "Credit assessed & loan offered, forwarded for eKYC."
-
         };
 
         confirmLead(req);

@@ -222,7 +222,25 @@ const leadRemarks = [
     { label: "Incomplete Documents", value: "Incomplete Documents" },
 ];
 
+const MoveRemarkOptions = [
+    // { label: "Move Lead back", value: "Move Lead back" },
+    { label: "Invalid Credit Details", value: "Invalid Credit Details" },
+    { label: "ReCreating Product", value: "ReCreating Product" },
+    { label: "Customer Requested to add Bank Details.", value: "Customer Requested to add Bank Details." },
+];
+
 const addRemarkOptions = [
+    { label: "Follow-up", value: "Follow-up" },
+    { label: "No Answer", value: "No Answer" },
+    { label: "Number Not Available", value: "Number Not Available" },
+    { label: "Number Not Reachable", value: "Number Not Reachable" },
+    { label: "Switched Off", value: "Switched Off" },
+    { label: "Call Disconnected", value: "Call Disconnected" },
+    { label: "Wrong Number", value: "Wrong Number" },
+    { label: "Requested Call Back", value: "Requested Call Back" },
+];
+
+const addRemarkOptionsforUnHold = [
     { label: "Follow-up", value: "Follow-up" },
     { label: "No Answer", value: "No Answer" },
     { label: "Number Not Available", value: "Number Not Available" },
@@ -551,4 +569,4 @@ const stateCodelist = [
 
 const stateMap = Object.fromEntries(stateCodelist.map(state => [state.label.toLowerCase(), state.value]))
 
-export { stateMap, paymentType, notifyItems, steperItems, houseTypeOptions, genderOptions, maritalStatusOptions, features, leadRemarks, actionType, branchList, assignStatus, kycStatus, disbursalStatus, emiStatus, collectionStatus, manageApp, qcStatus, leadStatus, creditApprovalStatus, creditApprovalRemarks, loanStatus, collectionPaymentMode, relationOptions, userStatus, userRole, nameTitle, assessmentRemarks, paymentMode, educationOptions, emplyeeType, productType, repaymentFrequency, loanTenure, interestType, scorePlatform, documentType, emiStaus, leadStep1, rejectLead, eKYCRemarks, disbursedRemarks, addRemarkOptions, exportDataType, exportLeadSource, exportStatusSource, exportCollectionSource, disburesementMode };
+export { stateMap, paymentType, notifyItems, steperItems, houseTypeOptions, genderOptions, maritalStatusOptions, features, leadRemarks, actionType, branchList, assignStatus, kycStatus, disbursalStatus, emiStatus, collectionStatus, manageApp, qcStatus, leadStatus, creditApprovalStatus, creditApprovalRemarks, loanStatus, collectionPaymentMode, relationOptions, userStatus, userRole, nameTitle, assessmentRemarks, paymentMode, educationOptions, emplyeeType, productType, repaymentFrequency, loanTenure, interestType, scorePlatform, documentType, emiStaus, leadStep1, rejectLead, eKYCRemarks, disbursedRemarks, addRemarkOptions, MoveRemarkOptions, addRemarkOptionsforUnHold, exportDataType, exportLeadSource, exportStatusSource, exportCollectionSource, disburesementMode };

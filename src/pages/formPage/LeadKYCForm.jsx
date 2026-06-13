@@ -14,10 +14,12 @@ import {
   registerEMandateEaseBuze,
   registerEMandateBySalora,
   pushMasterDataToSalora,
+  ChangeStepStatus,
+  addRemark,
 } from "../../api/ApiFunction";
 import SelectInput from "../../components/fields/SelectInput";
 import TextInput from "../../components/fields/TextInput";
-import { eKYCRemarks } from "../../components/content/Data";
+import { eKYCRemarks, MoveRemarkOptions } from "../../components/content/Data";
 import Button from "../../components/utils/Button";
 import Modal from "../../components/utils/Modal";
 import ErrorMsg from "../../components/utils/ErrorMsg";
@@ -45,6 +47,7 @@ import MandateHistory from "../../components/utils/MandateHistory";
 
 const LeadKYCForm = () => {
   const [openApporve, setOpenApporve] = useState(false);
+  const [isBackLeadOpen, setisBackLeadOpen] = useState(false);
   const [openReject, setOpenRejcet] = useState(false);
   const location = useLocation();
   const [userData, setUserData] = useState(null);
@@ -71,6 +74,8 @@ const LeadKYCForm = () => {
   const pageAccess = LoginPageFinder("page_display_name", "leads in kyc");
   const permission = pageAccess?.[0].read_write_permission;
   const funder = adminUser.role === "Funder" ? true : false;
+
+  const isAdmin = adminUser?.role?.toLowerCase() == "admin" || adminUser?.role?.toLowerCase() == "administrator";
 
   const FLAG_MAP = {
     netbankFlag: {
@@ -445,10 +450,52 @@ const LeadKYCForm = () => {
     // navigate("/manage-leads/leads-in-kyc");
 
     // push master data to salora - phase 2
-    await pushMasterDataToSalora({
-      user_id, lead_id
-    })
+    // await pushMasterDataToSalora({
+    //   user_id, lead_id
+    // })
   };
+
+  const formikRemarks = useFormik({
+    initialValues: {
+      reason: "",
+      remarks: "",
+    },
+    validationSchema: Yup.object({
+      reason: Yup.string().required("Select reason."),
+      remarks: Yup.string().when("reason", {
+        is: (reason) => reason !== "Interested",
+        then: () =>
+          Yup.string()
+            .required("Remarks are required.")
+            .min(10, "Remarks must be at least 10 characters."),
+        otherwise: () => Yup.string().notRequired(),
+      }),
+    }),
+
+    onSubmit: async (values) => {
+      const req = {
+        lead_id: lead_id,
+        reason: `Lead Moved kyc to credit: ${values.reason}`,
+        remarks: values.remarks,
+        process_by: adminUser.emp_code,
+      };
+
+      try {
+        const response = await addRemark(req);
+        if (response.status) {
+          formik.resetForm();
+          handleSendLeadBack();
+        } else {
+          toast.error(response.message);
+        }
+      } catch (error) {
+        console.error("Error adding remark:", error);
+        toast.error("An error occurred while adding remark.");
+      } finally {
+        setOpen(false);
+      }
+    },
+  });
 
   //handle Approve confirm No button
   const handleApproveNo = () => {
@@ -478,6 +525,33 @@ const LeadKYCForm = () => {
     }
   };
 
+  const handleSendLeadBack = async () => {
+    try {
+      setIsLoading(true);
+      const req = {
+        lead_id: lead_id,
+        user_id: user_id,
+        from_step: 4,
+        to_step: 3,
+        updated_by: adminUser.emp_code,
+      };
+
+      const response = await ChangeStepStatus(req);
+      if (response.status) {
+        toast.success(response.message || "Lead moved to Credit Assessment");
+        navigate("/manage-leads/leads-in-kyc");
+      } else {
+        toast.info(response.message || "Unable to move lead back!");
+      }
+    } catch (error) {
+      console.log("Error in Send lead back", error);
+      toast.error(error.message);
+    } finally {
+      setisBackLeadOpen(false);
+      setIsLoading(false);
+    }
+  };
+
   const tabData = [
     {
       label: "Application Status",
@@ -504,6 +578,17 @@ const LeadKYCForm = () => {
                       }}
                       style="min-w-[150px] bg-primary text-white font-medium py-2 px-4 rounded"
                     />}
+
+                  {isAdmin && !userData?.is_e_nach_activate && (
+                    <Button
+                      btnName={"Move Lead Back"}
+                      btnIcon={"TbArrowBackUpDouble"}
+                      type={""}
+                      disabled={isOnHold}
+                      onClick={() => { setisBackLeadOpen(true) }}
+                      style="min-w-[150px] bg-primary text-sm text-white font-medium border border-primary py-2 px-4 rounded hover:bg-white hover:text-primary"
+                    />)}
+
                   {permission && userData?.is_e_nach_activate === false && (
                     <Button
                       btnName={"Update e-NACH Token"}
@@ -991,6 +1076,73 @@ const LeadKYCForm = () => {
             </form>
           </div>
         )}
+      </Modal>
+
+      <Modal
+        isOpen={isBackLeadOpen}
+        onClose={() => setisBackLeadOpen(false)}
+        heading={"Add Remark"}
+      >
+        <div className="px-5">
+          <form onSubmit={formikRemarks.handleSubmit} className="my-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="col-span-2">
+                <SelectInput
+                  label="Select Reason"
+                  placeholder="Select"
+                  icon="RiDraftLine"
+                  name="reason"
+                  id="reason"
+                  options={MoveRemarkOptions}
+                  onChange={formikRemarks.handleChange}
+                  onBlur={formikRemarks.handleBlur}
+                  value={formikRemarks.values.reason}
+                />
+                {formikRemarks.touched.reason &&
+                  formikRemarks.errors.reason && (
+                    <ErrorMsg error={formikRemarks.errors.reason} />
+                  )}
+              </div>
+              {formikRemarks.values.reason !== "Interested" && (
+                <div className="col-span-2">
+                  <TextInput
+                    label="Remarks"
+                    icon="IoPersonOutline"
+                    placeholder="Write Remarks"
+                    name="remarks"
+                    maxLength={200}
+                    id="remarks"
+                    onChange={formikRemarks.handleChange}
+                    onBlur={formikRemarks.handleBlur}
+                    value={formikRemarks.values.remarks}
+                  />
+                  {formikRemarks.touched.remarks &&
+                    formikRemarks.errors.remarks && (
+                      <ErrorMsg error={formikRemarks.errors.remarks} />
+                    )}
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-end gap-4 mt-2">
+              <Button
+                btnName={isLoading ? "ADDING REMARKS" : "ADD REMARKS"}
+                btnIcon="IoCheckmarkCircleSharp"
+                type="submit"
+                disabled={isLoading}
+                style="min-w-[100px] md:w-auto text-xs font-semibold mt-4 py-1 px-4 border border-primary text-primary border hover:border-success hover:bg-success hover:text-white hover:font-bold italic"
+              />
+
+              <Button
+                btnName={"CLOSE"}
+                btnIcon={"IoCloseCircleOutline"}
+                type={"button"}
+                onClick={() => setisBackLeadOpen(false)}
+                style="min-w-[100px] md:w-auto text-xs font-semibold mt-4 py-1 px-4 border border-primary text-primary border hover:border-amber-500 hover:bg-amber-500 hover:text-black hover:font-bold italic"
+              />
+            </div>
+          </form>
+        </div>
       </Modal>
     </>
   );

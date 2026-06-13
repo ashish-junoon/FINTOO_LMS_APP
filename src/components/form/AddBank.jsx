@@ -24,7 +24,7 @@ const accountType = [
   { label: "Secondary", value: "2" },
 ]
 
-const AddBank = ({fetchData}) => {
+const AddBank = ({ fetchData }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [bankList, setBankList] = useState([]);
   const [initialFile, setInitialFile] = useState(null);
@@ -97,7 +97,7 @@ const AddBank = ({fetchData}) => {
         }
 
         //check if added bank is existing primary bank
-        if(leadInfo?.bankInfo?.[0]?.account_number === values.accountNumber) {
+        if (leadInfo?.bankInfo?.[0]?.account_number === values.accountNumber) {
           toast.error("Bank details exists as primary bank!");
           return;
         }
@@ -143,7 +143,8 @@ const AddBank = ({fetchData}) => {
           toast.success(response.message);
           setIsOpen(false);
           resetForm()
-          fetchData();
+          // fetchData();
+          fetchData({ UserId: leadInfo?.user_id, leadId: leadInfo?.lead_id });
         } else {
           toast.error(response.message);
         }
@@ -245,7 +246,8 @@ const AddBank = ({fetchData}) => {
 
       if (response?.model?.status === "SUCCESS") {
         toast.success("Primary bank verified successfully.");
-        fetchData();
+        // fetchData();
+        fetchData({ UserId: leadInfo?.user_id, leadId: leadInfo?.lead_id });
       }
       else {
         toast.error(
@@ -302,12 +304,12 @@ const AddBank = ({fetchData}) => {
           style="min-w-[120px] text-sm italic font-semibold md:w-auto py-1 border-success px-2 gap-1 text-white bg-success border hover:border-success text-primary hover:bg-white hover:text-success"
         />
         <Button
-          btnName={isLoading? "Verifying..." : "Verify Primary Bank"}
+          btnName={isLoading ? "Verifying..." : "Verify Primary Bank"}
           btnIcon={"IoVerifyCircleOutline"}
           type={"IoCheckmarkCircleSharp"}
           onClick={verifyPrimaryBank}
           disabled={isLoading}
-          style={`min-w-[130px] text-sm italic font-semibold md:w-auto py-1 border-success px-4 text-white bg-success border ${isLoading? '': 'hover:border-success'} text-primary hover:bg-white hover:text-success`}
+          style={`min-w-[130px] text-sm italic font-semibold md:w-auto py-1 border-success px-4 text-white bg-success border ${isLoading ? '' : 'hover:border-success'} text-primary hover:bg-white hover:text-success`}
         />
         {/* )} */}
       </div>

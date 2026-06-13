@@ -18,6 +18,8 @@ import Loader from '../../components/utils/Loader';
 import { useAuth } from '../../context/AuthContext';
 import { useOpenLeadContext } from '../../context/OpenLeadContext';
 import { Helmet } from 'react-helmet';
+import AddBank from '../../components/form/AddBank';
+import OtherBankInfo from '../../components/form/OtherBankInfo';
 
 const EditLeads = () => {
     const [userData, setUserData] = useState(null);
@@ -135,6 +137,11 @@ const EditLeads = () => {
                     <div>
                         <AppCard />
                     </div>
+
+                    <div className='py-5'>
+                        <AddBank fetchData={fetchData} />
+                    </div>
+
                     <div className='mt-4'>
                         <div className='grid grid-cols-7 gap-4 mt-5'>
                             <div className='col-span-2 py-5'>
@@ -149,6 +156,7 @@ const EditLeads = () => {
                                     <Address btnEnable={true} />
                                     <KycInfo btnEnable={true} />
                                     <BankInfo btnEnable={true} />
+                                    <OtherBankInfo btnEnable switchBank fetchData={fetchData} />
                                     <Gaurantor btnEnable={true} />
                                     <OthersDocs btnEnable={true} />
                                 </div>

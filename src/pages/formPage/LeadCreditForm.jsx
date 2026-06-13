@@ -120,7 +120,7 @@ const LeadCreditForm = () => {
                     <Address />
                     <KycInfo />
                     <BankInfo btnEnable={true} />
-                    <OtherBankInfo />
+                    <OtherBankInfo switchBank={true} />
                     <Gaurantor btnEnable={true} />
                     <OthersDocs btnEnable={true} />
                 </div>

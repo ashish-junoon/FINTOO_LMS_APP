@@ -34,7 +34,7 @@ export const GetDocProvider = ({ children }) => {
     // }
 
     return (
-        <GetDocContext.Provider value={{ documents, setDocuments }}>
+        <GetDocContext.Provider value={{ documents, setDocuments, getDocuments }}>
             {children}
         </GetDocContext.Provider>
     );
