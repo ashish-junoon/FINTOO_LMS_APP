@@ -103,11 +103,11 @@ const AddBank = ({ fetchData }) => {
         }
 
         // verify added bank
-        const isVerified = await verifyBank(values);
-        if (!isVerified) {
-          setSubmitting(false);
-          return; // stop here
-        }
+        // const isVerified = await verifyBank(values);
+        // if (!isVerified) {
+        //   setSubmitting(false);
+        //   return; // stop here
+        // }
 
         //Try
         let convertedBase64 = null;
@@ -127,7 +127,7 @@ const AddBank = ({ fetchData }) => {
           bank_name: bankname,
           bank_statement_image_name: values.file?.name || "sample.pdf",
           bank_statement_image_extn:
-            values.file?.name.split(".").pop() || "pdf",
+          values.file?.name.split(".").pop() || "pdf",
           bank_statement_data: convertedBase64 || generateDummyBase64(),
           account_holder_name: values.accountHolderName,
           account_number: values.accountNumber,

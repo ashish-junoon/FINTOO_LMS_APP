@@ -16,6 +16,7 @@ import {
   UpdateIncompleteUserApp,
   UpdateUserApp,
   VerifyBankDetails,
+  VerifyBankDetailsBySalora,
   VerifyIFSC,
 } from "../../api/ApiFunction";
 import { FileConverter } from "../utils/FileConverter";

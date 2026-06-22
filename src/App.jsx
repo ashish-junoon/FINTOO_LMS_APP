@@ -58,7 +58,17 @@ import VerifyOtp from "./pages/formPage/VerifyOtp";
 import FailurePage from "./pages/Response/FailurePage";
 import DisbursalReady from "./pages/loan/DisbursalReady";
 import EditCollection from "./pages/formPage/EditCollection";
+import DisbursementCollectionReportV1 from "./pages/Reports/DisbursementCollectionReportV1";
+import DemandReport from "./pages/Reports/DemandReport";
 import LoanHistoryPage from "./pages/loan/LoanHistoryPage";
+import CollectionReport from "./pages/Reports/CollectionReport";
+import MandateResisterReport from "./pages/Reports/MandateRegisterReport";
+import DemandvsCollectionReport from "./pages/Reports/DemandvsCollectionReport";
+import EnachTransactionReport from "./pages/Reports/EnachTransectionReport";
+import MasterSheetReport from "./pages/Reports/MasterSheetReport";
+// import Dashboardv2 from "./admin/Dashboardv2";
+import CustomerLoanHistory from "./pages/formPage/CustomerLoanHistory";
+import LeadReportStatusWise from "./pages/Reports/LeadReportStatusWise";
 import Dashboardv3 from "./admin/Dashboardv3";
 
 function App() {
@@ -99,6 +109,15 @@ function App() {
     "/admin/manage-department": ManageDepartment,
     "/admin/manage-designation": ManageDesignation,
     "/admin/manage-branch": ManageBranch,
+
+    //Reports Section
+    "/report-section/disbursement-report": DisbursementCollectionReportV1,
+    "/report-section/demand-report": DemandReport,
+    "/report-section/collection-report": CollectionReport,
+    "/report-section/manadate-register": MandateResisterReport,
+    "/report-section/demand-vs-collection": DemandvsCollectionReport,
+    "/report-section/enach-transactions": EnachTransactionReport,
+    "/report-section/mastersheet-report": MasterSheetReport,
 
     //Administrator
     "/administrator/manage-page": ManageURL,

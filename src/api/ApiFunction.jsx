@@ -688,16 +688,6 @@ export const GetDashboardDataV2 = async (req) => {
     }
 }
 
-export const DashboardReport = async (req) => {
-    try {
-        const response = await api.post("/Report_V1/DashboardReport", req);
-        return response.data;
-    } catch (error) {
-        console.error("Loan History:", error.response?.data || error.message);
-        throw error;
-    }
-}
-
 //Get Applicant Documents
 export const getLeadDocuments = async (req) => {
     try {
@@ -1006,6 +996,94 @@ export const DisbursmentCollectionReport = async (req) => {
     }
 }
 
+// V1 Reportsa
+export const DisbursmentCollectionReport_V1 = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/DisbursementReport", req);
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Get Reports error:", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+
+// Demand Report Export Excel
+export const DemandReports = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/DemandReport", req);
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Get Reports error:", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+
+// Collection Report Export Excel
+export const CollectionsReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/CollectionReport", req);
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Get Reports error:", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+
+
+// Mandate Register Report Export Excel
+export const MandateResisterReports = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/ManadateRegisterReport", req);
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Get Reports error:", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+
+// Mandate Register Report Export Excel
+export const DemandvsCollectionReports = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/DemandvsCollectionReport", req);
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Get Reports error:", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+
+
+// Enach Transaction Report Export Excel
+export const EnachTransactionsReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/EnachTransectionReport", req);
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Get Reports error:", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+//To Fetch Cutomer Loan History
+export const CustomerLoanDetail = async (req) => {
+    try {
+        const response = await api.post("/Admin/CustomerLoanDetails", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+// Enach Transaction Report Export Excel
+export const MasterSheetsReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/MasterSheetReport", req);
+        return response.data; // Return the API response data
+    } catch (error) {
+        console.error("Get Reports error:", error.response?.data || error.message);
+        throw error; // Rethrow error to handle it in the calling function
+    }
+}
+
 export const ManualVerifyOTP = async (req) => {
     try {
         const response = await api.post("/Admin/ManualVerifyOTP", req);
@@ -1172,6 +1250,40 @@ export const getMandateHistory = async (req) => {
     }
 }
 
+//To Fetch Cutomer Loan History
+export const getCustomerLoanHistory = async (req) => {
+    try {
+        const response = await api.post("/Admin/CustomerLoanHistory", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+//To Fetch Cutomer Loan History
+export const CustomerLoanHistoryWithPaymentDetails = async (req) => {
+    try {
+        const response = await api.post("/Admin/CustomerLoanHistoryWithPaymentDetails", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+
+//To Fetch LeadStatusReport
+export const LeadStatusReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/LeadStatusReport", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
 export const pushMasterDataToSalora = async (req) => {
     try {
         const response = await api.post("/Salora/PushMasterDataToSalora", req);
@@ -1186,6 +1298,102 @@ export const pushMasterDataToSalora = async (req) => {
 export const ChangeStepStatus = async (req) => {
     try {
         const response = await api.post("/Admin/ChangeStepStatus", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+
+
+//==================
+// V3 Dashboard API
+//==================
+
+export const SummaryReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/SummaryReport", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const OperationalMISReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/OperationalMISReport", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const RevenueReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/RevenueReport", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const KPIDashboardReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/KPIDashboardReport", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const LeadReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/LeadReport", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const DailyCreditReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/DailyCreditReport", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const DailyDisbursementReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/DailyDisbursementReport", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const CollectionPerformanceSheet = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/CollectionPerformanceSheet", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const DashboardReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/DashboardReport", req);
         return response.data;
     } catch (error) {
         console.error("Loan History:", error.response?.data || error.message);
