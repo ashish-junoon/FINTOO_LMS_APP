@@ -503,8 +503,8 @@ const OtherBankInfo = ({
                       id={`secondarybankinfo[${index}].bankName`}
                       disabled={!isEditing[index]}
                       options={bankList.map((bankName) => ({
-                        label: bankName.bank_name,
-                        value: bankName.bank_name,
+                        label: bankName.bankName,
+                        value: bankName.bankName,
                       }))}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
