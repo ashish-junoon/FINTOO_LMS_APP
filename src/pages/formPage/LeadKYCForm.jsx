@@ -450,9 +450,9 @@ const LeadKYCForm = () => {
     // navigate("/manage-leads/leads-in-kyc");
 
     // push master data to salora - phase 2
-    // await pushMasterDataToSalora({
-    //   user_id, lead_id
-    // })
+    await pushMasterDataToSalora({
+      user_id, lead_id
+    })
   };
 
   const formikRemarks = useFormik({
