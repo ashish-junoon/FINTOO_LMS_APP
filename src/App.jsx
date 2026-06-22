@@ -70,6 +70,7 @@ import MasterSheetReport from "./pages/Reports/MasterSheetReport";
 import CustomerLoanHistory from "./pages/formPage/CustomerLoanHistory";
 import LeadReportStatusWise from "./pages/Reports/LeadReportStatusWise";
 import Dashboardv3 from "./admin/Dashboardv3";
+import MasterSearch from "./pages/formPage/MasterSearch";
 
 function App() {
   const { adminUser } = useAuth();
@@ -118,6 +119,9 @@ function App() {
     "/report-section/demand-vs-collection": DemandvsCollectionReport,
     "/report-section/enach-transactions": EnachTransactionReport,
     "/report-section/mastersheet-report": MasterSheetReport,
+
+    // master search
+    "/manage-leads/master-search": MasterSearch,
 
     //Administrator
     "/administrator/manage-page": ManageURL,
@@ -188,6 +192,7 @@ function App() {
               <Route path="/admin/fund-tracker" element={<FundTracker />} />
               <Route path="/admin/funders" element={<FunderTable />} />
               <Route path="/admin/manage-funder" element={<ManageFunders />} />
+              {/* <Route path="/admin/manage-leads/master-search" element={<MasterSearch />} /> */}
 
               {/* Temp Route */}
               <Route path="/reports/dynamic-report" element={<DynamicReporting />} />

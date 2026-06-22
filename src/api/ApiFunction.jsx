@@ -779,6 +779,17 @@ export const VerifyBankDetailsBySalora = async (req) => {
     }
 }
 
+//To Fetch LeadStatusReport
+export const LeadStatusReport = async (req) => {
+    try {
+        const response = await api.post("/Report_V1/LeadStatusReport", req);
+        return response.data;
+    } catch (error) {
+        console.error("Loan History:", error.response?.data || error.message);
+        throw error;
+    }
+}
+
 //Verify IFSC Details
 export const VerifyIFSC = async (req) => {
     try {
@@ -1265,18 +1276,6 @@ export const getCustomerLoanHistory = async (req) => {
 export const CustomerLoanHistoryWithPaymentDetails = async (req) => {
     try {
         const response = await api.post("/Admin/CustomerLoanHistoryWithPaymentDetails", req);
-        return response.data;
-    } catch (error) {
-        console.error("Loan History:", error.response?.data || error.message);
-        throw error;
-    }
-}
-
-
-//To Fetch LeadStatusReport
-export const LeadStatusReport = async (req) => {
-    try {
-        const response = await api.post("/Report_V1/LeadStatusReport", req);
         return response.data;
     } catch (error) {
         console.error("Loan History:", error.response?.data || error.message);
