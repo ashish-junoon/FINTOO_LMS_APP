@@ -122,9 +122,9 @@ const MandateHistory = () => {
                     <th className="border px-2 py-2 text-xs text-left">
                       Status
                     </th>
-                    <th className="border px-2 py-2 text-xs text-left">
+                    {/* <th className="border px-2 py-2 text-xs text-left">
                       Action
-                    </th>
+                    </th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -175,14 +175,14 @@ const MandateHistory = () => {
                           {item?.status}
                         </p>
                       </td>
-                      <td className="border px-2 py-1 text-xs">
+                      {/* <td className="border px-2 py-1 text-xs">
                         <button
                           onClick={() => setCancelMandate(item)}
                           className="text-red-600 font-bold w-full"
                         >
                           Cancel
                         </button>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>

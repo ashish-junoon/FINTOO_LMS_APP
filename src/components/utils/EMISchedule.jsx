@@ -954,14 +954,14 @@ function EMISchedule({ data, loan_Id, hideincollection }) {
                                     onClick={() => setIsWriteoff(true)}
                                     style="min-w-[170px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
                                 /> */}
-                  <Button
+                  {/* <Button
                     btnName={"Pull Payment"}
                     btnIcon={"RiSecurePaymentLine"}
                     type={"button"}
                     disabled={!permission}
                     onClick={() => setIsPullNach(true)}
                     style="min-w-[150px] hover:shadow-lg bg-primary text-white font-medium py-2 px-4 rounded"
-                  />
+                  /> */}
                   <Button
                     btnName={"Update Collection"}
                     btnIcon={"MdOutlineReceipt"}
